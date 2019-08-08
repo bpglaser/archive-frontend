@@ -1,0 +1,18 @@
+.tab {
+  display: inline-block;
+  border-bottom: 0.5em solid lightgray;
+}
+
+.tab:not(:first-child) {
+  margin-left: 0.5em;
+}
+
+.tab > button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.tab-selected {
+  border-bottom: 0.5em solid lightcyan;
+}
