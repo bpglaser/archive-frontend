@@ -13,7 +13,7 @@ pipeline {
     }
     stage('Deploy') {
       steps {
-        sh 'cp ./build/ /var/www/html/'
+        sh 'cp -r ./build/* /var/www/html/'
       }
     }
   }
