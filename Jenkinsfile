@@ -13,7 +13,6 @@ pipeline {
     }
     stage('Deploy') {
       steps {
-        sh 'whoami'
         sh 'cp -r ./build/* /var/www/html/'
       }
     }
