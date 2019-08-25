@@ -2,7 +2,9 @@ pipeline {
   agent any
   stages {
     stage('Install') {
-      sh 'npm install'
+      steps {
+        sh 'npm install'
+      }
     }
     stage('Build') {
       steps {
