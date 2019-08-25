@@ -13,7 +13,7 @@ pipeline {
     }
     stage('Deploy') {
       steps {
-        sh 'pwd'
+        sh 'cp ./build/ /var/www/html/'
       }
     }
   }
