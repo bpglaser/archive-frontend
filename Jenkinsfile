@@ -13,7 +13,10 @@ pipeline {
     }
     stage('Deploy') {
       steps {
-        sh 'cp -r ./build/* /var/www/html/'
+        sh 'pwd'
+        sh 'whoami'
+        sh 'rm -rf /var/www/html/*'
+        sh 'cp -rf ./build/* /var/www/html/'
       }
     }
   }
