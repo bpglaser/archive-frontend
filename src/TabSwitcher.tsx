@@ -10,12 +10,12 @@ type TabProps = {
 
 class Tab extends React.Component<TabProps> {
   render() {
-    let classname = this.props.selected ? "tab tab-selected" : "tab"
-    return (<div className={classname}>
-      <button onClick={() => this.props.selectedCallback(this.props.idx)}>
-        <h2>{this.props.name}</h2>
-      </button>
-    </div>)
+    let classname = this.props.selected ? "is-active" : ""
+    return (<li className={classname}>
+      <a onClick={() => this.props.selectedCallback(this.props.idx)}>
+        {this.props.name}
+      </a>
+    </li>)
   }
 }
 
@@ -27,13 +27,15 @@ type TabSwitcherProps = {
 
 class TabSwitcher extends React.Component<TabSwitcherProps> {
   render() {
-    return (<div className="tab-switcher">
-      {
-        this.props.tabNames.map((name, i) =>
-          <Tab key={i} name={name} idx={i} selected={this.props.selected === i}
-            selectedCallback={this.props.selectedCallback}/>
-        )
-      }
+    return (<div className="tabs is-boxed">
+      <ul>
+        {
+          this.props.tabNames.map((name, i) =>
+            <Tab key={i} name={name} idx={i} selected={this.props.selected === i}
+              selectedCallback={this.props.selectedCallback} />
+          )
+        }
+      </ul>
     </div>)
   }
 }

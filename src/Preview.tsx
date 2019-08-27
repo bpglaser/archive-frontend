@@ -1,7 +1,5 @@
 import React from "react";
 import { ArchiveEntry } from "./helpers";
-import Tag from "./Tag";
-import Loader from "./Loader";
 
 type Props = {
   activeEntry?: ArchiveEntry,
@@ -14,15 +12,15 @@ export default class Preview extends React.Component<Props> {
       return (<div className="preview">
         <h1>{entry.name}</h1>
         <h2>{entry.owner}</h2>
-        <img src={entry.path} alt="Preview"/>
+        <img src={entry.path} alt="Preview" />
         <br />
-        <div className="taglist">
+        <div className="tags">
           {
-            entry.tags.map((content, i) =>
-              <Tag content={content} deleteCallback={undefined} idx={i} key={i}/>)
+            entry.tags.map((content) =>
+              <span className="tag is-info">{content}</span>)
           }
         </div>
-        <button>See Entry Details</button>
+        <button className="button">See Entry Details</button>
       </div>)
     } else {
       return (<div className="preview">
