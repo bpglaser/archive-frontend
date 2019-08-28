@@ -11,11 +11,10 @@ type BrowserProps = {
   rowClickedCallback: (entry: ArchiveEntry) => void,
 }
 
-export default class Browser extends React.Component<BrowserProps> {
+class Browser extends React.Component<BrowserProps> {
   render() {
     return (
       <div className="browser">
-        <Pager />
         {this.props.loading &&
           <div className="browser-loader">
             <Loader />
@@ -41,8 +40,10 @@ export default class Browser extends React.Component<BrowserProps> {
               rowNum={i}
               key={i}/>)
         }
-        <Pager />
+        <Pager max={100} selected={7} />
       </div>
     )
   }
 }
+
+export default Browser
