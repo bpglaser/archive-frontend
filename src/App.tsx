@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { HashRouter, Route } from 'react-router-dom';
 import './App.css';
 import Primary from './Primary';
 import Navbar from './Navbar';
@@ -17,7 +17,7 @@ class App extends React.Component<any, State> {
   }
   render() {
     return (<div className="container">
-      <BrowserRouter>
+      <HashRouter>
         <Navbar
           loggedIn={this.state.loggedIn}
           registerClicked={this.registerClicked}
@@ -25,7 +25,7 @@ class App extends React.Component<any, State> {
           logOutClicked={this.logOutClicked} />
 
         <Route path="/" exact component={Primary} />
-      </BrowserRouter>
+      </HashRouter>
     </div>)
   }
 
