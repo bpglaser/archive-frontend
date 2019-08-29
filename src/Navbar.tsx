@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom';
 
 type Prop = {
   loggedIn: boolean
@@ -17,7 +18,7 @@ class Navbar extends React.Component<Prop> {
       </div>
       <div className="navbar-menu">
         <div className="navbar-start">
-          <a className="navbar-item" href="#">Home</a>
+          <Link to="/" className="navbar-item">Home</Link>
         </div>
         <div className="navbar-end">
           <div className="navbar-item">
