@@ -34,8 +34,13 @@ class Primary extends React.Component<any, State> {
       <div className="container">
         <TabSwitcher tabNames={['Public', 'Robinson Observatory', 'Team Astromaintenance']} selected={0} selectedCallback={this.tabSelected} />
 
-        <div className="app-content">
-          <Browser activeEntry={this.state.activeEntry} entries={this.state.entries!} loading={this.state.loading} rowClickedCallback={this.rowClicked} />
+        <div className="columns">
+          <Browser
+            activeEntry={this.state.activeEntry}
+            entries={this.state.entries!}
+            loading={this.state.loading}
+            rowClickedCallback={this.rowClicked} />
+
           <Preview activeEntry={this.state.activeEntry} />
         </div>
       </div>

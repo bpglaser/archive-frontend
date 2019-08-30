@@ -1,8 +1,7 @@
-import React from 'react'
-import './Loader.css'
+import React from 'react';
 
 export default class Loader extends React.Component {
   render() {
-    return <div className="loader"></div>
+    return <progress className="progress"></progress>
   }
 }

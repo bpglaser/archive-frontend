@@ -9,12 +9,12 @@ export default class Preview extends React.Component<Props> {
   render() {
     let entry = this.props.activeEntry
     if (entry) {
-      return (<div className="preview">
+      return (<div className="column">
         <h1>{entry.name}</h1>
         <h2>{entry.owner}</h2>
         <img src={entry.path} alt="Preview" />
         <br />
-        <div className="tags">
+        <div className="tags" style={{maxWidth: "200px"}}>
           {
             entry.tags.map((content) =>
               <span className="tag is-info">{content}</span>)

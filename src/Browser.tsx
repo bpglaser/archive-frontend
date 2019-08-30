@@ -13,36 +13,39 @@ type BrowserProps = {
 
 class Browser extends React.Component<BrowserProps> {
   render() {
-    return (
-      <div className="browser">
-        {this.props.loading &&
-          <div className="browser-loader">
-            <Loader />
-          </div>
-        }
-        <div className="browser-header">
-          <div className="browser-element">
-            Name
-          </div>
-          <div className="browser-element">
-            Owner
-          </div>
-          <div className="browser-element">
-            Date
-          </div>
-        </div>
-        {
-          this.props.entries.map((entry, i) =>
-            <BrowserRow
-              active={entry === this.props.activeEntry}
-              entry={entry}
-              onClickCallback={this.props.rowClickedCallback}
-              rowNum={i}
-              key={i}/>)
-        }
-        <Pager max={100} selected={7} />
-      </div>
-    )
+    return (<div className="column is-three-quarters">
+      {this.props.loading &&
+        <Loader />
+      }
+
+      <table className="table is-fullwidth">
+        <thead>
+          <th>Name</th>
+          <th>Owner</th>
+          <th>Date</th>
+        </thead>
+
+        <tfoot>
+          <th>Name</th>
+          <th>Owner</th>
+          <th>Date</th>
+        </tfoot>
+
+        <tbody>
+          {
+            this.props.entries.map((entry, i) =>
+              <BrowserRow
+                active={this.props.activeEntry === entry}
+                entry={entry}
+                onClickCallback={this.props.rowClickedCallback}
+                rowNum={i} />
+            )
+          }
+        </tbody>
+      </table>
+
+      <Pager max={100} selected={7} />
+    </div>)
   }
 }
 

@@ -1,5 +1,4 @@
 import React from "react";
-import './TabSwitcher.css';
 
 type TabProps = {
   name: string,
