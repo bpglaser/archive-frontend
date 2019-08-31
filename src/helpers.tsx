@@ -23,3 +23,26 @@ export function createMany(count: number): ArchiveEntry[] {
   }
   return result
 }
+
+export type Project = {
+  id: number,
+  title: string,
+  description: string,
+  imageCount: number,
+}
+
+export const generateMockProjects = () => {
+  return [
+    { id: 0, title: "Hello world", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris scelerisque, mi id molestie faucibus, eros erat consequat mi, ut accumsan sem nibh vitae augue. Aliquam.", imageCount: 10 },
+    { id: 1, title: "Hello world", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris scelerisque, mi id molestie faucibus, eros erat consequat mi, ut accumsan sem nibh vitae augue. Aliquam.", imageCount: 10 },
+    { id: 2, title: "Hello world", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris scelerisque, mi id molestie faucibus, eros erat consequat mi, ut accumsan sem nibh vitae augue. Aliquam.", imageCount: 10 },
+    { id: 3, title: "Hello world", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris scelerisque, mi id molestie faucibus, eros erat consequat mi, ut accumsan sem nibh vitae augue. Aliquam.", imageCount: 10 },
+    { id: 4, title: "Hello world", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris scelerisque, mi id molestie faucibus, eros erat consequat mi, ut accumsan sem nibh vitae augue. Aliquam.", imageCount: 10 },
+    { id: 5, title: "Hello world", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris scelerisque, mi id molestie faucibus, eros erat consequat mi, ut accumsan sem nibh vitae augue. Aliquam.", imageCount: 10 },
+    { id: 6, title: "Hello world", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris scelerisque, mi id molestie faucibus, eros erat consequat mi, ut accumsan sem nibh vitae augue. Aliquam.", imageCount: 10 },
+    { id: 7, title: "Hello world", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris scelerisque, mi id molestie faucibus, eros erat consequat mi, ut accumsan sem nibh vitae augue. Aliquam.", imageCount: 10 },
+    { id: 8, title: "Hello world", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris scelerisque, mi id molestie faucibus, eros erat consequat mi, ut accumsan sem nibh vitae augue. Aliquam.", imageCount: 10 },
+    { id: 9, title: "Hello world", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris scelerisque, mi id molestie faucibus, eros erat consequat mi, ut accumsan sem nibh vitae augue. Aliquam.", imageCount: 10 },
+    { id: 10, title: "Hello world", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris scelerisque, mi id molestie faucibus, eros erat consequat mi, ut accumsan sem nibh vitae augue. Aliquam.", imageCount: 10 },
+  ]
+}

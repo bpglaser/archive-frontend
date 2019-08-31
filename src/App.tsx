@@ -4,6 +4,8 @@ import './App.css';
 import Primary from './Primary';
 import Navbar from './Navbar';
 import { Login, LoginDisplayMode } from './Login';
+import Projects from './Projects';
+import ProjectDetails from './ProjectDetails';
 
 type State = {
   loggedIn: boolean,
@@ -18,6 +20,7 @@ class App extends React.Component<any, State> {
       loginDisplayMode: LoginDisplayMode.Hidden,
     }
   }
+
   render() {
     return (<div className="container">
       <HashRouter>
@@ -28,6 +31,8 @@ class App extends React.Component<any, State> {
           logOutClicked={this.logOutClicked} />
 
         <Route path="/" exact component={Primary} />
+        <Route path="/projects" exact component={Projects} />
+        <Route path="/projects/:id" component={ProjectDetails} />
 
         {this.state.loginDisplayMode !== LoginDisplayMode.Hidden &&
           <Login
