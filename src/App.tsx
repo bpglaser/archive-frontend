@@ -1,11 +1,11 @@
 import React from 'react';
 import { HashRouter, Route } from 'react-router-dom';
 import './App.css';
-import Primary from './Primary';
-import Navbar from './Navbar';
-import { Login, LoginDisplayMode } from './Login';
-import Projects from './Projects';
-import ProjectDetails from './ProjectDetails';
+import Primary from './Routes/Primary';
+import Navbar from './Components/Navbar';
+import { Login, LoginDisplayMode } from './Components/Login';
+import Projects from './Routes/Projects';
+import ProjectDetails from './Components/ProjectDetails';
 
 type State = {
   loggedIn: boolean,

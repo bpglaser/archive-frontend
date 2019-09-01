@@ -1,11 +1,10 @@
 import React from 'react';
 import 'bulma';
-import './App.css';
-import Browser from './Browser';
-import Preview from './Preview';
-import { createMany, ArchiveEntry } from './helpers';
+import Browser from '../Components/Browser';
+import Preview from '../Components/Preview';
+import { createMany, ArchiveEntry } from '../helpers';
 import Cookies from 'js-cookie';
-import TabSwitcher from './TabSwitcher';
+import TabSwitcher from '../Components/TabSwitcher';
 
 type State = {
   activeEntry: ArchiveEntry,
