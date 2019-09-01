@@ -13,7 +13,7 @@ type State = {
   burgerState: boolean,
 }
 
-export default class Navbar extends React.Component<Props, State> {
+class Navbar extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -29,6 +29,7 @@ export default class Navbar extends React.Component<Props, State> {
         </div>
 
         <button
+          role="button"
           className={this.modifyClassName("navbar-burger burger link-button")}
           aria-label="menu"
           aria-expanded="false"
@@ -77,3 +78,5 @@ export default class Navbar extends React.Component<Props, State> {
     return className
   }
 }
+
+export default Navbar
