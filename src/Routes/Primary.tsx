@@ -2,7 +2,7 @@ import React from 'react';
 import 'bulma';
 import Browser from '../Components/Browser';
 import Preview from '../Components/Preview';
-import { createMany, ArchiveEntry } from '../helpers';
+import { createMany, ArchiveEntry } from '../Models/helpers';
 import Cookies from 'js-cookie';
 import TabSwitcher from '../Components/TabSwitcher';
 

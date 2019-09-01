@@ -1,5 +1,5 @@
 import React from "react";
-import { ArchiveEntry } from "../helpers";
+import { ArchiveEntry } from "../Models/helpers";
 
 type Props = {
   active: boolean,
