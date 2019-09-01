@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import './Navbar.css';
 
 type Props = {
   loggedIn: boolean,
@@ -28,16 +27,16 @@ class Navbar extends React.Component<Props, State> {
           <strong>Robinson Observatory Archive</strong>
         </div>
 
-        <button
+        <a
           role="button"
-          className={this.modifyClassName("navbar-burger burger link-button")}
+          className={this.modifyClassName("navbar-burger burger")}
           aria-label="menu"
           aria-expanded="false"
           onClick={this.burgerClicked}>
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
-        </button>
+        </a>
       </div>
 
       <div className={this.modifyClassName("navbar-menu")}>
