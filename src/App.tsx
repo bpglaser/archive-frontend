@@ -7,9 +7,10 @@ import { Login, LoginDisplayMode } from './Components/Login';
 import Projects from './Routes/Projects';
 import ProjectDetails from './Routes/ProjectDetails';
 import Settings from './Routes/Settings';
+import { User } from './Models/helpers';
 
 type State = {
-  loggedIn: boolean,
+  loggedInAs: User | null,
   loginDisplayMode: LoginDisplayMode,
 }
 
@@ -17,7 +18,7 @@ class App extends React.Component<any, State> {
   constructor(props: any) {
     super(props)
     this.state = {
-      loggedIn: false,
+      loggedInAs: null,
       loginDisplayMode: LoginDisplayMode.Hidden,
     }
   }
@@ -26,7 +27,7 @@ class App extends React.Component<any, State> {
     return (<div className="container">
       <HashRouter>
         <Navbar
-          loggedIn={this.state.loggedIn}
+          loggedInAs={this.state.loggedInAs}
           registerClicked={this.registerClicked}
           logInClicked={this.logInClicked}
           logOutClicked={this.logOutClicked} />
@@ -61,8 +62,8 @@ class App extends React.Component<any, State> {
 
   registerCompleted = () => {
     this.setState({
+      loggedInAs: { username: "ExampleUser01" },
       loginDisplayMode: LoginDisplayMode.Hidden,
-      loggedIn: true,
     })
   }
 
@@ -74,14 +75,14 @@ class App extends React.Component<any, State> {
 
   loginCompleted = () => {
     this.setState({
+      loggedInAs: { username: "ExampleUser01" },
       loginDisplayMode: LoginDisplayMode.Hidden,
-      loggedIn: true,
     })
   }
 
   logOutClicked = () => {
     this.setState({
-      loggedIn: false
+      loggedInAs: null,
     })
   }
 }

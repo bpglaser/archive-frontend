@@ -13,7 +13,18 @@ type Props = {
   register: () => void,
 }
 
-export class Login extends React.Component<Props> {
+type State = {
+  loading: boolean,
+}
+
+export class Login extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props)
+    this.state = {
+      loading: false,
+    }
+  }
+
   render() {
     let title = this.props.mode === LoginDisplayMode.Register ? "Register" : "Login"
     return (<div className="modal is-active">

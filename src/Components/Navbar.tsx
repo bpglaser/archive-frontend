@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { User } from '../Models/helpers';
 
 type Props = {
-  loggedIn: boolean,
+  loggedInAs: User | null,
   registerClicked: () => void,
   logInClicked: () => void,
   logOutClicked: () => void,
@@ -12,7 +13,7 @@ type State = {
   burgerState: boolean,
 }
 
-class Navbar extends React.Component<Props, State> {
+export default class Navbar extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -47,14 +48,21 @@ class Navbar extends React.Component<Props, State> {
         </div>
 
         <div className="navbar-end">
+          {this.props.loggedInAs !== null &&
+            <a className="navbar-item">
+              {this.props.loggedInAs.username}
+            </a>
+          }
+
           <div className="navbar-item">
-            {!this.props.loggedIn &&
+            {!this.props.loggedInAs &&
               <div className="buttons">
                 <button className="button" onClick={this.props.registerClicked}>Register</button>
                 <button className="button" onClick={this.props.logInClicked}>Log in</button>
               </div>
             }
-            {this.props.loggedIn &&
+
+            {this.props.loggedInAs &&
               <div className="buttons">
                 <button className="button" onClick={this.props.logOutClicked}>Log out</button>
               </div>
@@ -78,5 +86,3 @@ class Navbar extends React.Component<Props, State> {
     return className
   }
 }
-
-export default Navbar
