@@ -4,14 +4,26 @@ import BrowserRow from "./BrowserRow";
 import Pager from "./Pager";
 import Loader from "./Loader";
 
-type BrowserProps = {
+type Props = {
   activeEntry: ArchiveEntry,
   entries: ArchiveEntry[],
   loading: boolean,
+  maxPages: number,
   rowClickedCallback: (entry: ArchiveEntry) => void,
 }
 
-class Browser extends React.Component<BrowserProps> {
+type State = {
+  selected: number,
+}
+
+class Browser extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props)
+    this.state = {
+      selected: 1,
+    }
+  }
+
   render() {
     return (<div className="column is-three-quarters">
       {this.props.loading &&
@@ -44,8 +56,37 @@ class Browser extends React.Component<BrowserProps> {
         </tbody>
       </table>
 
-      <Pager max={100} selected={7} />
+      <Pager
+        max={this.props.maxPages}
+        nextButtonClicked={this.nextButtonClicked}
+        numberButtonClicked={this.numberButtonClicked}
+        previousButtonClicked={this.previousButtonClicked}
+        selected={this.state.selected} />
     </div>)
+  }
+
+  nextButtonClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (this.state.selected < this.props.maxPages) {
+      this.setState({
+        selected: this.state.selected + 1,
+      })
+    }
+  }
+
+  numberButtonClicked = (n: number) => {
+    if (n >= 1 && n <= this.props.maxPages) {
+      this.setState({
+        selected: n,
+      })
+    }
+  }
+
+  previousButtonClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (this.state.selected > 1) {
+      this.setState({
+        selected: this.state.selected - 1,
+      })
+    }
   }
 }
 

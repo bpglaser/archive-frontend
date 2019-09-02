@@ -38,6 +38,7 @@ class Primary extends React.Component<any, State> {
             activeEntry={this.state.activeEntry}
             entries={this.state.entries!}
             loading={this.state.loading}
+            maxPages={12}
             rowClickedCallback={this.rowClicked} />
 
           <Preview activeEntry={this.state.activeEntry} />
