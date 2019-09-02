@@ -8,11 +8,12 @@ type Props = {
   selected: number
 }
 
-class Pager extends React.Component<Props> {
+export default class Pager extends React.Component<Props> {
   render() {
     let isSinglePage = this.props.max === 1
     let previousDisabled = this.props.selected === 1 || isSinglePage
     let nextDisabled = this.props.selected === this.props.max || isSinglePage
+
     return (<nav className="pagination is-centered" role="navigation">
       <button
         className="pagination-previous"
@@ -20,12 +21,14 @@ class Pager extends React.Component<Props> {
         onClick={this.props.previousButtonClicked}>
         Previous
       </button>
+
       <button
         className="pagination-next"
         disabled={nextDisabled}
         onClick={this.props.nextButtonClicked}>
         Next
       </button>
+
       {this.props.max < 7 &&
         <ul className="pagination-list">
           {
@@ -34,22 +37,47 @@ class Pager extends React.Component<Props> {
           }
         </ul>
       }
+
       {this.props.max >= 7 &&
         <ul className="pagination-list">
-          <li><button className={1 === this.props.selected ? "pagination-link is-current" : "pagination-link"} onClick={() => this.props.numberButtonClicked(1)}>1</button></li>
-          <li><span className="pagination-ellipsis">&hellip;</span></li>
+          <li>
+            <button
+              className={this.getHiddenClassNameLeft(this.getActiveClassName(1))}
+              onClick={() => this.props.numberButtonClicked(1)}>
+              1
+            </button>
+          </li>
+
+          <li>
+            <span className={this.getHiddenClassNameLeft("pagination-ellipsis")}>
+              &hellip;
+            </span>
+          </li>
+
           {
             this.generateIndices().map((n) =>
               <li>
                 <button
-                  className={n === this.props.selected ? "pagination-link is-current" : "pagination-link"}
+                  className={this.getActiveClassName(n)}
                   onClick={() => this.props.numberButtonClicked(n)}>
                   {n}
                 </button>
               </li>)
           }
-          <li><span className="pagination-ellipsis">&hellip;</span></li>
-          <li><button className={this.props.max === this.props.selected ? "pagination-link is-current" : "pagination-link"} onClick={() => this.props.numberButtonClicked(this.props.max)}>{this.props.max}</button></li>
+
+          <li>
+            <span className={this.getHiddenClassNameRight("pagination-ellipsis")}>
+              &hellip;
+            </span>
+          </li>
+
+          <li>
+            <button
+              className={this.getHiddenClassNameRight(this.getActiveClassName(this.props.max))}
+              onClick={() => this.props.numberButtonClicked(this.props.max)}>
+              {this.props.max}
+            </button>
+          </li>
         </ul>
       }
     </nav>)
@@ -60,6 +88,22 @@ class Pager extends React.Component<Props> {
       return "pagination-link is-current"
     } else {
       return "pagination-link"
+    }
+  }
+
+  getHiddenClassNameLeft = (s: string): string => {
+    if (this.props.selected <= 2) {
+      return s + " hidden"
+    } else {
+      return s
+    }
+  }
+
+  getHiddenClassNameRight = (s: string): string => {
+    if (this.props.selected >= this.props.max - 2) {
+      return s + " hidden"
+    } else {
+      return s
     }
   }
 
@@ -75,5 +119,3 @@ class Pager extends React.Component<Props> {
     }
   }
 }
-
-export default Pager
