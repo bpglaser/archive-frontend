@@ -49,9 +49,9 @@ export default class Navbar extends React.Component<Props, State> {
 
         <div className="navbar-end">
           {this.props.loggedInAs !== null &&
-            <a className="navbar-item">
+            <Link to="/settings" className="navbar-item">
               {this.props.loggedInAs.username}
-            </a>
+            </Link>
           }
 
           <div className="navbar-item">

@@ -8,23 +8,13 @@ export enum LoginDisplayMode {
 
 type Props = {
   close: () => void,
+  loading: boolean,
   login: () => void,
   mode: LoginDisplayMode,
   register: () => void,
 }
 
-type State = {
-  loading: boolean,
-}
-
-export class Login extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props)
-    this.state = {
-      loading: false,
-    }
-  }
-
+export class Login extends React.Component<Props> {
   render() {
     let title = this.props.mode === LoginDisplayMode.Register ? "Register" : "Login"
     return (<div className="modal is-active">
@@ -71,7 +61,8 @@ export class Login extends React.Component<Props, State> {
             <p className="control">
               {this.props.mode === LoginDisplayMode.Login &&
                 <button
-                  className="button is-success"
+                  className={this.getButtonClassName("button is-success")}
+                  disabled={this.props.loading}
                   onClick={this.props.login}>
                     Login
                 </button>
@@ -79,7 +70,8 @@ export class Login extends React.Component<Props, State> {
 
               {this.props.mode === LoginDisplayMode.Register &&
                 <button
-                  className="button is-success"
+                  className={this.getButtonClassName("button is-success")}
+                  disabled={this.props.loading}
                   onClick={this.props.register}>
                     Register
                 </button>
@@ -89,5 +81,12 @@ export class Login extends React.Component<Props, State> {
         </footer>
       </div>
     </div>)
+  }
+
+  getButtonClassName = (s: string): string => {
+    if (this.props.loading) {
+      return s + ' is-loading'
+    }
+    return s
   }
 }

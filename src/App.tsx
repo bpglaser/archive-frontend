@@ -8,10 +8,12 @@ import Projects from './Routes/Projects';
 import ProjectDetails from './Routes/ProjectDetails';
 import Settings from './Routes/Settings';
 import { User } from './Models/helpers';
+import { delay } from 'q';
 
 type State = {
   loggedInAs: User | null,
   loginDisplayMode: LoginDisplayMode,
+  loginLoading: boolean,
 }
 
 class App extends React.Component<any, State> {
@@ -20,6 +22,7 @@ class App extends React.Component<any, State> {
     this.state = {
       loggedInAs: null,
       loginDisplayMode: LoginDisplayMode.Hidden,
+      loginLoading: false,
     }
   }
 
@@ -40,6 +43,7 @@ class App extends React.Component<any, State> {
         {this.state.loginDisplayMode !== LoginDisplayMode.Hidden &&
           <Login
             close={this.closeLoginPrompt}
+            loading={this.state.loginLoading}
             login={this.loginCompleted}
             mode={this.state.loginDisplayMode}
             register={this.registerCompleted} />
@@ -60,10 +64,17 @@ class App extends React.Component<any, State> {
     })
   }
 
-  registerCompleted = () => {
+  registerCompleted = async () => {
+    this.setState({
+      loginLoading: true,
+    })
+
+    await delay(1000)
+
     this.setState({
       loggedInAs: { username: "ExampleUser01" },
       loginDisplayMode: LoginDisplayMode.Hidden,
+      loginLoading: false,
     })
   }
 
@@ -73,10 +84,17 @@ class App extends React.Component<any, State> {
     })
   }
 
-  loginCompleted = () => {
+  loginCompleted = async () => {
+    this.setState({
+      loginLoading: true,
+    })
+
+    await delay(1000)
+
     this.setState({
       loggedInAs: { username: "ExampleUser01" },
       loginDisplayMode: LoginDisplayMode.Hidden,
+      loginLoading: false,
     })
   }
 
