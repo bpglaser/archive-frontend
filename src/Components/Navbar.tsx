@@ -43,6 +43,7 @@ class Navbar extends React.Component<Props, State> {
         <div className="navbar-start">
           <Link to="/" className="navbar-item">Home</Link>
           <Link to="/projects" className="navbar-item">My Projects</Link>
+          <Link to="/settings" className="navbar-item">Settings</Link>
         </div>
 
         <div className="navbar-end">

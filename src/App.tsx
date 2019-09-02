@@ -5,7 +5,8 @@ import Primary from './Routes/Primary';
 import Navbar from './Components/Navbar';
 import { Login, LoginDisplayMode } from './Components/Login';
 import Projects from './Routes/Projects';
-import ProjectDetails from './Components/ProjectDetails';
+import ProjectDetails from './Routes/ProjectDetails';
+import Settings from './Routes/Settings';
 
 type State = {
   loggedIn: boolean,
@@ -33,6 +34,7 @@ class App extends React.Component<any, State> {
         <Route path="/" exact component={Primary} />
         <Route path="/projects" exact component={Projects} />
         <Route path="/projects/:id" component={ProjectDetails} />
+        <Route path="/settings" exact component={Settings} />
 
         {this.state.loginDisplayMode !== LoginDisplayMode.Hidden &&
           <Login
