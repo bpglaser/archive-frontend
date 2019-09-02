@@ -92,7 +92,7 @@ export default class Pager extends React.Component<Props> {
   }
 
   getHiddenClassNameLeft = (s: string): string => {
-    if (this.props.selected <= 2) {
+    if (this.props.selected <= 3) {
       return s + " hidden"
     } else {
       return s
