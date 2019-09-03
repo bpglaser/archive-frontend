@@ -1,32 +1,10 @@
 import * as React from "react";
-import { Link } from "react-router-dom";
 import { Project, generateMockProjects } from "../Models/helpers";
+import ProjectPreviewCard from "../Components/ProjectPreviewCard";
 
 interface State {
   projects: Project[];
 }
-
-const ProjectComponent: React.FC<Project> =
-  ({ id, title, description, imageCount }) => (<div className="card" style={{ maxWidth: "25em", margin: "1em" }}>
-    <header className="card-header">
-      <p className="card-header-title">{title}</p>
-    </header>
-
-    <div className="card-content">
-      <div className="content">
-        {description}
-        <br />
-        <br />
-        Project size: {imageCount}
-      </div>
-    </div>
-
-    <footer className="card-footer">
-      <Link to={"/projects/" + id} className="card-footer-item">
-        View
-      </Link>
-    </footer>
-  </div>)
 
 export default class Projects extends React.Component<any, State> {
   constructor(props: any) {
@@ -37,10 +15,10 @@ export default class Projects extends React.Component<any, State> {
   }
 
   render() {
-    return (<div style={{ display: "flex", flexFlow: "row wrap", justifyContent: "space-evenly" }}>
+    return (<div className="projects">
       {
         this.state.projects.map((project, i) =>
-          <ProjectComponent {...project} />)
+          <ProjectPreviewCard project={project} />)
       }
     </div>)
   }
