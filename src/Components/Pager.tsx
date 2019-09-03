@@ -55,8 +55,8 @@ export default class Pager extends React.Component<Props> {
           </li>
 
           {
-            this.generateIndices().map((n) =>
-              <li>
+            this.generateIndices().map((n, i) =>
+              <li key={i}>
                 <button
                   className={this.getActiveClassName(n)}
                   onClick={() => this.props.numberButtonClicked(n)}>

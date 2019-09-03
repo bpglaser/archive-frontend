@@ -32,15 +32,19 @@ class Browser extends React.Component<Props, State> {
 
       <table className="table is-fullwidth">
         <thead>
-          <th>Name</th>
-          <th>Owner</th>
-          <th>Date</th>
+          <tr>
+            <th>Name</th>
+            <th>Owner</th>
+            <th>Date</th>
+          </tr>
         </thead>
 
         <tfoot>
-          <th>Name</th>
-          <th>Owner</th>
-          <th>Date</th>
+          <tr>
+            <th>Name</th>
+            <th>Owner</th>
+            <th>Date</th>
+          </tr>
         </tfoot>
 
         <tbody>
@@ -50,6 +54,7 @@ class Browser extends React.Component<Props, State> {
                 active={this.props.activeEntry === entry}
                 entry={entry}
                 onClickCallback={this.props.rowClickedCallback}
+                key={i}
                 rowNum={i} />
             )
           }

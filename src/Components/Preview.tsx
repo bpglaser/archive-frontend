@@ -16,8 +16,8 @@ export default class Preview extends React.Component<Props> {
         <br />
         <div className="tags" style={{ maxWidth: "200px"}}>
           {
-            entry.tags.map((content) =>
-              <span className="tag is-info">{content}</span>)
+            entry.tags.map((content, i) =>
+              <span className="tag is-info" key={i}>{content}</span>)
           }
         </div>
         <button className="button">See Entry Details</button>
