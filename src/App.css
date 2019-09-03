@@ -1,9 +1,22 @@
+.account-settings {
+    max-width: 30em;
+}
+
 .hidden {
     visibility: hidden;
+}
+
+.project-preview-card {
+    margin: 1em;
+    max-width: 25em;
 }
 
 .projects {
     display: flex;
     flex-flow: row wrap;
     justify-content: space-evenly;
+}
+
+.tags {
+    max-width: 200px;
 }

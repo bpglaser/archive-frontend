@@ -64,7 +64,7 @@ export class Login extends React.Component<Props> {
                   className={this.getButtonClassName("button is-success")}
                   disabled={this.props.loading}
                   onClick={this.props.login}>
-                    Login
+                  Login
                 </button>
               }
 
@@ -73,7 +73,7 @@ export class Login extends React.Component<Props> {
                   className={this.getButtonClassName("button is-success")}
                   disabled={this.props.loading}
                   onClick={this.props.register}>
-                    Register
+                  Register
                 </button>
               }
             </p>

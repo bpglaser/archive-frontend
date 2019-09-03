@@ -16,7 +16,7 @@ export default class Preview extends React.Component<Props> {
         <img src={entry.path} alt="Preview" />
         <br />
 
-        <div className="tags" style={{ maxWidth: "200px"}}>
+        <div className="tags">
           {
             entry.tags.map((content, i) =>
               <span className="tag is-info" key={i}>{content}</span>)

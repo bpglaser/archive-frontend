@@ -76,7 +76,7 @@ export default class AccountSettings extends React.Component<any, State> {
   }
 
   render() {
-    return (<div style={{ maxWidth: "30em" }}>
+    return (<div className="account-settings">
       <h3 className="title is-4">Update Password</h3>
 
       <div className="field">
