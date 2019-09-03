@@ -22,6 +22,7 @@ export default class Navbar extends React.Component<Props, State> {
   }
 
   render() {
+    /* eslint-disable jsx-a11y/anchor-is-valid */
     return (<div className="navbar">
       <div className="navbar-brand">
         <div className="navbar-item">
@@ -71,6 +72,7 @@ export default class Navbar extends React.Component<Props, State> {
         </div>
       </div>
     </div>)
+    /* eslint-enable jsx-a11y/anchor-is-valid */
   }
 
   burgerClicked = () => {

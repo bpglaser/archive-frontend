@@ -10,11 +10,13 @@ type TabProps = {
 class Tab extends React.Component<TabProps> {
   render() {
     let classname = this.props.selected ? "is-active" : ""
+    /* eslint-disable jsx-a11y/anchor-is-valid */
     return (<li className={classname}>
       <a onClick={() => this.props.selectedCallback(this.props.idx)}>
         {this.props.name}
       </a>
     </li>)
+    /* eslint-enable jsx-a11y/anchor-is-valid */
   }
 }
 
