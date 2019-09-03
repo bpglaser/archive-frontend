@@ -28,7 +28,7 @@ export class Login extends React.Component<Props> {
         <section className="modal-card-body">
           <div className="field">
             <p className="control has-icons-left">
-              <input className="input" type="email" placeholder="Email" />
+              <input className="input" type="email" placeholder="Email" disabled={this.props.loading} />
               <span className="icon is-small is-left">
                 <i className="fas fa-envelope"></i>
               </span>
@@ -37,7 +37,7 @@ export class Login extends React.Component<Props> {
 
           <div className="field">
             <p className="control has-icons-left">
-              <input className="input" type="password" placeholder="Password" />
+              <input className="input" type="password" placeholder="Password" disabled={this.props.loading} />
               <span className="icon is-small is-left">
                 <i className="fas fa-lock"></i>
               </span>
@@ -47,7 +47,7 @@ export class Login extends React.Component<Props> {
           {this.props.mode === LoginDisplayMode.Register &&
             <div className="field">
               <p className="control has-icons-left">
-                <input className="input" type="password" placeholder="Confirm password" />
+                <input className="input" type="password" placeholder="Confirm password" disabled={this.props.loading} />
                 <span className="icon is-small is-left">
                   <i className="fas fa-lock"></i>
                 </span>
