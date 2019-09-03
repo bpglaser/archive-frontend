@@ -57,14 +57,21 @@ export default class Projects extends React.Component<any, State> {
               <div className="field">
                 <label className="label">Project Name</label>
                 <div className="control">
-                  <input className="input" type="text" placeholder="Project Name" />
+                  <input
+                    className="input"
+                    type="text"
+                    placeholder="Project Name"
+                    disabled={this.state.awaitingCreationResponse} />
                 </div>
               </div>
 
               <div className="field">
                 <label className="label">Description</label>
                 <div className="control">
-                  <textarea className="textarea" placeholder="Description" />
+                  <textarea
+                    className="textarea"
+                    placeholder="Description"
+                    disabled={this.state.awaitingCreationResponse} />
                 </div>
               </div>
             </section>
