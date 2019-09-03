@@ -1,11 +1,11 @@
 import React from 'react'
 
-type Props = {
-  max: number
-  nextButtonClicked: (event: React.MouseEvent<HTMLButtonElement>) => void,
-  numberButtonClicked: (n: number) => void,
-  previousButtonClicked: (event: React.MouseEvent<HTMLButtonElement>) => void,
-  selected: number
+interface Props {
+  max: number;
+  nextButtonClicked: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  numberButtonClicked: (n: number) => void;
+  previousButtonClicked: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  selected: number;
 }
 
 export default class Pager extends React.Component<Props> {

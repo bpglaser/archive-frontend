@@ -6,15 +6,15 @@ import { createMany, ArchiveEntry } from '../Models/helpers';
 import Cookies from 'js-cookie';
 import TabSwitcher from '../Components/TabSwitcher';
 
-type State = {
-  activeEntry: ArchiveEntry,
-  activeTabID: number,
-  entries: ArchiveEntry[],
-  loading: boolean,
-  welcomeDisplayed: boolean,
+interface State {
+  activeEntry: ArchiveEntry;
+  activeTabID: number;
+  entries: ArchiveEntry[];
+  loading: boolean;
+  welcomeDisplayed: boolean;
 }
 
-class Primary extends React.Component<any, State> {
+export default class Primary extends React.Component<any, State> {
   constructor(props: any) {
     super(props)
     let welcome = JSON.parse(Cookies.get('welcome') || "false")
@@ -64,5 +64,3 @@ class Primary extends React.Component<any, State> {
     })
   }
 }
-
-export default Primary

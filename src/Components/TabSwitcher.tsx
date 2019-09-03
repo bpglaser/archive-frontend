@@ -1,10 +1,10 @@
 import React from "react";
 
-type TabProps = {
-  name: string,
-  idx: number,
-  selected: boolean,
-  selectedCallback: (i: number) => void,
+interface TabProps {
+  name: string;
+  idx: number;
+  selected: boolean;
+  selectedCallback: (i: number) => void;
 }
 
 class Tab extends React.Component<TabProps> {
@@ -20,13 +20,13 @@ class Tab extends React.Component<TabProps> {
   }
 }
 
-type TabSwitcherProps = {
-  tabNames: string[],
-  selected: number,
-  selectedCallback: (i: number) => void,
+interface TabSwitcherProps {
+  tabNames: string[];
+  selected: number;
+  selectedCallback: (i: number) => void;
 }
 
-class TabSwitcher extends React.Component<TabSwitcherProps> {
+export default class TabSwitcher extends React.Component<TabSwitcherProps> {
   render() {
     return (<div className="tabs is-boxed">
       <ul>
@@ -40,5 +40,3 @@ class TabSwitcher extends React.Component<TabSwitcherProps> {
     </div>)
   }
 }
-
-export default TabSwitcher

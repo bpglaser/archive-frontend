@@ -10,13 +10,13 @@ import Settings from './Routes/Settings';
 import { User } from './Models/helpers';
 import { delay } from 'q';
 
-type State = {
-  loggedInAs: User | null,
-  loginDisplayMode: LoginDisplayMode,
-  loginLoading: boolean,
+interface State {
+  loggedInAs: User | null;
+  loginDisplayMode: LoginDisplayMode;
+  loginLoading: boolean;
 }
 
-class App extends React.Component<any, State> {
+export default class App extends React.Component<any, State> {
   constructor(props: any) {
     super(props)
     this.state = {
@@ -104,5 +104,3 @@ class App extends React.Component<any, State> {
     })
   }
 }
-
-export default App

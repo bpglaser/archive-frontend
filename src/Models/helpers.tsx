@@ -1,9 +1,9 @@
-export type ArchiveEntry = {
-  name: string,
-  owner: string,
-  uploaded: Date,
-  path: string,
-  tags: string[],
+export interface ArchiveEntry {
+  name: string;
+  owner: string;
+  uploaded: Date;
+  path: string;
+  tags: string[];
 }
 
 function createInstance(i: number): ArchiveEntry {
@@ -24,11 +24,11 @@ export function createMany(count: number): ArchiveEntry[] {
   return result
 }
 
-export type Project = {
-  id: number,
-  title: string,
-  description: string,
-  imageCount: number,
+export interface Project {
+  id: number;
+  title: string;
+  description: string;
+  imageCount: number;
 }
 
 export const generateMockProjects = () => {
@@ -47,6 +47,6 @@ export const generateMockProjects = () => {
   ]
 }
 
-export type User = {
-  username: string,
+export interface User {
+  username: string;
 }

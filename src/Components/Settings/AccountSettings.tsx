@@ -7,11 +7,11 @@ enum Validation {
   Valid,
 }
 
-type PasswordFieldProps = {
-  label: string,
-  superRef: React.RefObject<HTMLInputElement>,
-  onInput: React.FormEventHandler<HTMLInputElement>,
-  validation: Validation,
+interface PasswordFieldProps {
+  label: string;
+  superRef: React.RefObject<HTMLInputElement>;
+  onInput: React.FormEventHandler<HTMLInputElement>;
+  validation: Validation;
 }
 
 const PasswordField: React.FC<PasswordFieldProps> =
@@ -50,11 +50,11 @@ const PasswordField: React.FC<PasswordFieldProps> =
     </div>)
   }
 
-type State = {
-  awaitingUpdateResponse: boolean,
-  displayMessage: string | null,
-  displayMessageClassNameSuffix: string,
-  validation: Validation,
+interface State {
+  awaitingUpdateResponse: boolean;
+  displayMessage: string | null;
+  displayMessageClassNameSuffix: string;
+  validation: Validation;
 }
 
 export default class AccountSettings extends React.Component<any, State> {

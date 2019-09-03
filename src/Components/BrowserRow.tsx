@@ -1,11 +1,11 @@
 import React from "react";
 import { ArchiveEntry } from "../Models/helpers";
 
-type Props = {
-  active: boolean,
-  entry: ArchiveEntry,
-  onClickCallback: (entry: ArchiveEntry) => void,
-  rowNum: number,
+interface Props {
+  active: boolean;
+  entry: ArchiveEntry;
+  onClickCallback: (entry: ArchiveEntry) => void;
+  rowNum: number;
 }
 
 export default class BrowserRow extends React.Component<Props> {

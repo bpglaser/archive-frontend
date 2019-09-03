@@ -2,8 +2,8 @@ import * as React from "react";
 import { Link } from "react-router-dom";
 import { Project, generateMockProjects } from "../Models/helpers";
 
-type State = {
-  projects: Project[],
+interface State {
+  projects: Project[];
 }
 
 const ProjectComponent: React.FC<Project> =

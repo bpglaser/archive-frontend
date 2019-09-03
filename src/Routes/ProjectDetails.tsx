@@ -1,8 +1,8 @@
 import React from "react";
 import { RouteComponentProps } from "react-router";
 
-type Params = {
-  id: string, 
+interface Params {
+  id: string;
 }
 
 export default class ProjectDetails extends React.Component<RouteComponentProps<Params>> {

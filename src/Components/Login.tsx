@@ -6,12 +6,12 @@ export enum LoginDisplayMode {
   Register,
 }
 
-type Props = {
-  close: () => void,
-  loading: boolean,
-  login: () => void,
-  mode: LoginDisplayMode,
-  register: () => void,
+interface Props {
+  close: () => void;
+  loading: boolean;
+  login: () => void;
+  mode: LoginDisplayMode;
+  register: () => void;
 }
 
 export class Login extends React.Component<Props> {

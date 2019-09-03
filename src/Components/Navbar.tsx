@@ -2,15 +2,15 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { User } from '../Models/helpers';
 
-type Props = {
-  loggedInAs: User | null,
-  registerClicked: () => void,
-  logInClicked: () => void,
-  logOutClicked: () => void,
+interface Props {
+  loggedInAs: User | null;
+  registerClicked: () => void;
+  logInClicked: () => void;
+  logOutClicked: () => void;
 }
 
-type State = {
-  burgerState: boolean,
+interface State {
+  burgerState: boolean;
 }
 
 export default class Navbar extends React.Component<Props, State> {
