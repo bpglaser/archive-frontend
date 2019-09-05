@@ -1,15 +1,18 @@
+import { createHashHistory } from 'history';
+import { delay } from 'q';
 import React from 'react';
 import { HashRouter, Route } from 'react-router-dom';
 import './App.css';
-import Primary from './Routes/Primary';
-import Navbar from './Components/Navbar';
 import { Login, LoginDisplayMode } from './Components/Login';
-import Projects from './Routes/Projects';
-import ProjectDetails from './Routes/ProjectDetails';
-import Settings from './Routes/Settings';
+import Navbar from './Components/Navbar';
 import { User } from './Models/helpers';
-import { delay } from 'q';
 import Organizations from './Routes/Organizations';
+import Primary from './Routes/Primary';
+import ProjectDetails from './Routes/ProjectDetails';
+import Projects from './Routes/Projects';
+import Settings from './Routes/Settings';
+
+const history = createHashHistory()
 
 interface State {
   loggedInAs: User | null;
@@ -104,5 +107,6 @@ export default class App extends React.Component<any, State> {
     this.setState({
       loggedInAs: null,
     })
+    history.push('/')
   }
 }
