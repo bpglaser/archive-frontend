@@ -1,5 +1,5 @@
-import * as React from "react";
 import { delay } from "q";
+import * as React from "react";
 
 interface Props {
   close: () => void;

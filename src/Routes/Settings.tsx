@@ -1,5 +1,5 @@
 import * as React from "react";
-import { RouteComponentProps, Redirect } from "react-router";
+import { Redirect, RouteComponentProps } from "react-router";
 import AccountSettings from "../Components/Settings/AccountSettings";
 
 export default class Settings extends React.Component<RouteComponentProps> {

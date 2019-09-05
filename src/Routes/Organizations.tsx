@@ -1,8 +1,8 @@
+import { delay } from "q";
 import * as React from "react";
 import Loader from "../Components/Loader";
 import OrganizationCard from "../Components/OrganizationCard";
 import Organization from "../Models/Organization";
-import { delay } from "q";
 
 interface State {
   myOrganizations: Organization[] | null;

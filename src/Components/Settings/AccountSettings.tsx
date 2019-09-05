@@ -1,5 +1,5 @@
-import React from "react";
 import { delay } from "q";
+import React from "react";
 
 enum Validation {
   Undetermined,

@@ -1,10 +1,10 @@
-import React from 'react';
 import 'bulma';
+import Cookies from 'js-cookie';
+import React from 'react';
 import Browser from '../Components/Browser';
 import Preview from '../Components/Preview';
-import { createMany, ArchiveEntry } from '../Models/helpers';
-import Cookies from 'js-cookie';
 import TabSwitcher from '../Components/TabSwitcher';
+import { ArchiveEntry, createMany } from '../Models/helpers';
 
 interface State {
   activeEntry: ArchiveEntry;

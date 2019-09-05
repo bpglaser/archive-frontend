@@ -1,8 +1,8 @@
 import React from "react";
 import { ArchiveEntry } from "../Models/helpers";
 import BrowserRow from "./BrowserRow";
-import Pager from "./Pager";
 import Loader from "./Loader";
+import Pager from "./Pager";
 
 interface Props {
   activeEntry: ArchiveEntry;
