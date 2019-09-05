@@ -6,6 +6,16 @@
     visibility: hidden;
 }
 
+.organization-card {
+    margin: 1em;
+    width: 400px;
+}
+
+.organization-cards {
+    display: flex;
+    flex-flow: row wrap;
+}
+
 .project-preview-card {
     margin: 1em;
     max-width: 25em;

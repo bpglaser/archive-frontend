@@ -9,6 +9,7 @@ import ProjectDetails from './Routes/ProjectDetails';
 import Settings from './Routes/Settings';
 import { User } from './Models/helpers';
 import { delay } from 'q';
+import Organizations from './Routes/Organizations';
 
 interface State {
   loggedInAs: User | null;
@@ -39,6 +40,7 @@ export default class App extends React.Component<any, State> {
         <Route path="/projects" exact component={Projects} />
         <Route path="/projects/:id" component={ProjectDetails} />
         <Route path="/settings" exact component={Settings} />
+        <Route path="/organizations" exact component={Organizations} />
 
         {this.state.loginDisplayMode !== LoginDisplayMode.Hidden &&
           <Login

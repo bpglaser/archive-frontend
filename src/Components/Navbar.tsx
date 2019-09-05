@@ -45,6 +45,7 @@ export default class Navbar extends React.Component<Props, State> {
         <div className="navbar-start">
           <Link to="/" className="navbar-item">Home</Link>
           <Link to="/projects" className="navbar-item">My Projects</Link>
+          <Link to="/organizations" className="navbar-item">Organizations</Link>
           <Link to="/settings" className="navbar-item">Settings</Link>
         </div>
 
