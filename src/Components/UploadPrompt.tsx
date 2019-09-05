@@ -8,7 +8,8 @@ interface Props {
 
 interface State {
   disabled: boolean;
-  selectedFile: string;
+  errorMessage: string | null;
+  selectedFile: string | null;
 }
 
 export default class UploadPrompt extends React.Component<Props, State> {
@@ -23,7 +24,8 @@ export default class UploadPrompt extends React.Component<Props, State> {
     this.noteTextareaRef = React.createRef()
     this.state = {
       disabled: false,
-      selectedFile: ""
+      errorMessage: null,
+      selectedFile: null,
     }
   }
 
@@ -58,7 +60,7 @@ export default class UploadPrompt extends React.Component<Props, State> {
               </span>
 
               <span className="file-name">
-                {this.state.selectedFile}
+                {this.state.selectedFile !== null ? this.state.selectedFile : ""}
               </span>
             </label>
           </div>
@@ -91,6 +93,10 @@ export default class UploadPrompt extends React.Component<Props, State> {
             onClick={this.props.close}>
             Cancel
           </button>
+
+          {this.state.errorMessage !== null &&
+            <p className="help is-danger">Error: {this.state.errorMessage}</p>
+          }
         </footer>
       </div>
     </div>)
@@ -103,8 +109,9 @@ export default class UploadPrompt extends React.Component<Props, State> {
   }
 
   displayError = (error: any) => {
-    // TODO handle error
-    console.log(error)
+    this.setState({
+      errorMessage: String(error),
+    })
   }
 
   enableInteractivity = () => {
