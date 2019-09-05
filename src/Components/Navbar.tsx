@@ -44,9 +44,14 @@ export default class Navbar extends React.Component<Props, State> {
       <div className={this.modifyClassName("navbar-menu")}>
         <div className="navbar-start">
           <Link to="/" className="navbar-item">Home</Link>
-          <Link to="/projects" className="navbar-item">My Projects</Link>
-          <Link to="/organizations" className="navbar-item">Organizations</Link>
-          <Link to="/settings" className="navbar-item">Settings</Link>
+
+          {this.props.loggedInAs !== null &&
+            <Link to="/projects" className="navbar-item">My Projects</Link>
+          }
+
+          {this.props.loggedInAs !== null &&
+            <Link to="/organizations" className="navbar-item">Organizations</Link>
+          }
         </div>
 
         <div className="navbar-end">
