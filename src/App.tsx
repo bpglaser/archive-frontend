@@ -1,5 +1,4 @@
 import { createHashHistory } from 'history';
-import { delay } from 'q';
 import React from 'react';
 import { HashRouter, Route } from 'react-router-dom';
 import './App.css';
@@ -16,8 +15,7 @@ const history = createHashHistory()
 
 interface State {
   loggedInAs: User | null;
-  loginDisplayMode: LoginDisplayMode;
-  loginLoading: boolean;
+  loginDisplayMode: LoginDisplayMode | null;
 }
 
 export default class App extends React.Component<any, State> {
@@ -25,8 +23,7 @@ export default class App extends React.Component<any, State> {
     super(props)
     this.state = {
       loggedInAs: null,
-      loginDisplayMode: LoginDisplayMode.Hidden,
-      loginLoading: false,
+      loginDisplayMode: null,
     }
   }
 
@@ -45,13 +42,11 @@ export default class App extends React.Component<any, State> {
         <Route path="/settings" exact component={Settings} />
         <Route path="/organizations" exact component={Organizations} />
 
-        {this.state.loginDisplayMode !== LoginDisplayMode.Hidden &&
+        {this.state.loginDisplayMode !== null &&
           <Login
             close={this.closeLoginPrompt}
-            loading={this.state.loginLoading}
-            login={this.loginCompleted}
-            mode={this.state.loginDisplayMode}
-            register={this.registerCompleted} />
+            loginSuccess={this.loginCompleted}
+            mode={this.state.loginDisplayMode} />
         }
       </HashRouter>
     </div>)
@@ -59,28 +54,21 @@ export default class App extends React.Component<any, State> {
 
   closeLoginPrompt = () => {
     this.setState({
-      loginDisplayMode: LoginDisplayMode.Hidden,
-    })
+      loginDisplayMode: null,
+    });
   }
 
   registerClicked = () => {
     this.setState({
       loginDisplayMode: LoginDisplayMode.Register,
-    })
+    });
   }
 
   registerCompleted = async () => {
     this.setState({
-      loginLoading: true,
-    })
-
-    await delay(1000)
-
-    this.setState({
       loggedInAs: { username: "ExampleUser01" },
-      loginDisplayMode: LoginDisplayMode.Hidden,
-      loginLoading: false,
-    })
+      loginDisplayMode: null,
+    });
   }
 
   logInClicked = () => {
@@ -89,24 +77,19 @@ export default class App extends React.Component<any, State> {
     })
   }
 
-  loginCompleted = async () => {
+  loginCompleted = async (user: User, token: string) => {
     this.setState({
-      loginLoading: true,
-    })
-
-    await delay(1000)
-
-    this.setState({
-      loggedInAs: { username: "ExampleUser01" },
-      loginDisplayMode: LoginDisplayMode.Hidden,
-      loginLoading: false,
-    })
+      loggedInAs: { username: user.username },
+      loginDisplayMode: null,
+    });
   }
 
   logOutClicked = () => {
     this.setState({
       loggedInAs: null,
-    })
-    history.push('/')
+    });
+
+    // Redirect to root.
+    history.push('/');
   }
 }
