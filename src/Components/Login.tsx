@@ -1,6 +1,5 @@
 import React from 'react';
-import * as Backend from '../Data/Backend';
-import { User } from '../Data/Backend';
+import { Backend, User } from '../Data/Backend';
 import { vaildEmail, validPassword } from '../Helpers';
 import ValidationField from './ValidationField';
 
@@ -10,6 +9,7 @@ export enum LoginDisplayMode {
 }
 
 interface Props {
+  backend: Backend;
   close: () => void;
   loginSuccess: (user: User, token: string) => void;
   mode: LoginDisplayMode;
@@ -166,7 +166,7 @@ export class Login extends React.Component<Props, State> {
         });
 
         try {
-          const { user, token } = await Backend.login(email, password);
+          const { user, token } = await this.props.backend.login(email, password);
 
           this.setState({
             loading: false,
@@ -197,7 +197,7 @@ export class Login extends React.Component<Props, State> {
         });
 
         try {
-          const { user, token } = await Backend.register(email, password);
+          const { user, token } = await this.props.backend.register(email, password);
 
           this.setState({
             loading: false,

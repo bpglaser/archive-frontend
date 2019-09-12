@@ -1,10 +1,11 @@
 import { createHashHistory } from 'history';
+import Cookies from 'js-cookie';
 import React from 'react';
 import { HashRouter, Route } from 'react-router-dom';
 import './App.css';
-import { DebugToggle } from './Components/DebugToggle';
 import { Login, LoginDisplayMode } from './Components/Login';
 import Navbar from './Components/Navbar';
+import { Backend, MockBackend } from './Data/Backend';
 import { User } from './Models/helpers';
 import Organizations from './Routes/Organizations';
 import Primary from './Routes/Primary';
@@ -15,6 +16,7 @@ import Settings from './Routes/Settings';
 const history = createHashHistory()
 
 interface State {
+  backend: Backend;
   loggedInAs: User | null;
   loginDisplayMode: LoginDisplayMode | null;
 }
@@ -23,9 +25,15 @@ export default class App extends React.Component<any, State> {
   constructor(props: any) {
     super(props)
     this.state = {
+      backend: new MockBackend(500),
       loggedInAs: null,
       loginDisplayMode: null,
     }
+  }
+
+  componentDidMount() {
+    const foo = Cookies.getJSON('asdf');
+    console.log(foo);
   }
 
   render() {
@@ -46,10 +54,10 @@ export default class App extends React.Component<any, State> {
         {this.state.loginDisplayMode !== null &&
           <Login
             close={this.closeLoginPrompt}
+            backend={this.state.backend}
             loginSuccess={this.loginCompleted}
             mode={this.state.loginDisplayMode} />
         }
-        <DebugToggle fields={[{ labelValue:"test"}]} />
       </HashRouter>
     </div>)
   }
