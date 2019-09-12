@@ -2,6 +2,7 @@ import { createHashHistory } from 'history';
 import React from 'react';
 import { HashRouter, Route } from 'react-router-dom';
 import './App.css';
+import { DebugToggle } from './Components/DebugToggle';
 import { Login, LoginDisplayMode } from './Components/Login';
 import Navbar from './Components/Navbar';
 import { User } from './Models/helpers';
@@ -48,6 +49,7 @@ export default class App extends React.Component<any, State> {
             loginSuccess={this.loginCompleted}
             mode={this.state.loginDisplayMode} />
         }
+        <DebugToggle fields={[{ labelValue:"test"}]} />
       </HashRouter>
     </div>)
   }
