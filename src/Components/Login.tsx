@@ -2,6 +2,7 @@ import React from 'react';
 import * as Backend from '../Data/Backend';
 import { User } from '../Data/Backend';
 import { vaildEmail, validPassword } from '../Helpers';
+import ValidationField from './ValidationField';
 
 export enum LoginDisplayMode {
   Login,
@@ -52,81 +53,36 @@ export class Login extends React.Component<Props, State> {
         </header>
 
         <section className="modal-card-body">
-          <div className="field">
-            <p className={this.state.emailInvalid ? "control has-icons-left has-icons-right" : "control has-icons-left"}>
-              <input
-                className={this.state.emailInvalid ? "input is-danger" : "input"}
-                type="email"
-                placeholder="Email"
-                disabled={this.state.loading}
-                ref={this.emailRef} />
+          <ValidationField
+            disabled={this.state.loading}
+            innerInputRef={this.emailRef}
+            invalid={this.state.emailInvalid}
+            invalidMessage="Invalid email address"
+            leftIconName="fa-envelope"
+            inputPlaceholder="Email"
+            rightIconName="fa-exclamation-triangle"
+            inputType="email" />
 
-              <span className="icon is-small is-left">
-                <i className="fas fa-envelope"></i>
-              </span>
-
-              {this.state.emailInvalid &&
-                <span className="icon is-small is-right">
-                  <i className="fas fa-exclamation-triangle"></i>
-                </span>
-              }
-            </p>
-
-            {this.state.emailInvalid &&
-              <p className="help is-danger">Invalid email address</p>
-            }
-          </div>
-
-          <div className="field">
-            <p className={this.state.passwordInvalid ? "control has-icons-left has-icons-right" : "control has-icons-left"}>
-              <input
-                className={this.state.passwordInvalid ? "input is-danger" : "input"}
-                type="password"
-                placeholder="Password"
-                disabled={this.state.loading}
-                ref={this.passwordRef} />
-
-              <span className="icon is-small is-left">
-                <i className="fas fa-lock"></i>
-              </span>
-
-              {this.state.passwordInvalid &&
-                <span className="icon is-small is-right">
-                  <i className="fas fa-exclamation-triangle"></i>
-                </span>
-              }
-            </p>
-
-            {this.state.passwordInvalid &&
-              <p className="help is-danger">Invalid password</p>
-            }
-          </div>
+          <ValidationField
+            disabled={this.state.loading}
+            innerInputRef={this.passwordRef}
+            invalid={this.state.passwordInvalid}
+            invalidMessage="Invalid password"
+            leftIconName="fa-lock"
+            inputPlaceholder="Password"
+            rightIconName="fa-exclamation-triangle"
+            inputType="password" />
 
           {this.props.mode === LoginDisplayMode.Register &&
-            <div className="field">
-              <p className={this.state.passwordsMatch ? "control has-icons-left" : "control has-icons-left has-icons-right"}>
-                <input
-                  className={this.state.passwordsMatch ? "input" : "input is-danger"}
-                  type="password"
-                  placeholder="Confirm password"
-                  disabled={this.state.loading}
-                  ref={this.passwordConfirmationRef} />
-
-                <span className="icon is-small is-left">
-                  <i className="fas fa-lock"></i>
-                </span>
-
-                {!this.state.passwordsMatch &&
-                  <span className="icon is-small is-right">
-                    <i className="fas fa-exclamation-triangle"></i>
-                  </span>
-                }
-              </p>
-
-              {!this.state.passwordsMatch &&
-                <p className="help is-danger">Passwords must match</p>
-              }
-            </div>
+            <ValidationField
+              disabled={this.state.loading}
+              innerInputRef={this.passwordConfirmationRef}
+              invalid={!this.state.passwordsMatch}
+              invalidMessage="Passwords must match"
+              leftIconName="fa-lock"
+              inputPlaceholder="Confirm password"
+              rightIconName="fa-exclamation-triangle"
+              inputType="password" />
           }
         </section>
 
