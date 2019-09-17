@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { User } from '../Models/helpers';
+import { User } from '../Data/Backend';
 
 interface Props {
   loggedInAs: User | null;
@@ -57,7 +57,7 @@ export default class Navbar extends React.Component<Props, State> {
         <div className="navbar-end">
           {this.props.loggedInAs !== null &&
             <Link to="/settings" className="navbar-item">
-              {this.props.loggedInAs.username}
+              {this.props.loggedInAs.email}
             </Link>
           }
 

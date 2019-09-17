@@ -5,8 +5,8 @@ import { HashRouter, Route } from 'react-router-dom';
 import './App.css';
 import { Login, LoginDisplayMode } from './Components/Login';
 import Navbar from './Components/Navbar';
-import { Backend, MockBackend } from './Data/Backend';
-import { User } from './Models/helpers';
+import { Backend, URLBackend, User } from './Data/Backend';
+import { readTokenPayload } from './Helpers';
 import Organizations from './Routes/Organizations';
 import Primary from './Routes/Primary';
 import ProjectDetails from './Routes/ProjectDetails';
@@ -19,21 +19,28 @@ interface State {
   backend: Backend;
   loggedInAs: User | null;
   loginDisplayMode: LoginDisplayMode | null;
+  token: string | null;
 }
 
 export default class App extends React.Component<any, State> {
   constructor(props: any) {
     super(props)
-    this.state = {
-      backend: new MockBackend(500),
-      loggedInAs: null,
-      loginDisplayMode: null,
-    }
-  }
 
-  componentDidMount() {
-    const foo = Cookies.getJSON('asdf');
-    console.log(foo);
+    const cookieToken = Cookies.get('login-token');
+
+    let token = null;
+    let user = null;
+    if (cookieToken !== undefined) {
+      token = cookieToken;
+      user = readTokenPayload(token);
+    }
+
+    this.state = {
+      backend: new URLBackend('https://robinsonobservatory.org/'),
+      loggedInAs: user,
+      loginDisplayMode: null,
+      token: token,
+    }
   }
 
   render() {
@@ -74,13 +81,6 @@ export default class App extends React.Component<any, State> {
     });
   }
 
-  registerCompleted = async () => {
-    this.setState({
-      loggedInAs: { username: "ExampleUser01" },
-      loginDisplayMode: null,
-    });
-  }
-
   logInClicked = () => {
     this.setState({
       loginDisplayMode: LoginDisplayMode.Login,
@@ -88,18 +88,28 @@ export default class App extends React.Component<any, State> {
   }
 
   loginCompleted = async (user: User, token: string) => {
+    Cookies.set('login-token', token);
     this.setState({
-      loggedInAs: { username: user.username },
+      loggedInAs: user,
+      token: token,
       loginDisplayMode: null,
     });
   }
 
-  logOutClicked = () => {
-    this.setState({
-      loggedInAs: null,
-    });
+  logOutClicked = async () => {
+    if (this.state.token !== null) {
+      if (await this.state.backend.logout(this.state.token)) {
+        Cookies.remove('login-token');
+        this.setState({
+          loggedInAs: null,
+          token: null,
+        });
 
-    // Redirect to root.
-    history.push('/');
+        // Redirect to root.
+        history.push('/');
+      } else {
+        // TODO failed to logout; notify user
+      }
+    }
   }
 }

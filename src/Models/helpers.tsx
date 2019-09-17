@@ -46,7 +46,3 @@ export const generateMockProjects = () => {
     { id: 10, title: "Hello world", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris scelerisque, mi id molestie faucibus, eros erat consequat mi, ut accumsan sem nibh vitae augue. Aliquam.", imageCount: 10 },
   ]
 }
-
-export interface User {
-  username: string;
-}

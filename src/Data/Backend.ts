@@ -1,35 +1,61 @@
-import Axios from "axios";
-import { delay } from "q";
+import Axios from 'axios';
+import { delay } from 'q';
+import { readTokenPayload } from '../Helpers';
+import { OK } from 'http-status-codes';
 
 export interface User {
   userID: string;
-  username: string;
+  email: string;
 }
 
 export interface Backend {
   login: (email: string, password: string) => Promise<{ user: User, token: string }>;
   register: (email: string, password: string) => Promise<{ user: User, token: string }>;
+  logout: (token: string) => Promise<boolean>;
 }
 
 export class URLBackend implements Backend {
-  base: string;
+  base: string | undefined;
+  mock: MockBackend;
 
-  constructor(base: string) {
+  constructor(base?: string) {
     this.base = base;
+    this.mock = new MockBackend(0);
   }
 
   login = async (email: string, password: string) => {
-    const url = new URL('/api/login', this.base);
+    const url = new URL('/api/users/login', this.base);
     const data = { email: email, password: password };
     const response = await Axios.post(url.toString(), data);
-    return response.data;
+
+    if (response.data.token === undefined) {
+      throw new Error('Server returned invalid payload.');
+    }
+
+    const token: string = response.data.token;
+    const user = readTokenPayload(token);
+    return { user: user, token: token };
   }
 
   register = async (email: string, password: string) => {
-    const url = new URL('/api/register', this.base);
+    const url = new URL('/api/users/create', this.base);
     const data = { email: email, password: password };
     const response = await Axios.post(url.toString(), data);
-    return response.data;
+
+    if (response.data.token === undefined) {
+      throw new Error('Server returned invalid payload.');
+    }
+
+    const token: string = response.data.token;
+    const user = readTokenPayload(token);
+    return { user: user, token: token };
+  }
+
+  logout = async (token: string) => {
+    const url = new URL('/api/users/logout', this.base);
+    const data = { token: token };
+    const response = await Axios.post(url.toString(), data);
+    return response.status === OK;
   }
 }
 
@@ -46,7 +72,7 @@ export class MockBackend implements Backend {
     return {
       user: {
         userID: "1234567890",
-        username: email,
+        email: email,
       },
       token: "abc123",
     };
@@ -58,9 +84,14 @@ export class MockBackend implements Backend {
     return {
       user: {
         userID: "1234567890",
-        username: email,
+        email: email,
       },
       token: "abc123",
     };
+  }
+
+  logout = async (token: string) => {
+    await delay(this.sleepDuration);
+    return true;
   }
 }
