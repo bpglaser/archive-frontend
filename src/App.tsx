@@ -55,7 +55,7 @@ export default class App extends React.Component<any, State> {
         <Route path="/" exact component={Primary} />
         <Route path="/projects" exact component={Projects} />
         <Route path="/projects/:id" component={ProjectDetails} />
-        <Route path="/settings" exact component={Settings} />
+        <Route path="/settings" exact render={(props) => <Settings {...props} backend={this.state.backend} token={this.state.token} />} />
         <Route path="/organizations" exact component={Organizations} />
 
         {this.state.loginDisplayMode !== null &&

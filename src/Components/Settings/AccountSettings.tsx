@@ -1,5 +1,6 @@
-import { delay } from "q";
+import { BAD_REQUEST, INTERNAL_SERVER_ERROR, UNAUTHORIZED } from "http-status-codes";
 import React from "react";
+import { Backend } from "../../Data/Backend";
 
 enum Validation {
   Undetermined,
@@ -16,11 +17,12 @@ interface PasswordFieldProps {
 
 const PasswordField: React.FC<PasswordFieldProps> =
   ({ label, superRef: ref, onInput, validation }) => {
-    let divClassName = "control has-icons-left"
-    let inputClassName = "input"
+    let divClassName = "control has-icons-left";
+    let inputClassName = "input";
+
     if (validation === Validation.Invalid) {
-      inputClassName += " is-danger"
-      divClassName += " has-icons-right"
+      inputClassName += " is-danger";
+      divClassName += " has-icons-right";
     }
 
     return (<div className="field">
@@ -50,6 +52,11 @@ const PasswordField: React.FC<PasswordFieldProps> =
     </div>)
   }
 
+interface Props {
+  backend: Backend;
+  token: string;
+}
+
 interface State {
   awaitingUpdateResponse: boolean;
   displayMessage: string | null;
@@ -57,22 +64,24 @@ interface State {
   validation: Validation;
 }
 
-export default class AccountSettings extends React.Component<any, State> {
+export default class AccountSettings extends React.Component<Props, State> {
   oldPasswordField: React.RefObject<HTMLInputElement>
   newPasswordField: React.RefObject<HTMLInputElement>
   confirmNewPasswordField: React.RefObject<HTMLInputElement>
 
-  constructor(props: any) {
+  constructor(props: Props) {
     super(props)
-    this.oldPasswordField = React.createRef()
-    this.newPasswordField = React.createRef()
-    this.confirmNewPasswordField = React.createRef()
+
+    this.oldPasswordField = React.createRef();
+    this.newPasswordField = React.createRef();
+    this.confirmNewPasswordField = React.createRef();
+
     this.state = {
       awaitingUpdateResponse: false,
       displayMessage: null,
       displayMessageClassNameSuffix: "",
       validation: Validation.Undetermined,
-    }
+    };
   }
 
   render() {
@@ -121,41 +130,84 @@ export default class AccountSettings extends React.Component<any, State> {
   }
 
   validateNewPasswordFields = () => {
-    return (this.newPasswordField.current != null
-      && this.confirmNewPasswordField.current != null
-      && this.newPasswordField.current.value === this.confirmNewPasswordField.current.value)
+    return (this.newPasswordField.current !== null
+      && this.confirmNewPasswordField.current !== null
+      && this.newPasswordField.current.value === this.confirmNewPasswordField.current.value);
   }
 
   newPasswordUpdated = (event: React.FormEvent<HTMLInputElement>) => {
     if (this.validateNewPasswordFields()) {
       this.setState({
         validation: Validation.Valid
-      })
+      });
     } else {
       this.setState({
         validation: Validation.Invalid
-      })
+      });
     }
   }
 
+  clearPasswordFields = () => {
+    if (this.oldPasswordField.current !== null)
+      this.oldPasswordField.current.value = "";
+    if (this.newPasswordField.current !== null)
+      this.newPasswordField.current.value = "";
+    if (this.confirmNewPasswordField.current !== null)
+      this.confirmNewPasswordField.current.value = "";
+    this.setState({ validation: Validation.Undetermined });
+  }
+
   updateButtonOnClick = async (event: React.FormEvent<HTMLButtonElement>) => {
+    if (!this.validateNewPasswordFields()) {
+      return;
+    }
+
+    const oldPassword = this.oldPasswordField.current!.value;
+    const newPassword = this.newPasswordField.current!.value;
+
     this.setState({
       awaitingUpdateResponse: true,
-    })
+    });
 
-    await delay(1000)
+    try {
+      await this.props.backend.updatePassword(this.props.token, oldPassword, newPassword);
 
-    if (this.oldPasswordField.current !== null)
-      this.oldPasswordField.current.value = ""
-    if (this.newPasswordField.current !== null)
-      this.newPasswordField.current.value = ""
-    if (this.confirmNewPasswordField.current !== null)
-      this.confirmNewPasswordField.current.value = ""
+      this.clearPasswordFields();
 
-    this.setState({
-      awaitingUpdateResponse: false,
-      displayMessage: "Password updated successfully!",
-      displayMessageClassNameSuffix: " is-success",
-    })
+      this.setState({
+        displayMessage: "Password updated successfully!",
+        displayMessageClassNameSuffix: " is-success",
+      });
+    } catch (err) {
+      if (err.response) {
+        switch (err.response.status) {
+          case BAD_REQUEST:
+            // The token is invalid
+            // TODO redirect to home and logout
+            break;
+          case INTERNAL_SERVER_ERROR:
+            // TODO
+            break;
+          case UNAUTHORIZED:
+            // Wrong old password
+            this.setState({
+              displayMessage: 'Old password incorrect.',
+              displayMessageClassNameSuffix: ' is-danger',
+            });
+            this.clearPasswordFields();
+            return;
+        }
+      }
+
+      console.log('Error encountered while updating password: ' + err);
+      this.setState({
+        displayMessage: 'An error was encountered.',
+        displayMessageClassNameSuffix: ' is-danger',
+      });
+    } finally {
+      this.setState({
+        awaitingUpdateResponse: false,
+      });
+    }
   }
 }

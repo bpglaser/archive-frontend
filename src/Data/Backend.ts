@@ -1,7 +1,7 @@
 import Axios from 'axios';
+import { OK } from 'http-status-codes';
 import { delay } from 'q';
 import { readTokenPayload } from '../Helpers';
-import { OK } from 'http-status-codes';
 
 export interface User {
   userID: string;
@@ -12,6 +12,7 @@ export interface Backend {
   login: (email: string, password: string) => Promise<{ user: User, token: string }>;
   register: (email: string, password: string) => Promise<{ user: User, token: string }>;
   logout: (token: string) => Promise<boolean>;
+  updatePassword: (token: string, oldPassword: string, newPassword: string) => Promise<void>;
 }
 
 export class URLBackend implements Backend {
@@ -57,6 +58,12 @@ export class URLBackend implements Backend {
     const response = await Axios.post(url.toString(), data);
     return response.status === OK;
   }
+
+  updatePassword = async (token: string, oldPassword: string, newPassword: string) => {
+    const url = new URL('/api/users/password', this.base);
+    const data = { old: oldPassword, new: newPassword };
+    await Axios.post(url.toString(), data, { headers: { Authorization: 'Bearer ' + token } });
+  }
 }
 
 export class MockBackend implements Backend {
@@ -93,5 +100,9 @@ export class MockBackend implements Backend {
   logout = async (token: string) => {
     await delay(this.sleepDuration);
     return true;
+  }
+
+  updatePassword = async (token: string, oldPassword: string, newPassword: string) => {
+    await delay(this.sleepDuration);
   }
 }

@@ -1,14 +1,24 @@
 import * as React from "react";
 import { Redirect, RouteComponentProps } from "react-router";
 import AccountSettings from "../Components/Settings/AccountSettings";
+import { Backend } from "../Data/Backend";
 
-export default class Settings extends React.Component<RouteComponentProps> {
+interface Props extends RouteComponentProps {
+  backend: Backend;
+  token: string | null;
+}
+
+export default class Settings extends React.Component<Props> {
   render() {
-    let params = new URLSearchParams(this.props.location.search)
-    let details
+    if (this.props.token === null) {
+      return <Redirect to="/" />;
+    }
+
+    const params = new URLSearchParams(this.props.location.search);
+    let details;
     switch (params.get("page")) {
       case "account":
-        details = <AccountSettings />
+        details = <AccountSettings backend={this.props.backend} token={this.props.token} />
         break;
       default:
         return <Redirect to="/settings?page=account" />
