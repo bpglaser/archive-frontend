@@ -12,6 +12,7 @@ import Primary from './Routes/Primary';
 import ProjectDetails from './Routes/ProjectDetails';
 import Projects from './Routes/Projects';
 import Settings from './Routes/Settings';
+import Invite from './Routes/Invite';
 
 const history = createHashHistory()
 
@@ -57,6 +58,7 @@ export default class App extends React.Component<any, State> {
         <Route path="/projects/:id" component={ProjectDetails} />
         <Route path="/settings" exact render={(props) => <Settings {...props} backend={this.state.backend} token={this.state.token} />} />
         <Route path="/organizations" exact component={Organizations} />
+        <Route path="/invite" exact render={(props) => <Invite {...props} backend={this.state.backend} token={this.state.token} />} />
 
         {this.state.loginDisplayMode !== null &&
           <Login

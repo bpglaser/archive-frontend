@@ -24,13 +24,6 @@ export function createMany(count: number): ArchiveEntry[] {
   return result
 }
 
-export interface Project {
-  id: number;
-  title: string;
-  description: string;
-  imageCount: number;
-}
-
 export const generateMockProjects = () => {
   return [
     { id: 0, title: "Hello world", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris scelerisque, mi id molestie faucibus, eros erat consequat mi, ut accumsan sem nibh vitae augue. Aliquam.", imageCount: 10 },

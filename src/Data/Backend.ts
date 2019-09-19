@@ -2,10 +2,16 @@ import Axios from 'axios';
 import { OK } from 'http-status-codes';
 import { delay } from 'q';
 import { readTokenPayload } from '../Helpers';
+import Project from '../Models/Project';
 
 export interface User {
   userID: string;
   email: string;
+}
+
+export interface InviteDetails {
+  inviter: User;
+  project: Project;
 }
 
 export interface Backend {
@@ -13,6 +19,10 @@ export interface Backend {
   register: (email: string, password: string) => Promise<{ user: User, token: string }>;
   logout: (token: string) => Promise<boolean>;
   updatePassword: (token: string, oldPassword: string, newPassword: string) => Promise<void>;
+
+  invite: (token: string, key: string) => Promise<InviteDetails>;
+  acceptInvite: (token: string, key: string) => Promise<void>;
+  declineInvite: (token: string, key: string) => Promise<void>;
 }
 
 export class URLBackend implements Backend {
@@ -64,6 +74,18 @@ export class URLBackend implements Backend {
     const data = { old: oldPassword, new: newPassword };
     await Axios.post(url.toString(), data, { headers: { Authorization: 'Bearer ' + token } });
   }
+
+  invite = async (token: string, key: string) => {
+    return await new MockBackend(1000).invite(token, key);
+  }
+
+  acceptInvite = async (token: string, key: string) => {
+    await new MockBackend(1000).acceptInvite(token, key);
+  }
+
+  declineInvite = async (token: string, key: string) => {
+    await new MockBackend(1000).declineInvite(token, key);
+  }
 }
 
 export class MockBackend implements Backend {
@@ -103,6 +125,22 @@ export class MockBackend implements Backend {
   }
 
   updatePassword = async (token: string, oldPassword: string, newPassword: string) => {
+    await delay(this.sleepDuration);
+  }
+
+  invite = async (token: string, key: string) => {
+    await delay(this.sleepDuration);
+    return {
+      inviter: { userID: 'brad-iD', email: 'brad@foo.com' },
+      project: { id: 1234, title: 'Example Project', description: 'Everyone is having fun lol', imageCount: 1 },
+    };
+  }
+
+  acceptInvite = async (token: string, key: string) => {
+    await delay(this.sleepDuration);
+  }
+
+  declineInvite = async (token: string, key: string) => {
     await delay(this.sleepDuration);
   }
 }
