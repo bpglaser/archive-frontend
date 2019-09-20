@@ -64,15 +64,16 @@ export class URLBackend implements Backend {
 
   logout = async (token: string) => {
     const url = new URL('/api/users/logout', this.base);
-    const data = { token: token };
-    const response = await Axios.post(url.toString(), data);
+    const config = this.createAuthorizationConfig(token);
+    const response = await Axios.post(url.toString(), null, config);
     return response.status === OK;
   }
 
   updatePassword = async (token: string, oldPassword: string, newPassword: string) => {
     const url = new URL('/api/users/password', this.base);
     const data = { old: oldPassword, new: newPassword };
-    await Axios.post(url.toString(), data, { headers: { Authorization: 'Bearer ' + token } });
+    const config = this.createAuthorizationConfig(token);
+    await Axios.post(url.toString(), data, config);
   }
 
   invite = async (token: string, key: string) => {
@@ -85,6 +86,10 @@ export class URLBackend implements Backend {
 
   declineInvite = async (token: string, key: string) => {
     await new MockBackend(1000).declineInvite(token, key);
+  }
+
+  createAuthorizationConfig = (token: string) => {
+    return { headers: { Authorization: 'Bearer ' + token } };
   }
 }
 
