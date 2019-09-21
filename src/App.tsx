@@ -1,18 +1,18 @@
 import { createHashHistory } from 'history';
 import Cookies from 'js-cookie';
 import React from 'react';
-import { HashRouter, Route } from 'react-router-dom';
+import { BrowserRouter, Route } from 'react-router-dom';
 import './App.css';
 import { Login, LoginDisplayMode } from './Components/Login';
 import Navbar from './Components/Navbar';
 import { Backend, URLBackend, User } from './Data/Backend';
 import { readTokenPayload } from './Helpers';
+import Invite from './Routes/Invite';
 import Organizations from './Routes/Organizations';
 import Primary from './Routes/Primary';
 import ProjectDetails from './Routes/ProjectDetails';
 import Projects from './Routes/Projects';
 import Settings from './Routes/Settings';
-import Invite from './Routes/Invite';
 
 const history = createHashHistory()
 
@@ -46,7 +46,7 @@ export default class App extends React.Component<any, State> {
 
   render() {
     return (<div className="container">
-      <HashRouter>
+      <BrowserRouter>
         <Navbar
           loggedInAs={this.state.loggedInAs}
           registerClicked={this.registerClicked}
@@ -67,7 +67,7 @@ export default class App extends React.Component<any, State> {
             loginSuccess={this.loginCompleted}
             mode={this.state.loginDisplayMode} />
         }
-      </HashRouter>
+      </BrowserRouter>
     </div>)
   }
 
