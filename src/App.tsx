@@ -100,18 +100,21 @@ export default class App extends React.Component<any, State> {
 
   logOutClicked = async () => {
     if (this.state.token !== null) {
-      if (await this.state.backend.logout(this.state.token)) {
-        Cookies.remove('login-token');
-        this.setState({
-          loggedInAs: null,
-          token: null,
-        });
-
-        // Redirect to root.
-        history.push('/');
-      } else {
-        // TODO failed to logout; notify user
+      try {
+        await this.state.backend.logout(this.state.token);
+      } catch (err) {
+        console.log('Error while logging out. Just clearing the cookies.');
+        console.log(err);
       }
+
+      Cookies.remove('login-token');
+      this.setState({
+        loggedInAs: null,
+        token: null,
+      });
+
+      // Redirect to root.
+      history.push('/');
     }
   }
 }

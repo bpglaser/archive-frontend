@@ -40,7 +40,7 @@ export default class Projects extends React.Component<any, State> {
       <div className="projects">
         {
           this.state.projects.map((project, i) =>
-            <ProjectPreviewCard project={project} />)
+            <ProjectPreviewCard project={project} key={i} />)
         }
       </div>
 

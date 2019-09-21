@@ -1,5 +1,4 @@
 import Axios from 'axios';
-import { OK } from 'http-status-codes';
 import { delay } from 'q';
 import { readTokenPayload } from '../Helpers';
 import Project from '../Models/Project';
@@ -17,7 +16,7 @@ export interface InviteDetails {
 export interface Backend {
   login: (email: string, password: string) => Promise<{ user: User, token: string }>;
   register: (email: string, password: string) => Promise<{ user: User, token: string }>;
-  logout: (token: string) => Promise<boolean>;
+  logout: (token: string) => Promise<void>;
   updatePassword: (token: string, oldPassword: string, newPassword: string) => Promise<void>;
 
   invite: (token: string, key: string) => Promise<InviteDetails>;
@@ -65,8 +64,7 @@ export class URLBackend implements Backend {
   logout = async (token: string) => {
     const url = new URL('/api/users/logout', this.base);
     const config = this.createAuthorizationConfig(token);
-    const response = await Axios.post(url.toString(), null, config);
-    return response.status === OK;
+    await Axios.post(url.toString(), null, config);
   }
 
   updatePassword = async (token: string, oldPassword: string, newPassword: string) => {
@@ -126,7 +124,6 @@ export class MockBackend implements Backend {
 
   logout = async (token: string) => {
     await delay(this.sleepDuration);
-    return true;
   }
 
   updatePassword = async (token: string, oldPassword: string, newPassword: string) => {
