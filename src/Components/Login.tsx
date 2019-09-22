@@ -47,8 +47,19 @@ export class Login extends React.Component<Props, State> {
     };
   }
 
+  componentDidMount() {
+    document.onkeyup = (event) => {
+      this.props.close();
+    };
+  }
+
+  componentWillUnmount() {
+    document.onkeyup = null;
+  }
+
   render() {
-    let title = this.props.mode === LoginDisplayMode.Register ? "Register" : "Login"
+    const title = this.props.mode === LoginDisplayMode.Register ? "Register" : "Login";
+
     return (<div className="modal is-active">
       <div className="modal-background" onClick={this.props.close}></div>
       <div className="modal-card">
@@ -127,7 +138,7 @@ export class Login extends React.Component<Props, State> {
           </div>
         </footer>
       </div>
-    </div>)
+    </div>);
   }
 
   getButtonClassName = (s: string): string => {
