@@ -1,5 +1,5 @@
-import React from "react";
-import { ArchiveEntry } from "../Models/helpers";
+import React from 'react';
+import { ArchiveEntry } from '../Models/ArchiveEntry';
 
 interface Props {
   activeEntry?: ArchiveEntry;
@@ -7,7 +7,7 @@ interface Props {
 
 export default class Preview extends React.Component<Props> {
   render() {
-    let entry = this.props.activeEntry
+    const entry = this.props.activeEntry;
 
     if (entry) {
       return (<div className="column is-hidden-touch">
@@ -24,9 +24,9 @@ export default class Preview extends React.Component<Props> {
         </div>
 
         <button className="button">See Entry Details</button>
-      </div>)
+      </div>);
     } else {
-      return <div className="preview"></div>
+      return (<div className="preview"></div>);
     }
   }
 }

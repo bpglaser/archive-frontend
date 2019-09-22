@@ -1,5 +1,5 @@
-import React from "react";
-import { ArchiveEntry } from "../Models/helpers";
+import React from 'react';
+import { ArchiveEntry } from '../Models/ArchiveEntry';
 
 interface Props {
   active: boolean;
@@ -10,12 +10,13 @@ interface Props {
 
 export default class BrowserRow extends React.Component<Props> {
   render() {
-    let entry = this.props.entry
-    let className = this.props.active ? "is-selected" : undefined
+    const entry = this.props.entry;
+    const className = this.props.active ? 'is-selected' : undefined;
+
     return (<tr className={className} onMouseOver={() => this.props.onClickCallback(entry)}>
       <td>{entry.name}</td>
       <td>{entry.owner}</td>
       <td>{entry.uploaded.toISOString()}</td>
-    </tr>)
+    </tr>);
   }
 }

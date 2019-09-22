@@ -4,7 +4,8 @@ import React from 'react';
 import Browser from '../Components/Browser';
 import Preview from '../Components/Preview';
 import TabSwitcher from '../Components/TabSwitcher';
-import { ArchiveEntry, createMany } from '../Models/helpers';
+import { createMany } from '../Data/helpers';
+import { ArchiveEntry } from '../Models/ArchiveEntry';
 
 interface State {
   activeEntry: ArchiveEntry;

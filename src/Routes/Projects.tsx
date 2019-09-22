@@ -1,7 +1,7 @@
 import { delay } from 'q';
 import * as React from 'react';
 import ProjectPreviewCard from '../Components/ProjectPreviewCard';
-import { generateMockProjects } from '../Models/helpers';
+import { generateMockProjects } from '../Data/helpers';
 import { Project } from '../Models/Project';
 
 interface State {
