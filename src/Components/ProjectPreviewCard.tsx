@@ -1,10 +1,11 @@
-import * as React from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { Project } from '../Models/Project';
 
 export default class ProjectPreviewCard extends React.Component<{ project: Project }> {
   render() {
-    let { id, title, description, imageCount } = this.props.project
+    const { id, title, description } = this.props.project
+
     return (<div className="project-preview-card">
       <div className="card">
         <header className="card-header">
@@ -16,7 +17,7 @@ export default class ProjectPreviewCard extends React.Component<{ project: Proje
             {description}
             <br />
             <br />
-            Project size: {imageCount}
+            Project size: ?
           </div>
         </div>
 
@@ -27,6 +28,6 @@ export default class ProjectPreviewCard extends React.Component<{ project: Proje
         </footer>
 
       </div>
-    </div>)
+    </div>);
   }
 }
