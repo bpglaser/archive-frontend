@@ -54,6 +54,10 @@ export class Login extends React.Component<Props, State> {
         this.props.close();
       }
     };
+
+    if (this.emailRef.current) {
+      this.emailRef.current.focus();
+    }
   }
 
   componentWillUnmount() {
