@@ -1,6 +1,8 @@
 import React from 'react';
+import zxcvbn from 'zxcvbn';
 import { Backend, User } from '../Data/Backend';
 import { vaildEmail, validPassword } from '../Helpers';
+import StrengthIndicator from './StrengthIndicator';
 import ValidationField from './ValidationField';
 
 export enum LoginDisplayMode {
@@ -21,6 +23,7 @@ interface State {
   loading: boolean;
   passwordInvalid: boolean,
   passwordsMatch: boolean,
+  passwordStrength: zxcvbn.ZXCVBNResult | null,
 }
 
 export class Login extends React.Component<Props, State> {
@@ -39,6 +42,7 @@ export class Login extends React.Component<Props, State> {
       loading: false,
       passwordInvalid: false,
       passwordsMatch: true,
+      passwordStrength: null,
     };
   }
 
@@ -71,7 +75,12 @@ export class Login extends React.Component<Props, State> {
             leftIconName="fa-lock"
             inputPlaceholder="Password"
             rightIconName="fa-exclamation-triangle"
+            onInput={this.passwordUpdated}
             inputType="password" />
+
+          {this.props.mode === LoginDisplayMode.Register &&
+            <StrengthIndicator passwordStrength={this.state.passwordStrength} />
+          }
 
           {this.props.mode === LoginDisplayMode.Register &&
             <ValidationField
@@ -214,6 +223,16 @@ export class Login extends React.Component<Props, State> {
           });
         }
       }
+    }
+  }
+
+  passwordUpdated = (element: React.FormEvent<HTMLInputElement>) => {
+    const value = element.currentTarget.value;
+    if (value.trim() === '') {
+      this.setState({ passwordStrength: null });
+    } else {
+      const result = zxcvbn(element.currentTarget.value);
+      this.setState({ passwordStrength: result });
     }
   }
 }
