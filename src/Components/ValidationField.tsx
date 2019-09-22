@@ -9,6 +9,7 @@ interface Props {
   invalidMessage: string,
   leftIconName: string,
   onInput?: (element: React.FormEvent<HTMLInputElement>) => void,
+  submit: () => void,
   rightIconName: string,
 }
 
@@ -22,6 +23,7 @@ export default class ValidationField extends React.Component<Props> {
           placeholder={this.props.inputPlaceholder}
           disabled={this.props.disabled}
           onInput={this.props.onInput}
+          onKeyUp={this.inputOnKeyUp}
           ref={this.props.innerInputRef} />
 
         <span className="icon is-small is-left">
@@ -41,5 +43,12 @@ export default class ValidationField extends React.Component<Props> {
 
       {this.props.children}
     </div>);
+  }
+
+  inputOnKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    const enterKeyCode = 13;
+    if (event.keyCode === enterKeyCode) {
+      this.props.submit();
+    }
   }
 }

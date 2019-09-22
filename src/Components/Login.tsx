@@ -66,6 +66,7 @@ export class Login extends React.Component<Props, State> {
             leftIconName="fa-envelope"
             inputPlaceholder="Email"
             rightIconName="fa-exclamation-triangle"
+            submit={this.submit}
             inputType="email" />
 
           <ValidationField
@@ -77,6 +78,7 @@ export class Login extends React.Component<Props, State> {
             inputPlaceholder="Password"
             rightIconName="fa-exclamation-triangle"
             onInput={this.passwordUpdated}
+            submit={this.submit}
             inputType="password" />
 
           {this.props.mode === LoginDisplayMode.Register &&
@@ -92,6 +94,7 @@ export class Login extends React.Component<Props, State> {
               leftIconName="fa-lock"
               inputPlaceholder="Confirm password"
               rightIconName="fa-exclamation-triangle"
+              submit={this.submit}
               inputType="password" />
           }
         </section>
@@ -224,6 +227,17 @@ export class Login extends React.Component<Props, State> {
           });
         }
       }
+    }
+  }
+
+  submit = async () => {
+    switch (this.props.mode) {
+      case LoginDisplayMode.Login:
+        await this.login();
+        break;
+      case LoginDisplayMode.Register:
+        await this.register();
+        break;
     }
   }
 
