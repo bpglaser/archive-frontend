@@ -1,17 +1,8 @@
 import Axios from 'axios';
 import { delay } from 'q';
 import { readTokenPayload } from '../Helpers';
-import Project from '../Models/Project';
-
-export interface User {
-  userID: string;
-  email: string;
-}
-
-export interface InviteDetails {
-  inviter: User;
-  project: Project;
-}
+import { InviteDetails } from '../Models/InviteDetails';
+import { User } from '../Models/User';
 
 export interface Backend {
   login: (email: string, password: string) => Promise<{ user: User, token: string }>;

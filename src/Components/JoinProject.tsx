@@ -1,5 +1,5 @@
 import React from 'react';
-import { InviteDetails } from '../Data/Backend';
+import { InviteDetails } from '../Models/InviteDetails';
 
 interface Props {
   acceptClicked: () => void;

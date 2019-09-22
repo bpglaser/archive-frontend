@@ -2,7 +2,7 @@ import { delay } from 'q';
 import * as React from 'react';
 import ProjectPreviewCard from '../Components/ProjectPreviewCard';
 import { generateMockProjects } from '../Models/helpers';
-import Project from '../Models/Project';
+import { Project } from '../Models/Project';
 
 interface State {
   awaitingCreationResponse: boolean;

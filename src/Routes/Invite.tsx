@@ -1,7 +1,8 @@
 import React from 'react';
 import { Redirect, RouteComponentProps } from 'react-router';
 import JoinProject from '../Components/JoinProject';
-import { Backend, InviteDetails } from '../Data/Backend';
+import { Backend } from '../Data/Backend';
+import { InviteDetails } from '../Models/InviteDetails';
 
 interface Props extends RouteComponentProps {
   backend: Backend;

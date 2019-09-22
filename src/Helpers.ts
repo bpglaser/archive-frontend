@@ -1,5 +1,5 @@
 import * as jwt from 'jsonwebtoken';
-import { User } from './Data/Backend';
+import { User } from './Models/User';
 
 export const vaildEmail = (s: string): boolean => {
   // TODO proper validation

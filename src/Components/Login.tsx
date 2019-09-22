@@ -1,7 +1,8 @@
 import React from 'react';
 import zxcvbn from 'zxcvbn';
-import { Backend, User } from '../Data/Backend';
+import { Backend } from '../Data/Backend';
 import { vaildEmail, validPassword } from '../Helpers';
+import { User } from '../Models/User';
 import StrengthIndicator from './StrengthIndicator';
 import ValidationField from './ValidationField';
 

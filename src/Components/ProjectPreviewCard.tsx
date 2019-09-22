@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import Project from '../Models/Project';
+import { Project } from '../Models/Project';
 
 export default class ProjectPreviewCard extends React.Component<{ project: Project }> {
   render() {

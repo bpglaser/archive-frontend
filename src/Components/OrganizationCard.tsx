@@ -1,5 +1,5 @@
-import * as React from "react";
-import Organization from "../Models/Organization";
+import * as React from 'react';
+import { Organization } from '../Models/Organization';
 
 interface Props {
   organization: Organization;

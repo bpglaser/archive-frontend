@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { User } from '../Data/Backend';
+import { User } from '../Models/User';
 
 interface Props {
   loggedInAs: User | null;
