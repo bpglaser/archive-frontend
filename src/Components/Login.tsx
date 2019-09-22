@@ -48,8 +48,11 @@ export class Login extends React.Component<Props, State> {
   }
 
   componentDidMount() {
+    const escapeKeyCode = 27;
     document.onkeyup = (event) => {
-      this.props.close();
+      if (event.keyCode === escapeKeyCode) {
+        this.props.close();
+      }
     };
   }
 
