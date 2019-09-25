@@ -9,7 +9,7 @@ export class URLBackend implements Backend {
 
   constructor(base?: string) {
     this.base = base;
-    this.mock = new MockBackend(0);
+    this.mock = new MockBackend(500);
   }
 
   login = async (email: string, password: string) => {
@@ -65,11 +65,11 @@ export class URLBackend implements Backend {
     return await this.mock.createOrganization(token, name, description);
   }
 
-  editOrganization = async (token: string, organizationID: string, name: string, description: string) => {
+  editOrganization = async (token: string, organizationID: number, name: string, description: string) => {
     return await this.mock.editOrganization(token, organizationID, name, description);
   }
 
-  deleteOrganization = async (token: string, organizationID: string) => {
+  deleteOrganization = async (token: string, organizationID: number) => {
     await this.mock.deleteOrganization(token, organizationID);
   }
 
@@ -77,15 +77,15 @@ export class URLBackend implements Backend {
     return await this.mock.listOrganizations(token);
   }
 
-  createProject = async (token: string, organizationID: string, name: string, description: string) => {
+  createProject = async (token: string, organizationID: number, name: string, description: string) => {
     return await this.mock.createProject(token, organizationID, name, description);
   }
 
-  editProject = async (token: string, projectID: string, name: string, description: string) => {
-    return await this.mock.editProject(token, projectID, name, description);
+  editProject = async (token: string, projectID: number, organizationID: number, name: string, description: string) => {
+    return await this.mock.editProject(token, projectID, organizationID, name, description);
   }
 
-  deleteProject = async (token: string, projectID: string) => {
+  deleteProject = async (token: string, projectID: number) => {
     await this.mock.deleteProject(token, projectID);
   }
 

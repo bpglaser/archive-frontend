@@ -42,7 +42,7 @@ export class MockBackend implements Backend {
     await delay(this.sleepDuration);
     return {
       inviter: { userID: 'brad-iD', email: 'brad@foo.com' },
-      project: { id: 1234, title: 'Example Project', description: 'Everyone is having fun lol', imageCount: 1 },
+      project: { projectID: 1234, organizationID: 1, name: 'Example Project', description: 'Everyone is having fun lol' },
     };
   }
 
@@ -56,44 +56,49 @@ export class MockBackend implements Backend {
 
   createOrganization = async (token: string, name: string, description: string) => {
     await delay(this.sleepDuration);
-    return {};
+    return { organizationID: 1, name: 'foobar', description: 'hello world' };
   }
 
-  editOrganization = async (token: string, organizationID: string, name: string, description: string) => {
+  editOrganization = async (token: string, organizationID: number, name: string, description: string) => {
     await delay(this.sleepDuration);
-    return {};
+    return { organizationID: 1, name: 'foobar', description: 'hello world' };
   }
 
-  deleteOrganization = async (token: string, organizationID: string) => {
+  deleteOrganization = async (token: string, organizationID: number) => {
     await delay(this.sleepDuration);
   }
 
   listOrganizations = async (token: string) => {
     await delay(this.sleepDuration);
-    return [{}, {}, {}, {}];
+    return [
+      { organizationID: 1, name: 'foobar1', description: 'hello world' },
+      { organizationID: 2, name: 'foobar2', description: 'hello world' },
+      { organizationID: 3, name: 'foobar3', description: 'hello world' },
+      { organizationID: 4, name: 'foobar4', description: 'hello world' },
+    ];
   }
 
-  createProject = async (token: string, organizationID: string, name: string, description: string) => {
+  createProject = async (token: string, organizationID: number, name: string, description: string) => {
     await delay(this.sleepDuration);
-    return { id: 123, title: 'foo', description: 'bar' };
+    return { projectID: 123, organizationID: organizationID, name: name, description: description };
   }
 
-  editProject = async (token: string, projectID: string, name: string, description: string) => {
+  editProject = async (token: string, projectID: number, organizationID: number, name: string, description: string) => {
     await delay(this.sleepDuration);
-    return { id: 123, title: 'foo', description: 'bar' };
+    return { projectID: projectID, organizationID: organizationID, name: name, description: description };
   }
 
-  deleteProject = async (token: string, projectID: string) => {
+  deleteProject = async (token: string, projectID: number) => {
     await delay(this.sleepDuration);
   }
 
   listProjects = async (token: string) => {
     await delay(this.sleepDuration);
     return [
-      { id: 123, title: 'foo', description: 'bar' },
-      { id: 123, title: 'foo', description: 'bar' },
-      { id: 123, title: 'foo', description: 'bar' },
-      { id: 123, title: 'foo', description: 'bar' },
+      { projectID: 123, organizationID: 1, name: 'foo1', description: 'bar' },
+      { projectID: 345, organizationID: 2, name: 'foo2', description: 'bar' },
+      { projectID: 678, organizationID: 3, name: 'foo3', description: 'bar' },
+      { projectID: 910, organizationID: 4, name: 'foo4', description: 'bar' },
     ];
   }
 }

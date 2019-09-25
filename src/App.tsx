@@ -8,6 +8,7 @@ import Navbar from './Components/Navbar';
 import { Backend } from './Data/Backend';
 import { URLBackend } from "./Data/URLBackend";
 import { readTokenPayload } from './Helpers';
+import { Organization } from './Models/Organization';
 import { User } from './Models/User';
 import Invite from './Routes/Invite';
 import Organizations from './Routes/Organizations';
@@ -19,6 +20,7 @@ import Settings from './Routes/Settings';
 const history = createHashHistory()
 
 interface State {
+  activeOrganization: Organization | null;
   backend: Backend;
   loggedInAs: User | null;
   loginDisplayMode: LoginDisplayMode | null;
@@ -39,6 +41,7 @@ export default class App extends React.Component<any, State> {
     }
 
     this.state = {
+      activeOrganization: { organizationID: 1, name: "foo", description: "bar" }, // todo
       backend: new URLBackend('https://robinsonobservatory.org/'),
       loggedInAs: user,
       loginDisplayMode: null,
@@ -56,7 +59,7 @@ export default class App extends React.Component<any, State> {
           logOutClicked={this.logOutClicked} />
 
         <Route path="/" exact component={Primary} />
-        <Route path="/projects" exact component={Projects} />
+        <Route path="/projects" exact render={(props) => <Projects {...props} backend={this.state.backend} organization={this.state.activeOrganization} token={this.state.token} />} />
         <Route path="/projects/:id" component={ProjectDetails} />
         <Route path="/settings" exact render={(props) => <Settings {...props} backend={this.state.backend} token={this.state.token} />} />
         <Route path="/organizations" exact component={Organizations} />

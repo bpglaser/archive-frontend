@@ -16,7 +16,7 @@ export default class JoinProject extends React.Component<Props> {
       return (<div className="card">
         <header className="card-header">
           <p className="card-header-title">
-            {inviter.email} has invited you to join {project.title}
+            {inviter.email} has invited you to join {project.name}
           </p>
         </header>
         <div className="card-content">

@@ -1,26 +1,54 @@
-import { delay } from 'q';
 import * as React from 'react';
+import { Redirect } from 'react-router';
+import CreateProjectPrompt from '../Components/CreateProjectPrompt';
 import ProjectPreviewCard from '../Components/ProjectPreviewCard';
-import { generateMockProjects } from '../Data/helpers';
+import { Backend } from '../Data/Backend';
+import { Organization } from '../Models/Organization';
 import { Project } from '../Models/Project';
 
+interface Props {
+  backend: Backend;
+  organization: Organization | null;
+  token: string | null;
+}
+
 interface State {
-  awaitingCreationResponse: boolean;
   createNewProjectPromptVisible: boolean;
+  loading: boolean;
   projects: Project[];
 }
 
-export default class Projects extends React.Component<any, State> {
-  constructor(props: any) {
+export default class Projects extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props)
     this.state = {
-      awaitingCreationResponse: false,
       createNewProjectPromptVisible: false,
-      projects: generateMockProjects(),
+      loading: false,
+      projects: [],
+    }
+  }
+
+  async componentDidMount() {
+    if (this.props.organization && this.props.token) {
+      this.setState({
+        loading: true,
+      });
+
+      const projects = await this.props.backend.listProjects(this.props.token);
+
+      this.setState({
+        loading: true,
+        projects: projects,
+      });
     }
   }
 
   render() {
+    if (!this.props.organization || !this.props.token) {
+      // TODO prompt for login
+      return <Redirect to="/" />
+    }
+
     return (<div>
       <nav className="level">
         <div className="level-left">
@@ -45,75 +73,32 @@ export default class Projects extends React.Component<any, State> {
       </div>
 
       {this.state.createNewProjectPromptVisible &&
-        <div className="modal is-active">
-          <div className="modal-background" onClick={this.cancelCreateProject}></div>
-
-          <div className="modal-card">
-            <header className="modal-card-head">
-              <p className="modal-card-title">Create New Project</p>
-              <button className="delete" aria-label="close" onClick={this.cancelCreateProject}></button>
-            </header>
-
-            <section className="modal-card-body">
-              <div className="field">
-                <label className="label">Project Name</label>
-                <div className="control">
-                  <input
-                    className="input"
-                    type="text"
-                    placeholder="Project Name"
-                    disabled={this.state.awaitingCreationResponse} />
-                </div>
-              </div>
-
-              <div className="field">
-                <label className="label">Description</label>
-                <div className="control">
-                  <textarea
-                    className="textarea"
-                    placeholder="Description"
-                    disabled={this.state.awaitingCreationResponse} />
-                </div>
-              </div>
-            </section>
-
-            <footer className="modal-card-foot">
-              <button
-                className={this.state.awaitingCreationResponse ? "button is-success is-loading" : "button is-success"}
-                disabled={this.state.awaitingCreationResponse}
-                onClick={this.submitNewProject}>
-                Create
-              </button>
-              <button className="button" onClick={this.cancelCreateProject}>Cancel</button>
-            </footer>
-          </div>
-        </div>
+        <CreateProjectPrompt
+          backend={this.props.backend}
+          close={this.closeProjectPrompt}
+          organization={this.props.organization}
+          success={this.newProjectCreated}
+          token={this.props.token} />
       }
     </div>)
-  }
-
-  cancelCreateProject = () => {
-    this.setState({
-      createNewProjectPromptVisible: false,
-    })
   }
 
   displayNewProjectDialog = () => {
     this.setState({
       createNewProjectPromptVisible: true,
-    })
+    });
   }
 
-  submitNewProject = async () => {
+  closeProjectPrompt = () => {
     this.setState({
-      awaitingCreationResponse: true,
-    })
-
-    await delay(1000)
-
-    this.setState({
-      awaitingCreationResponse: false,
       createNewProjectPromptVisible: false,
-    })
+    });
+  }
+
+  newProjectCreated = (project: Project) => {
+    this.setState({
+      createNewProjectPromptVisible: false,
+      projects: [...this.state.projects, project],
+    });
   }
 }

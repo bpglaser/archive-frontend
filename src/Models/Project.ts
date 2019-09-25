@@ -1,5 +1,6 @@
 export interface Project {
-  id: number;
-  title: string;
+  projectID: number;
+  organizationID: number;
+  name: string;
   description: string;
 }

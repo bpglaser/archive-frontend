@@ -14,12 +14,12 @@ export interface Backend {
   declineInvite: (token: string, key: string) => Promise<void>;
 
   createOrganization: (token: string, name: string, description: string) => Promise<Organization>;
-  editOrganization: (token: string, organizationID: string, name: string, description: string) => Promise<Organization>;
-  deleteOrganization: (token: string, organizationID: string) => Promise<void>;
+  editOrganization: (token: string, organizationID: number, name: string, description: string) => Promise<Organization>;
+  deleteOrganization: (token: string, organizationID: number) => Promise<void>;
   listOrganizations: (token: string) => Promise<Organization[]>;
 
-  createProject: (token: string, organizationID: string, name: string, description: string) => Promise<Project>;
-  editProject: (token: string, projectID: string, name: string, description: string) => Promise<Project>;
-  deleteProject: (token: string, projectID: string) => Promise<void>;
+  createProject: (token: string, organizationID: number, name: string, description: string) => Promise<Project>;
+  editProject: (token: string, projectID: number, organizationID: number, name: string, description: string) => Promise<Project>;
+  deleteProject: (token: string, projectID: number) => Promise<void>;
   listProjects: (token: string) => Promise<Project[]>;
 }
