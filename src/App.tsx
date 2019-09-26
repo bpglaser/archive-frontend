@@ -4,7 +4,7 @@ import React from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
 import './App.css';
 import Navbar from './Components/Navbar';
-import { LoginPrompt, LoginDisplayMode } from './Components/Prompts/LoginPrompt';
+import { LoginDisplayMode, LoginPrompt } from './Components/Prompts/LoginPrompt';
 import { Backend } from './Data/Backend';
 import { URLBackend } from "./Data/URLBackend";
 import { readTokenPayload } from './Helpers';
@@ -60,7 +60,7 @@ export default class App extends React.Component<any, State> {
 
         <Route path="/" exact component={Primary} />
         <Route path="/projects" exact render={(props) => <Projects {...props} backend={this.state.backend} organization={this.state.activeOrganization} token={this.state.token} />} />
-        <Route path="/projects/:id" component={ProjectDetails} />
+        <Route path="/projects/:id" render={(props) => <ProjectDetails {...props} backend={this.state.backend} organization={this.state.activeOrganization} token={this.state.token} />} />
         <Route path="/settings" exact render={(props) => <Settings {...props} backend={this.state.backend} token={this.state.token} />} />
         <Route path="/organizations" exact component={Organizations} />
         <Route path="/invite" exact render={(props) => <Invite {...props} backend={this.state.backend} token={this.state.token} />} />
@@ -72,6 +72,15 @@ export default class App extends React.Component<any, State> {
             loginSuccess={this.loginCompleted}
             mode={this.state.loginDisplayMode} />
         }
+
+        {/* <DeleteProjectPrompt
+          backend={this.state.backend}
+          close={() => { }}
+          organization={{ organizationID: 123, name: 'Orglol', description: 'foo' }}
+          project={{ projectID: 456, organizationID: 123, name: 'MyProject', description: 'hello world' }}
+          success={() => { }}
+          token={this.state.token!} /> */}
+
       </BrowserRouter>
     </div>)
   }

@@ -101,4 +101,9 @@ export class MockBackend implements Backend {
       { projectID: 910, organizationID: 4, name: 'foo4', description: 'bar' },
     ];
   }
+
+  getProjectDetails = async (token: string, projectID: number) => {
+    await delay(this.sleepDuration);
+    return { projectID: projectID, organizationID: 1, name: 'MyProject', description: 'Lorem ipsum description' };
+  }
 }

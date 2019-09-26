@@ -92,6 +92,10 @@ export class URLBackend implements Backend {
   listProjects = async (token: string) => {
     return await this.mock.listProjects(token);
   }
+
+  getProjectDetails = async (token: string, projectID: number) => {
+    return await this.mock.getProjectDetails(token, projectID);
+  }
 }
 
 function createAuthorizationConfig(token: string) {
