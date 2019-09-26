@@ -1,6 +1,6 @@
 import React from "react";
 import { RouteComponentProps } from "react-router";
-import UploadPrompt from "../Components/UploadPrompt";
+import UploadPrompt from "../Components/Prompts/UploadPrompt";
 
 interface Params {
   id: string;

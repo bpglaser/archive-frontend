@@ -1,7 +1,7 @@
 import React from 'react';
-import { Backend } from '../Data/Backend';
-import { Organization } from '../Models/Organization';
-import { Project } from '../Models/Project';
+import { Backend } from '../../Data/Backend';
+import { Organization } from '../../Models/Organization';
+import { Project } from '../../Models/Project';
 
 interface Props {
   backend: Backend;

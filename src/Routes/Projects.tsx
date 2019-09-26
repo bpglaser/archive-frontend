@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Redirect } from 'react-router';
-import CreateProjectPrompt from '../Components/CreateProjectPrompt';
 import ProjectPreviewCard from '../Components/ProjectPreviewCard';
+import CreateProjectPrompt from '../Components/Prompts/CreateProjectPrompt';
 import { Backend } from '../Data/Backend';
 import { Organization } from '../Models/Organization';
 import { Project } from '../Models/Project';

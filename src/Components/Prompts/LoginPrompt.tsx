@@ -1,10 +1,10 @@
 import React from 'react';
 import zxcvbn from 'zxcvbn';
-import { Backend } from '../Data/Backend';
-import { vaildEmail, validPassword } from '../Helpers';
-import { User } from '../Models/User';
-import StrengthIndicator from './StrengthIndicator';
-import ValidationField from './ValidationField';
+import { Backend } from '../../Data/Backend';
+import { vaildEmail, validPassword } from '../../Helpers';
+import { User } from '../../Models/User';
+import StrengthIndicator from '../StrengthIndicator';
+import ValidationField from '../ValidationField';
 
 export enum LoginDisplayMode {
   Login,
@@ -27,7 +27,7 @@ interface State {
   passwordStrength: zxcvbn.ZXCVBNResult | null,
 }
 
-export class Login extends React.Component<Props, State> {
+export class LoginPrompt extends React.Component<Props, State> {
   emailRef: React.RefObject<HTMLInputElement>;
   passwordRef: React.RefObject<HTMLInputElement>;
   passwordConfirmationRef: React.RefObject<HTMLInputElement>;

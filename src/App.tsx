@@ -3,8 +3,8 @@ import Cookies from 'js-cookie';
 import React from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
 import './App.css';
-import { Login, LoginDisplayMode } from './Components/Login';
 import Navbar from './Components/Navbar';
+import { LoginPrompt, LoginDisplayMode } from './Components/Prompts/LoginPrompt';
 import { Backend } from './Data/Backend';
 import { URLBackend } from "./Data/URLBackend";
 import { readTokenPayload } from './Helpers';
@@ -66,7 +66,7 @@ export default class App extends React.Component<any, State> {
         <Route path="/invite" exact render={(props) => <Invite {...props} backend={this.state.backend} token={this.state.token} />} />
 
         {this.state.loginDisplayMode !== null &&
-          <Login
+          <LoginPrompt
             close={this.closeLoginPrompt}
             backend={this.state.backend}
             loginSuccess={this.loginCompleted}
