@@ -62,35 +62,82 @@ export class URLBackend implements Backend {
   }
 
   createOrganization = async (token: string, name: string, description: string) => {
-    return await this.mock.createOrganization(token, name, description);
+    const url = new URL('/api/organizations/create', this.base);
+    const data = { name: name, desc: description };
+    const config = createAuthorizationConfig(token);
+
+    const response = await Axios.post(url.toString(), data, config);
+    const organizationID = response.data.orgID;
+    if (organizationID === undefined) {
+      throw new Error('Invalid fields on response.');
+    }
+    return { organizationID: organizationID, name: name, description: description };
   }
 
   editOrganization = async (token: string, organizationID: number, name: string, description: string) => {
-    return await this.mock.editOrganization(token, organizationID, name, description);
+    const url = new URL('/api/organizations/edit', this.base);
+    const data = { orgID: organizationID, name: name, desc: description };
+    const config = createAuthorizationConfig(token);
+
+    await Axios.post(url.toString(), data, config);
+    return { organizationID: organizationID, name: name, description: description };
   }
 
   deleteOrganization = async (token: string, organizationID: number) => {
-    await this.mock.deleteOrganization(token, organizationID);
+    const url = new URL('/api/organizations/delete', this.base);
+    const data = { orgID: organizationID };
+    const config = createAuthorizationConfig(token);
+
+    await Axios.post(url.toString(), data, config);
   }
 
   listOrganizations = async (token: string) => {
-    return await this.mock.listOrganizations(token);
+    const url = new URL('/api/organizations/list', this.base);
+    const config = createAuthorizationConfig(token);
+
+    const response = await Axios.get(url.toString(), config);
+    return response.data.map((entry: any) => {
+      return { organizationID: entry.OrgID, name: entry.Name, description: entry.Description }
+    });
   }
 
   createProject = async (token: string, organizationID: number, name: string, description: string) => {
-    return await this.mock.createProject(token, organizationID, name, description);
+    const url = new URL('/api/projects/create', this.base);
+    const data = { orgID: organizationID, name: name, desc: description };
+    const config = createAuthorizationConfig(token);
+
+    const response = await Axios.post(url.toString(), data, config);
+    if (response.data.projID === undefined) {
+      throw new Error('Invalid field on project creation response');
+    }
+    return { projectID: response.data.projID, organizationID: organizationID, name: name, description: description };
   }
 
   editProject = async (token: string, projectID: number, organizationID: number, name: string, description: string) => {
-    return await this.mock.editProject(token, projectID, organizationID, name, description);
+    const url = new URL('/api/projects/edit', this.base);
+    const data = { projID: projectID, orgID: organizationID, name: name, desc: description };
+    const config = createAuthorizationConfig(token);
+
+    await Axios.post(url.toString(), data, config);
+    return { projectID: projectID, organizationID: organizationID, name: name, description: description };
   }
 
   deleteProject = async (token: string, projectID: number) => {
-    await this.mock.deleteProject(token, projectID);
+    const url = new URL('/api/projects/delete', this.base);
+    const data = { projID: projectID };
+    const config = createAuthorizationConfig(token);
+
+    await Axios.post(url.toString(), data, config);
   }
 
-  listProjects = async (token: string) => {
-    return await this.mock.listProjects(token);
+  listProjects = async (token: string, organizationID: number) => {
+    const url = new URL('/api/projects/list', this.base);
+    const data = { orgID: organizationID };
+    const config = createAuthorizationConfig(token);
+
+    const result = await Axios.post(url.toString(), data, config);
+    // TODO convert raw response
+    return result.data;
   }
 
   getProjectDetails = async (token: string, projectID: number) => {

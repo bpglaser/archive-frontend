@@ -34,7 +34,7 @@ export default class Projects extends React.Component<Props, State> {
         loading: true,
       });
 
-      const projects = await this.props.backend.listProjects(this.props.token);
+      const projects = await this.props.backend.listProjects(this.props.token, this.props.organization.organizationID);
 
       this.setState({
         loading: true,
