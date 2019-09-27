@@ -62,7 +62,7 @@ export default class App extends React.Component<any, State> {
         <Route path="/projects" exact render={(props) => <Projects {...props} backend={this.state.backend} organization={this.state.activeOrganization} token={this.state.token} />} />
         <Route path="/projects/:id" render={(props) => <ProjectDetails {...props} backend={this.state.backend} organization={this.state.activeOrganization} token={this.state.token} />} />
         <Route path="/settings" exact render={(props) => <Settings {...props} backend={this.state.backend} token={this.state.token} />} />
-        <Route path="/organizations" exact component={Organizations} />
+        <Route path="/organizations" exact render={(props) => <Organizations {...props} backend={this.state.backend} setActiveOrganization={() => { }} token={this.state.token} />} />
         <Route path="/invite" exact render={(props) => <Invite {...props} backend={this.state.backend} token={this.state.token} />} />
 
         {this.state.loginDisplayMode !== null &&
@@ -72,15 +72,6 @@ export default class App extends React.Component<any, State> {
             loginSuccess={this.loginCompleted}
             mode={this.state.loginDisplayMode} />
         }
-
-        {/* <DeleteProjectPrompt
-          backend={this.state.backend}
-          close={() => { }}
-          organization={{ organizationID: 123, name: 'Orglol', description: 'foo' }}
-          project={{ projectID: 456, organizationID: 123, name: 'MyProject', description: 'hello world' }}
-          success={() => { }}
-          token={this.state.token!} /> */}
-
       </BrowserRouter>
     </div>)
   }

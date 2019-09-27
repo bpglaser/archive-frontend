@@ -1,26 +1,53 @@
-import { delay } from 'q';
 import * as React from 'react';
 import Loader from '../Components/Loader';
 import OrganizationCard from '../Components/OrganizationCard';
+import CreateOrganizationPrompt from '../Components/Prompts/CreateOrganizationPrompt';
+import { Backend } from '../Data/Backend';
 import { Organization } from '../Models/Organization';
 
-interface State {
-  myOrganizations: Organization[] | null;
-  publicOrganizations: Organization[] | null;
+interface Props {
+  backend: Backend;
+  setActiveOrganization: (organization: Organization) => void;
+  token: string | null;
 }
 
-export default class Organizations extends React.Component<any, State> {
-  constructor(props: any) {
+interface State {
+  createOrganizationPromptVisible: boolean;
+  errorMessage: string | null;
+  loading: boolean;
+  organizations: Organization[];
+}
+
+export default class Organizations extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props)
     this.state = {
-      myOrganizations: null,
-      publicOrganizations: null,
-    }
+      createOrganizationPromptVisible: false,
+      errorMessage: null,
+      loading: false,
+      organizations: [],
+    };
+  }
 
-    this.loadMyOrganizations().then((myOrganizations) =>
-      this.setState({ myOrganizations: myOrganizations }))
-    this.loadPublicOrganizations().then((publicOrganizations) =>
-      this.setState({ publicOrganizations: publicOrganizations }))
+  async componentDidMount() {
+    try {
+      this.setState({
+        loading: true,
+      });
+
+      const organizations = await this.props.backend.listOrganizations(this.props.token!); // todo validate token
+      this.setState({
+        organizations: organizations,
+      });
+    } catch (err) {
+      this.setState({
+        errorMessage: 'Error loading organizations',
+      });
+    } finally {
+      this.setState({
+        loading: false,
+      });
+    }
   }
 
   render() {
@@ -31,49 +58,70 @@ export default class Organizations extends React.Component<any, State> {
         </div>
       </div>
 
-      {this.state.myOrganizations === null &&
-        <Loader />
-      }
-
-      {this.state.myOrganizations !== null &&
-        <div className="organization-cards">
-          {
-            this.state.myOrganizations.map((organization, i) =>
-              <OrganizationCard organization={organization} key={i} />)
-          }
-        </div>
-      }
-
       <div className="level">
-        <div className="level-item">
-          <h1 className="title">Public Organizations</h1>
+        <div className="level-left">
+          <div className="level-item">
+            <button className="button" onClick={this.showCreateOrganizationPrompt}>
+
+              <span className="icon">
+                <i className="fas fa-plus"></i>
+              </span>
+
+              <span>
+                Create New Organization
+              </span>
+
+            </button>
+          </div>
         </div>
       </div>
 
-      {this.state.publicOrganizations === null &&
+
+      {this.state.loading &&
         <Loader />
       }
 
-      {this.state.publicOrganizations !== null &&
-        <div className="organization-cards">
-          {
-            this.state.publicOrganizations.map((organization, i) =>
-              <OrganizationCard organization={organization} key={i} />)
-          }
-        </div>
+      {!this.state.loading &&
+        this.renderOrganizations()
       }
-    </div>)
+
+      {this.state.createOrganizationPromptVisible &&
+        <CreateOrganizationPrompt
+          backend={this.props.backend}
+          close={this.hideCreateOrganizationPrompt}
+          success={this.newOrganizationCreated}
+          token={this.props.token!} />
+      }
+    </div>);
   }
 
-  loadMyOrganizations = async (): Promise<Organization[]> => {
-    await delay(Math.random() * 2000 + 1000)
-    const count = Math.floor(Math.random() * 9 + 1)
-    return Array(count).fill({})
+  renderOrganizations = () => {
+    if (this.state.organizations.length === 0) {
+      return (<span>You don't belong to any organizations.</span>);
+    } else {
+      return (<div className="organization-cards">
+        {
+          this.state.organizations.map((organization, i) =>
+            <OrganizationCard organization={organization} key={i} />)
+        }
+      </div>);
+    }
   }
 
-  loadPublicOrganizations = async (): Promise<Organization[]> => {
-    await delay(Math.random() * 2000 + 1000)
-    const count = Math.floor(Math.random() * 9 + 1)
-    return Array(count).fill({})
+  hideCreateOrganizationPrompt = () => {
+    this.setState({
+      createOrganizationPromptVisible: false,
+    });
+  }
+
+  showCreateOrganizationPrompt = () => {
+    this.setState({
+      createOrganizationPromptVisible: true,
+    });
+  }
+
+  newOrganizationCreated = () => {
+    // TODO handle reloading data or redirect
+    this.hideCreateOrganizationPrompt();
   }
 }
