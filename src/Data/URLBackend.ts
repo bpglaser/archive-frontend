@@ -97,7 +97,7 @@ export class URLBackend implements Backend {
 
     const response = await Axios.get(url.toString(), config);
     return response.data.map((entry: any) => {
-      return { organizationID: entry.OrgID, name: entry.Name, description: entry.Description }
+      return { organizationID: entry.OrgID, name: entry.Name, description: entry.Description };
     });
   }
 
@@ -131,13 +131,13 @@ export class URLBackend implements Backend {
   }
 
   listProjects = async (token: string, organizationID: number) => {
-    const url = new URL('/api/projects/list', this.base);
-    const data = { orgID: organizationID };
+    const url = new URL('/api/projects/list/' + organizationID, this.base);
     const config = createAuthorizationConfig(token);
 
-    const result = await Axios.post(url.toString(), data, config);
-    // TODO convert raw response
-    return result.data;
+    const result = await Axios.get(url.toString(), config);
+    return result.data.map((entry: any) => {
+      return { projectID: entry.ProjID, organizationID: entry.OrgID, name: entry.Name, description: entry.Description };
+    });
   }
 
   getProjectDetails = async (token: string, projectID: number) => {

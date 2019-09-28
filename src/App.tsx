@@ -41,7 +41,7 @@ export default class App extends React.Component<any, State> {
     }
 
     this.state = {
-      activeOrganization: { organizationID: 1, name: "foo", description: "bar" }, // todo
+      activeOrganization: { organizationID: 22, name: 'Orgname1', description: 'asdfasd' }, // todo
       backend: new URLBackend('https://robinsonobservatory.org/'),
       loggedInAs: user,
       loginDisplayMode: null,
