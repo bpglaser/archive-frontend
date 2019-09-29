@@ -71,13 +71,51 @@ export default class App extends React.Component<any, State> {
         />
 
         <Switch>
-          <Route path="/" exact component={Primary} />
-          <Route path="/projects" exact render={(props) => <Projects {...props} backend={this.state.backend} organization={this.state.activeOrganization} token={this.state.token} />} />
-          <Route path="/projects/:id" render={(props) => <ProjectDetails {...props} backend={this.state.backend} organization={this.state.activeOrganization} token={this.state.token} />} />
-          <Route path="/settings" exact render={(props) => <Settings {...props} backend={this.state.backend} token={this.state.token} />} />
-          <Route path="/organizations" exact render={(props) => <Organizations {...props} backend={this.state.backend} setActiveOrganization={() => { }} token={this.state.token} />} />
-          <Route path="/invite" exact render={(props) => <Invite {...props} backend={this.state.backend} token={this.state.token} />} />
-          <Route component={NotFound} />
+          <Route path="/" exact>
+            <Primary />
+          </Route>
+
+          <Route path="/projects" exact>
+            <Projects
+              backend={this.state.backend}
+              organization={this.state.activeOrganization}
+              token={this.state.token}
+            />
+          </Route>
+
+          <Route path="/projects/:id">
+            <ProjectDetails
+              backend={this.state.backend}
+              organization={this.state.activeOrganization}
+              token={this.state.token}
+            />
+          </Route>
+
+          <Route path="/settings" exact>
+            <Settings
+              backend={this.state.backend}
+              token={this.state.token}
+            />
+          </Route>
+
+          <Route path="/organizations" exact>
+            <Organizations
+              backend={this.state.backend}
+              setActiveOrganization={this.setActiveOrganization}
+              token={this.state.token}
+            />
+          </Route>
+
+          <Route path="/invite" exact>
+            <Invite
+              backend={this.state.backend}
+              token={this.state.token}
+            />
+          </Route>
+
+          <Route>
+            <NotFound />
+          </Route>
         </Switch>
 
         {this.state.loginDisplayMode !== null &&

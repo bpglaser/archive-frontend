@@ -1,11 +1,10 @@
 import React from 'react';
-import { RouteComponentProps } from 'react-router';
+import DeleteProjectPrompt from '../Components/Prompts/DeleteProjectPrompt';
+import ProjectSettingsPrompt from '../Components/Prompts/ProjectSettingsPrompt';
 import UploadPrompt from '../Components/Prompts/UploadPrompt';
 import { Backend } from '../Data/Backend';
-import ProjectSettingsPrompt from '../Components/Prompts/ProjectSettingsPrompt';
-import { Project } from '../Models/Project';
-import DeleteProjectPrompt from '../Components/Prompts/DeleteProjectPrompt';
 import { Organization } from '../Models/Organization';
+import { Project } from '../Models/Project';
 
 enum ProjectPrompt {
   Delete,
@@ -17,7 +16,7 @@ interface Params {
   id: string;
 }
 
-interface Props extends RouteComponentProps<Params> {
+interface Props {
   backend: Backend;
   organization: Organization | null;
   token: string | null;
@@ -40,7 +39,7 @@ export default class ProjectDetails extends React.Component<Props, State> {
       visiblePrompt: null,
     };
 
-    this.projectID = Number(this.props.match.params.id);
+    this.projectID = Number((this.props as any).match.params.id);
   }
 
   async componentDidMount() {

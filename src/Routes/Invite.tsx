@@ -1,10 +1,10 @@
 import React from 'react';
-import { Redirect, RouteComponentProps } from 'react-router';
+import { Redirect } from 'react-router';
 import JoinProject from '../Components/JoinProject';
 import { Backend } from '../Data/Backend';
 import { InviteDetails } from '../Models/InviteDetails';
 
-interface Props extends RouteComponentProps {
+interface Props {
   backend: Backend;
   token: string | null;
 }
@@ -24,7 +24,7 @@ export default class Invite extends React.Component<Props, State> {
       details: null
     };
 
-    const params = new URLSearchParams(this.props.location.search);
+    const params = new URLSearchParams((this.props as any).location.search);
     this.inviteKey = params.get('key');
   }
 
