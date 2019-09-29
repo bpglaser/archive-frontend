@@ -1,12 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Organization } from '../Models/Organization';
 import { User } from '../Models/User';
+import OrganizationNavbarItem from './OrganizationNavbarItem';
 
 interface Props {
   loggedInAs: User | null;
   registerClicked: () => void;
   logInClicked: () => void;
   logOutClicked: () => void;
+  activeOrganization: Organization | null;
+  recentOrganizations: Organization[];
+  switchOrganization: (organization: Organization) => void;
 }
 
 interface State {
@@ -15,10 +20,10 @@ interface State {
 
 export default class Navbar extends React.Component<Props, State> {
   constructor(props: Props) {
-    super(props)
+    super(props);
     this.state = {
       burgerState: false,
-    }
+    };
   }
 
   render() {
@@ -48,13 +53,17 @@ export default class Navbar extends React.Component<Props, State> {
           {this.props.loggedInAs !== null &&
             <Link to="/projects" className="navbar-item">My Projects</Link>
           }
-
-          {this.props.loggedInAs !== null &&
-            <Link to="/organizations" className="navbar-item">Organizations</Link>
-          }
         </div>
 
         <div className="navbar-end">
+          {this.props.loggedInAs !== null &&
+            <OrganizationNavbarItem
+              activeOrganization={this.props.activeOrganization}
+              recentOrganizations={this.props.recentOrganizations}
+              switchOrganization={this.props.switchOrganization}
+            />
+          }
+
           {this.props.loggedInAs !== null &&
             <Link to="/settings" className="navbar-item">
               {this.props.loggedInAs.email}
@@ -77,20 +86,20 @@ export default class Navbar extends React.Component<Props, State> {
           </div>
         </div>
       </div>
-    </div>)
+    </div>);
     /* eslint-enable jsx-a11y/anchor-is-valid */
   }
 
   burgerClicked = () => {
     this.setState({
       burgerState: !this.state.burgerState,
-    })
+    });
   }
 
   modifyClassName = (className: string) => {
     if (this.state.burgerState) {
-      return className + " is-active"
+      return className + " is-active";
     }
-    return className
+    return className;
   }
 }

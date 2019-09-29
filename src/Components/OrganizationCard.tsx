@@ -7,6 +7,7 @@ interface Props {
 
 export default class OrganizationCard extends React.Component<Props> {
   render() {
+    /* eslint-disable jsx-a11y/anchor-is-valid */
     return (<div className="organization-card">
       <div className="card">
         <div className="card-content">
@@ -31,5 +32,6 @@ export default class OrganizationCard extends React.Component<Props> {
         </footer>
       </div>
     </div>);
+    /* eslint-enable jsx-a11y/anchor-is-valid */
   }
 }

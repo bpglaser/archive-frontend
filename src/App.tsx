@@ -24,12 +24,13 @@ interface State {
   backend: Backend;
   loggedInAs: User | null;
   loginDisplayMode: LoginDisplayMode | null;
+  recentOrganizations: Organization[];
   token: string | null;
 }
 
 export default class App extends React.Component<any, State> {
   constructor(props: any) {
-    super(props)
+    super(props);
 
     const cookieToken = Cookies.get('login-token');
 
@@ -41,12 +42,18 @@ export default class App extends React.Component<any, State> {
     }
 
     this.state = {
-      activeOrganization: { organizationID: 22, name: 'Orgname1', description: 'asdfasd' }, // todo
+      activeOrganization: null,
       backend: new URLBackend('https://robinsonobservatory.org/'),
       loggedInAs: user,
       loginDisplayMode: null,
+      recentOrganizations: [],
       token: token,
-    }
+    };
+  }
+
+  async componentDidMount() {
+    await this.populateRecentOrganizations();
+    await this.populateActiveOrganization();
   }
 
   render() {
@@ -56,7 +63,11 @@ export default class App extends React.Component<any, State> {
           loggedInAs={this.state.loggedInAs}
           registerClicked={this.registerClicked}
           logInClicked={this.logInClicked}
-          logOutClicked={this.logOutClicked} />
+          logOutClicked={this.logOutClicked}
+          activeOrganization={this.state.activeOrganization}
+          recentOrganizations={this.state.recentOrganizations}
+          switchOrganization={this.setActiveOrganization}
+        />
 
         <Route path="/" exact component={Primary} />
         <Route path="/projects" exact render={(props) => <Projects {...props} backend={this.state.backend} organization={this.state.activeOrganization} token={this.state.token} />} />
@@ -91,7 +102,7 @@ export default class App extends React.Component<any, State> {
   logInClicked = () => {
     this.setState({
       loginDisplayMode: LoginDisplayMode.Login,
-    })
+    });
   }
 
   loginCompleted = async (user: User, token: string) => {
@@ -101,6 +112,9 @@ export default class App extends React.Component<any, State> {
       token: token,
       loginDisplayMode: null,
     });
+
+    await this.populateRecentOrganizations();
+    await this.populateActiveOrganization();
   }
 
   logOutClicked = async () => {
@@ -119,7 +133,53 @@ export default class App extends React.Component<any, State> {
       });
 
       // Redirect to root.
-      history.push('/');
+      if (history.location.pathname !== '/') {
+        history.push('/');
+      }
+    }
+  }
+
+  setActiveOrganization = (organization: Organization) => {
+    this.setState({
+      activeOrganization: organization,
+    });
+    Cookies.set('active-organization-id', organization.organizationID.toString());
+  }
+
+  populateActiveOrganization = async () => {
+    if (this.state.token === null) {
+      return;
+    }
+
+    try {
+      const activeOrganizationID = Cookies.get('active-organization-id');
+      if (!activeOrganizationID) {
+        return;
+      }
+
+      const activeOrganization = this.state.recentOrganizations.find(org => org.organizationID === Number(activeOrganizationID));
+      if (activeOrganization) {
+        this.setState({
+          activeOrganization: activeOrganization,
+        });
+      }
+    } catch (err) {
+      // TODO
+    }
+  }
+
+  populateRecentOrganizations = async () => {
+    if (this.state.token === null) {
+      return;
+    }
+
+    try {
+      const organizations = await this.state.backend.listOrganizations(this.state.token);
+      this.setState({
+        recentOrganizations: organizations,
+      });
+    } catch (err) {
+      // TODO handle
     }
   }
 }
