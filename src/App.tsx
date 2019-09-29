@@ -1,7 +1,7 @@
 import { createHashHistory } from 'history';
 import Cookies from 'js-cookie';
 import React from 'react';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import './App.css';
 import Navbar from './Components/Navbar';
 import { LoginDisplayMode, LoginPrompt } from './Components/Prompts/LoginPrompt';
@@ -11,6 +11,7 @@ import { readTokenPayload } from './Helpers';
 import { Organization } from './Models/Organization';
 import { User } from './Models/User';
 import Invite from './Routes/Invite';
+import NotFound from './Routes/NotFound';
 import Organizations from './Routes/Organizations';
 import Primary from './Routes/Primary';
 import ProjectDetails from './Routes/ProjectDetails';
@@ -69,12 +70,15 @@ export default class App extends React.Component<any, State> {
           switchOrganization={this.setActiveOrganization}
         />
 
-        <Route path="/" exact component={Primary} />
-        <Route path="/projects" exact render={(props) => <Projects {...props} backend={this.state.backend} organization={this.state.activeOrganization} token={this.state.token} />} />
-        <Route path="/projects/:id" render={(props) => <ProjectDetails {...props} backend={this.state.backend} organization={this.state.activeOrganization} token={this.state.token} />} />
-        <Route path="/settings" exact render={(props) => <Settings {...props} backend={this.state.backend} token={this.state.token} />} />
-        <Route path="/organizations" exact render={(props) => <Organizations {...props} backend={this.state.backend} setActiveOrganization={() => { }} token={this.state.token} />} />
-        <Route path="/invite" exact render={(props) => <Invite {...props} backend={this.state.backend} token={this.state.token} />} />
+        <Switch>
+          <Route path="/" exact component={Primary} />
+          <Route path="/projects" exact render={(props) => <Projects {...props} backend={this.state.backend} organization={this.state.activeOrganization} token={this.state.token} />} />
+          <Route path="/projects/:id" render={(props) => <ProjectDetails {...props} backend={this.state.backend} organization={this.state.activeOrganization} token={this.state.token} />} />
+          <Route path="/settings" exact render={(props) => <Settings {...props} backend={this.state.backend} token={this.state.token} />} />
+          <Route path="/organizations" exact render={(props) => <Organizations {...props} backend={this.state.backend} setActiveOrganization={() => { }} token={this.state.token} />} />
+          <Route path="/invite" exact render={(props) => <Invite {...props} backend={this.state.backend} token={this.state.token} />} />
+          <Route component={NotFound} />
+        </Switch>
 
         {this.state.loginDisplayMode !== null &&
           <LoginPrompt
