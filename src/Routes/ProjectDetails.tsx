@@ -5,6 +5,8 @@ import UploadPrompt from '../Components/Prompts/UploadPrompt';
 import { Backend } from '../Data/Backend';
 import { Organization } from '../Models/Organization';
 import { Project } from '../Models/Project';
+import { RouteComponentProps } from 'react-router';
+import Loader from '../Components/Loader';
 
 enum ProjectPrompt {
   Delete,
@@ -16,7 +18,7 @@ interface Params {
   id: string;
 }
 
-interface Props {
+interface Props extends RouteComponentProps<Params> {
   backend: Backend;
   organization: Organization | null;
   token: string | null;
@@ -29,7 +31,7 @@ interface State {
 }
 
 export default class ProjectDetails extends React.Component<Props, State> {
-  projectID: number;
+  readonly projectID: number;
 
   constructor(props: any) {
     super(props)
@@ -39,7 +41,7 @@ export default class ProjectDetails extends React.Component<Props, State> {
       visiblePrompt: null,
     };
 
-    this.projectID = Number((this.props as any).match.params.id);
+    this.projectID = Number(this.props.match.params.id);
   }
 
   async componentDidMount() {
@@ -63,7 +65,7 @@ export default class ProjectDetails extends React.Component<Props, State> {
 
   render() {
     if (this.state.loading) {
-      return <div>Loading...</div>;
+      return <Loader />;
     }
 
     return (<div>

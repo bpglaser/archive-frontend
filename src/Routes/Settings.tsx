@@ -1,9 +1,9 @@
 import * as React from "react";
-import { Redirect } from "react-router";
+import { Redirect, RouteComponentProps } from "react-router";
 import AccountSettings from "../Components/Settings/AccountSettings";
 import { Backend } from "../Data/Backend";
 
-interface Props {
+interface Props extends RouteComponentProps {
   backend: Backend;
   token: string | null;
 }
@@ -14,7 +14,7 @@ export default class Settings extends React.Component<Props> {
       return <Redirect to="/" />;
     }
 
-    const params = new URLSearchParams((this.props as any).location.search);
+    const params = new URLSearchParams(this.props.location.search);
     let details;
     switch (params.get("page")) {
       case "account":

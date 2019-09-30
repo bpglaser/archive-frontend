@@ -12,6 +12,7 @@ import { Organization } from './Models/Organization';
 import { User } from './Models/User';
 import Invite from './Routes/Invite';
 import NotFound from './Routes/NotFound';
+import OrganizationDetails from './Routes/OrganizationDetails';
 import Organizations from './Routes/Organizations';
 import Primary from './Routes/Primary';
 import ProjectDetails from './Routes/ProjectDetails';
@@ -75,6 +76,17 @@ export default class App extends React.Component<any, State> {
             <Primary />
           </Route>
 
+          <Route path="/projects/:id"
+            render={(props) =>
+              <ProjectDetails
+                {...props}
+                backend={this.state.backend}
+                organization={this.state.activeOrganization}
+                token={this.state.token}
+              />
+            }
+          />
+
           <Route path="/projects" exact>
             <Projects
               backend={this.state.backend}
@@ -83,20 +95,25 @@ export default class App extends React.Component<any, State> {
             />
           </Route>
 
-          <Route path="/projects/:id">
-            <ProjectDetails
-              backend={this.state.backend}
-              organization={this.state.activeOrganization}
-              token={this.state.token}
-            />
-          </Route>
+          <Route path="/settings" exact
+            render={(props) =>
+              <Settings
+                {...props}
+                backend={this.state.backend}
+                token={this.state.token}
+              />
+            }
+          />
 
-          <Route path="/settings" exact>
-            <Settings
-              backend={this.state.backend}
-              token={this.state.token}
-            />
-          </Route>
+          <Route path="/organizations/:id"
+            render={(props) =>
+              <OrganizationDetails
+                {...props}
+                backend={this.state.backend}
+                token={this.state.token}
+              />
+            }
+          />
 
           <Route path="/organizations" exact>
             <Organizations

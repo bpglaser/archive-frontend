@@ -17,6 +17,7 @@ export interface Backend {
   editOrganization: (token: string, organizationID: number, name: string, description: string) => Promise<Organization>;
   deleteOrganization: (token: string, organizationID: number) => Promise<void>;
   listOrganizations: (token: string) => Promise<Organization[]>;
+  getOrganizationDetails: (token: string, organizationID: number) => Promise<Organization>;
 
   createProject: (token: string, organizationID: number, name: string, description: string) => Promise<Project>;
   editProject: (token: string, projectID: number, organizationID: number, name: string, description: string) => Promise<Project>;
