@@ -1,11 +1,11 @@
 import React from 'react';
-import { RouteComponentProps, Redirect } from 'react-router';
+import { Redirect, RouteComponentProps } from 'react-router';
 import Loader from '../Components/Loader';
 import OrganizationDeletePrompt from '../Components/Prompts/OrganizationDeletePrompt';
+import OrganizationSettingsPrompt from '../Components/Prompts/OrganizationSettingsPrompt';
 import { Backend } from '../Data/Backend';
 import { Organization } from '../Models/Organization';
 import { Project } from '../Models/Project';
-import OrganizationSettingsPrompt from '../Components/Prompts/OrganizationSettingsPrompt';
 
 enum VisiblePrompt {
   Delete,
@@ -111,6 +111,7 @@ export default class OrganizationDetails extends React.Component<Props, State> {
         organization: organization,
       });
     } catch (err) {
+      console.log(err);
       this.setState({
         errorMessage: 'Failed to load organization',
       });
@@ -124,6 +125,7 @@ export default class OrganizationDetails extends React.Component<Props, State> {
         projects: projects,
       });
     } catch (err) {
+      console.log(err);
       this.setState({
         errorMessage: 'Failed to load projects',
       });

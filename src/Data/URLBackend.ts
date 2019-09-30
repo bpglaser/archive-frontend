@@ -102,7 +102,16 @@ export class URLBackend implements Backend {
   }
 
   getOrganizationDetails = async (token: string, organizationID: number) => {
-    return await this.mock.getOrganizationDetails(token, organizationID);
+    const url = new URL('/api/organizations/details/' + organizationID, this.base);
+    const config = createAuthorizationConfig(token);
+
+    const response = await Axios.get(url.toString(), config);
+    const entry = response.data;
+    return {
+      organizationID: entry.OrgID,
+      name: entry.Name,
+      description: entry.Description
+    };
   }
 
   createProject = async (token: string, organizationID: number, name: string, description: string) => {
@@ -145,7 +154,17 @@ export class URLBackend implements Backend {
   }
 
   getProjectDetails = async (token: string, projectID: number) => {
-    return await this.mock.getProjectDetails(token, projectID);
+    const url = new URL('/api/projects/details/' + projectID, this.base);
+    const config = createAuthorizationConfig(token);
+
+    const result = await Axios.get(url.toString(), config);
+    const entry = result.data;
+    return {
+      projectID: entry.ProjID,
+      organizationID: entry.OrgID,
+      name: entry.Name,
+      description: entry.Description
+    };
   }
 }
 
