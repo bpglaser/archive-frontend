@@ -75,11 +75,24 @@ export default class OrganizationDetails extends React.Component<Props, State> {
       </nav>
 
       {this.state.visiblePrompt === VisiblePrompt.Delete &&
-        <OrganizationDeletePrompt />
+        <OrganizationDeletePrompt
+          backend={this.props.backend}
+          close={this.hidePrompt}
+          organization={this.state.organization!} // TODO ensure that organization is not null
+          success={this.organizationDeleted}
+          token={this.props.token!}
+        />
       }
 
       {this.state.visiblePrompt === VisiblePrompt.Settings &&
-        <OrganizationSettingsPrompt />
+        <OrganizationSettingsPrompt
+          backend={this.props.backend}
+          close={this.hidePrompt}
+          organization={this.state.organization!} // TODO ensure that organization is not null
+          showDeletePrompt={this.showDeletePrompt}
+          success={this.organizationUpdated}
+          token={this.props.token!} // TODO ensure not null
+        />
       }
     </div>);
   }
@@ -126,5 +139,16 @@ export default class OrganizationDetails extends React.Component<Props, State> {
     this.setState({
       visiblePrompt: VisiblePrompt.Delete,
     });
+  }
+
+  organizationUpdated = (organization: Organization) => {
+    // TODO should we reload the projects?
+    this.setState({
+      organization: organization,
+    });
+  }
+
+  organizationDeleted = () => {
+    // TODO redirect page
   }
 }

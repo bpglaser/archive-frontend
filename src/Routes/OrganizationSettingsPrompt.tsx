@@ -17,13 +17,26 @@ interface State {
 }
 
 export default class OrganizationSettingsPrompt extends React.Component<Props, State> {
+  readonly nameRef: React.RefObject<HTMLInputElement>;
+  readonly descriptionRef: React.RefObject<HTMLTextAreaElement>;
+
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      disabled: false,
+      errorMessage: null,
+    };
+    this.nameRef = React.createRef();
+    this.descriptionRef = React.createRef();
+  }
+
   render() {
     return (<div className="modal is-active">
       <div className="modal-background" onClick={this.props.close}></div>
 
       <div className="modal-card">
         <header className="modal-card-head">
-          <p className="modal-card-title">Project Settings</p>
+          <p className="modal-card-title">Organization Settings</p>
           <button className="delete" aria-label="close" onClick={this.props.close}></button>
         </header>
 
@@ -35,7 +48,7 @@ export default class OrganizationSettingsPrompt extends React.Component<Props, S
                 className="input"
                 type="text"
                 placeholder="Project Name"
-                // ref={this.nameRef}
+                ref={this.nameRef}
                 disabled={this.state.disabled} />
             </div>
           </div>
@@ -46,7 +59,7 @@ export default class OrganizationSettingsPrompt extends React.Component<Props, S
               <textarea
                 className="textarea"
                 placeholder="Description"
-                // ref={this.descriptionRef}
+                ref={this.descriptionRef}
                 disabled={this.state.disabled} />
             </div>
           </div>
@@ -75,5 +88,33 @@ export default class OrganizationSettingsPrompt extends React.Component<Props, S
         </footer>
       </div>
     </div>);
+  }
+
+  submitSettings = async () => {
+    if (this.nameRef.current === null || this.descriptionRef.current === null) {
+      return;
+    }
+
+    try {
+      this.setState({
+        disabled: true,
+      });
+
+      const { organizationID } = this.props.organization;
+      const name = this.nameRef.current.value;
+      const description = this.descriptionRef.current.value;
+
+      const organization = await this.props.backend.editOrganization(this.props.token, organizationID, name, description);
+      this.props.success(organization);
+    } catch (err) {
+      // TODO properly display message
+      this.setState({
+        errorMessage: 'Failed to update settings',
+      });
+    } finally {
+      this.setState({
+        disabled: false,
+      });
+    }
   }
 }
