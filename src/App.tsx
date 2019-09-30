@@ -110,6 +110,7 @@ export default class App extends React.Component<any, State> {
               <OrganizationDetails
                 {...props}
                 backend={this.state.backend}
+                clearActiveOrganization={() => this.setActiveOrganization(null)}
                 token={this.state.token}
               />
             }
@@ -198,11 +199,14 @@ export default class App extends React.Component<any, State> {
     }
   }
 
-  setActiveOrganization = (organization: Organization) => {
-    this.setState({
-      activeOrganization: organization,
-    });
-    Cookies.set('active-organization-id', organization.organizationID.toString());
+  setActiveOrganization = async (organization: Organization | null) => {
+    if (organization) {
+      Cookies.set('active-organization-id', organization.organizationID.toString());
+    } else {
+      Cookies.remove('active-organization-id');
+    }
+    await this.populateRecentOrganizations();
+    await this.populateActiveOrganization();
   }
 
   populateActiveOrganization = async () => {

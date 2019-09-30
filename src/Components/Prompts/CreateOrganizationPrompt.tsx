@@ -94,9 +94,6 @@ export default class CreateOrganizationPrompt extends React.Component<Props, Sta
     } catch (err) {
       this.setState({
         errorMessage: 'Failed to create organization',
-      });
-    } finally {
-      this.setState({
         disabled: false,
       });
     }

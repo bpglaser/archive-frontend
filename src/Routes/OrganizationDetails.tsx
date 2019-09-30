@@ -1,11 +1,11 @@
 import React from 'react';
-import { RouteComponentProps } from 'react-router';
+import { RouteComponentProps, Redirect } from 'react-router';
 import Loader from '../Components/Loader';
 import OrganizationDeletePrompt from '../Components/Prompts/OrganizationDeletePrompt';
 import { Backend } from '../Data/Backend';
 import { Organization } from '../Models/Organization';
 import { Project } from '../Models/Project';
-import OrganizationSettingsPrompt from './OrganizationSettingsPrompt';
+import OrganizationSettingsPrompt from '../Components/Prompts/OrganizationSettingsPrompt';
 
 enum VisiblePrompt {
   Delete,
@@ -14,12 +14,14 @@ enum VisiblePrompt {
 
 interface Props extends RouteComponentProps<{ id: string }> {
   backend: Backend;
+  clearActiveOrganization: () => Promise<void>;
   token: string | null;
 }
 
 interface State {
   errorMessage: string | null;
   loading: boolean;
+  needsRedirect: boolean;
   organization: Organization | null;
   projects: Project[];
   visiblePrompt: VisiblePrompt | null;
@@ -33,6 +35,7 @@ export default class OrganizationDetails extends React.Component<Props, State> {
     this.state = {
       errorMessage: null,
       loading: true,
+      needsRedirect: false,
       organization: null,
       projects: [],
       visiblePrompt: null,
@@ -50,6 +53,10 @@ export default class OrganizationDetails extends React.Component<Props, State> {
   }
 
   render() {
+    if (this.state.needsRedirect) {
+      return <Redirect to="/organizations" />;
+    }
+
     if (this.state.loading) {
       return <Loader />;
     }
@@ -148,7 +155,11 @@ export default class OrganizationDetails extends React.Component<Props, State> {
     });
   }
 
-  organizationDeleted = () => {
-    // TODO redirect page
+  organizationDeleted = async () => {
+    this.hidePrompt();
+    await this.props.clearActiveOrganization();
+    this.setState({
+      needsRedirect: true,
+    });
   }
 }

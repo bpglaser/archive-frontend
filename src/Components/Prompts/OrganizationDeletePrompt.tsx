@@ -87,9 +87,6 @@ export default class OrganizationDeletePrompt extends React.Component<Props, Sta
     } catch (err) {
       this.setState({
         errorMessage: 'Organization deletion failed.',
-      });
-    } finally {
-      this.setState({
         loading: false,
       });
     }
