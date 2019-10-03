@@ -1,13 +1,15 @@
+import { NOT_FOUND } from 'http-status-codes';
 import React from 'react';
+import { RouteComponentProps } from 'react-router';
+import Loader from '../Components/Loader';
 import DeleteProjectPrompt from '../Components/Prompts/DeleteProjectPrompt';
 import ProjectSettingsPrompt from '../Components/Prompts/ProjectSettingsPrompt';
 import UploadFilePrompt from '../Components/Prompts/UploadPrompt';
 import { Backend } from '../Data/Backend';
+import { File } from '../Models/File';
 import { Organization } from '../Models/Organization';
 import { Project } from '../Models/Project';
-import { RouteComponentProps } from 'react-router';
-import Loader from '../Components/Loader';
-import { File } from '../Models/File';
+import NotFound from './NotFound';
 
 enum ProjectPrompt {
   Delete,
@@ -15,11 +17,7 @@ enum ProjectPrompt {
   Upload,
 }
 
-interface Params {
-  id: string;
-}
-
-interface Props extends RouteComponentProps<Params> {
+interface Props extends RouteComponentProps<{ id: string }> {
   backend: Backend;
   organization: Organization | null;
   token: string | null;
@@ -27,6 +25,7 @@ interface Props extends RouteComponentProps<Params> {
 
 interface State {
   loading: boolean;
+  notFound: boolean;
   project: Project | null;
   visiblePrompt: ProjectPrompt | null;
 }
@@ -38,6 +37,7 @@ export default class ProjectDetails extends React.Component<Props, State> {
     super(props)
     this.state = {
       loading: false,
+      notFound: false,
       project: null,
       visiblePrompt: null,
     };
@@ -46,27 +46,24 @@ export default class ProjectDetails extends React.Component<Props, State> {
   }
 
   async componentDidMount() {
-    try {
-      this.setState({
-        loading: true,
-      });
+    this.setState({
+      loading: true,
+    });
 
-      const loadedProject = await this.props.backend.getProjectDetails(this.props.token!, this.projectID);
-      this.setState({
-        project: loadedProject,
-      });
-    } catch (err) {
-      // TODO handle
-    } finally {
-      this.setState({
-        loading: false,
-      });
-    }
+    await this.loadProject();
+
+    this.setState({
+      loading: false,
+    });
   }
 
   render() {
     if (this.state.loading) {
       return <Loader />;
+    }
+
+    if (this.state.notFound) {
+      return <NotFound />;
     }
 
     return (<div>
@@ -161,5 +158,31 @@ export default class ProjectDetails extends React.Component<Props, State> {
       project: project,
       visiblePrompt: null,
     });
+  }
+
+  loadProject = async () => {
+    try {
+      const loadedProject = await this.props.backend.getProjectDetails(this.props.token!, this.projectID);
+      this.setState({
+        project: loadedProject,
+      });
+    } catch (err) {
+      if (err.response) {
+        if (err.response.status === NOT_FOUND) {
+          this.setState({
+            notFound: true,
+          });
+        } else {
+          // Unknown error code recieved
+          console.log(err);
+        }
+      } else if (err.request) {
+        // Server not responding
+        console.log(err);
+      } else {
+        // Unknown error
+        console.log(err);
+      }
+    }
   }
 }

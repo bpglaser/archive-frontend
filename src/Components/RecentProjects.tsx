@@ -40,7 +40,7 @@ export default class RecentProjects extends React.Component<Props, State> {
 
     return (<div style={{ display: "flex", flexFlow: "row wrap" }}>
       {
-        this.state.projects.map((project) => <ProjectPreviewCard project={project} />)
+        this.state.projects.map((project, i) => <ProjectPreviewCard project={project} key={i} />)
       }
       <MoreProjectsCard />
     </div>);
