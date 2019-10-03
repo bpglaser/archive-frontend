@@ -166,6 +166,10 @@ export class URLBackend implements Backend {
       description: entry.Description
     };
   }
+
+  uploadFile = async (token: string, projectID: number, formData: FormData) => {
+    return await this.mock.uploadFile(token, projectID, formData);
+  }
 }
 
 function createAuthorizationConfig(token: string) {

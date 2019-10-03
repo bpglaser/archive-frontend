@@ -2,6 +2,7 @@ import { InviteDetails } from '../Models/InviteDetails';
 import { Organization } from '../Models/Organization';
 import { Project } from '../Models/Project';
 import { User } from '../Models/User';
+import { File } from '../Models/File';
 
 export interface Backend {
   login: (email: string, password: string) => Promise<{ user: User, token: string }>;
@@ -24,4 +25,6 @@ export interface Backend {
   deleteProject: (token: string, projectID: number) => Promise<void>;
   listProjects: (token: string, organizationID: number) => Promise<Project[]>;
   getProjectDetails: (token: string, projectID: number) => Promise<Project>;
+
+  uploadFile: (token: string, projectID: number, formData: FormData) => Promise<File>;
 }

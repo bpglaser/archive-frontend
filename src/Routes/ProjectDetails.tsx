@@ -1,12 +1,13 @@
 import React from 'react';
 import DeleteProjectPrompt from '../Components/Prompts/DeleteProjectPrompt';
 import ProjectSettingsPrompt from '../Components/Prompts/ProjectSettingsPrompt';
-import UploadPrompt from '../Components/Prompts/UploadPrompt';
+import UploadFilePrompt from '../Components/Prompts/UploadPrompt';
 import { Backend } from '../Data/Backend';
 import { Organization } from '../Models/Organization';
 import { Project } from '../Models/Project';
 import { RouteComponentProps } from 'react-router';
 import Loader from '../Components/Loader';
+import { File } from '../Models/File';
 
 enum ProjectPrompt {
   Delete,
@@ -116,9 +117,13 @@ export default class ProjectDetails extends React.Component<Props, State> {
       }
 
       {this.state.visiblePrompt === ProjectPrompt.Upload &&
-        <UploadPrompt
+        <UploadFilePrompt
+          backend={this.props.backend}
           close={this.closePrompt}
-          closeWithSuccess={this.closePrompt} />
+          closeWithSuccess={this.fileSuccessfullyUploaded}
+          project={this.state.project!}
+          token={this.props.token!}
+        />
       }
     </div>);
   }
@@ -127,6 +132,10 @@ export default class ProjectDetails extends React.Component<Props, State> {
     this.setState({
       visiblePrompt: null,
     });
+  }
+
+  fileSuccessfullyUploaded = (file: File) => {
+    this.closePrompt();
   }
 
   showDeletePrompt = () => {

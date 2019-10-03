@@ -111,4 +111,9 @@ export class MockBackend implements Backend {
     await delay(this.sleepDuration);
     return { projectID: projectID, organizationID: 1, name: 'MyProject', description: 'Lorem ipsum description' };
   }
+
+  uploadFile = async (token: string, projectID: number, formData: FormData) => {
+    await delay(this.sleepDuration);
+    return {};
+  }
 }

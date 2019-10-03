@@ -1,9 +1,14 @@
-import { delay } from "q";
 import * as React from "react";
+import { Backend } from "../../Data/Backend";
+import { Project } from "../../Models/Project";
+import { File } from '../../Models/File';
 
 interface Props {
+  backend: Backend;
   close: () => void;
-  closeWithSuccess: () => void;
+  closeWithSuccess: (file: File) => void;
+  project: Project;
+  token: string;
 }
 
 interface State {
@@ -12,21 +17,21 @@ interface State {
   selectedFile: string | null;
 }
 
-export default class UploadPrompt extends React.Component<Props, State> {
-  fileInputRef: React.RefObject<HTMLInputElement>
-  nameInputRef: React.RefObject<HTMLInputElement>
-  noteTextareaRef: React.RefObject<HTMLTextAreaElement>
+export default class UploadFilePrompt extends React.Component<Props, State> {
+  readonly fileInputRef: React.RefObject<HTMLInputElement>;
+  readonly nameInputRef: React.RefObject<HTMLInputElement>;
+  readonly noteTextareaRef: React.RefObject<HTMLTextAreaElement>;
 
   constructor(props: Props) {
     super(props)
-    this.fileInputRef = React.createRef()
-    this.nameInputRef = React.createRef()
-    this.noteTextareaRef = React.createRef()
+    this.fileInputRef = React.createRef();
+    this.nameInputRef = React.createRef();
+    this.noteTextareaRef = React.createRef();
     this.state = {
       disabled: false,
       errorMessage: null,
       selectedFile: null,
-    }
+    };
   }
 
   render() {
@@ -99,59 +104,72 @@ export default class UploadPrompt extends React.Component<Props, State> {
           }
         </footer>
       </div>
-    </div>)
+    </div>);
   }
 
   disableInteractivity = () => {
     this.setState({
       disabled: true,
-    })
+    });
   }
 
   displayError = (error: any) => {
     this.setState({
       errorMessage: String(error),
-    })
+    });
   }
 
   enableInteractivity = () => {
     this.setState({
       disabled: false,
-    })
+    });
   }
 
   fileUpdated = () => {
     if (this.fileInputRef.current !== null) {
-      const files = this.fileInputRef.current.files
+      const files = this.fileInputRef.current.files;
       if (files === null || files.length === 0) {
-        return
+        return;
       }
 
       if (this.nameInputRef.current !== null && this.nameInputRef.current.value === '') {
-        this.nameInputRef.current.value = files[0].name
+        this.nameInputRef.current.value = files[0].name;
       }
 
       this.setState({
         selectedFile: files[0].name,
-      })
+      });
     }
   }
 
   modifyClassNameForDisabled = (s: string): string => {
     if (this.state.disabled) {
-      return s + ' is-loading'
+      return s + ' is-loading';
     }
-    return s
+    return s;
   }
 
   startUpload = async () => {
-    this.disableInteractivity()
+    if (this.fileInputRef.current!.files === null || this.fileInputRef.current!.files.length === 0) {
+      // TODO
+      return;
+    }
+
     try {
-      await delay(1000)
-      this.props.closeWithSuccess()
+      const { backend, project, token } = this.props;
+      this.disableInteractivity();
+
+      const formData = new FormData();
+      formData.append('name', this.nameInputRef.current!.value);
+      formData.append('note', this.noteTextareaRef.current!.value);
+      const file = this.fileInputRef.current!.files[0];
+      formData.append('image', file);
+
+      const result = await backend.uploadFile(token, project.projectID, formData);
+      this.props.closeWithSuccess(result);
     } catch (error) {
-      this.displayError(error)
-      this.enableInteractivity()
+      this.displayError(error);
+      this.enableInteractivity();
     }
   }
 }
