@@ -167,6 +167,10 @@ export class URLBackend implements Backend {
     };
   }
 
+  getRecentProjects = async (token: string) => {
+    return await this.mock.getRecentProjects(token);
+  }
+
   uploadFile = async (token: string, projectID: number, formData: FormData) => {
     return await this.mock.uploadFile(token, projectID, formData);
   }

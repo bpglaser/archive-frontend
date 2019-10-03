@@ -112,6 +112,16 @@ export class MockBackend implements Backend {
     return { projectID: projectID, organizationID: 1, name: 'MyProject', description: 'Lorem ipsum description' };
   }
 
+  getRecentProjects = async (token: string) => {
+    await delay(this.sleepDuration);
+    return [
+      { projectID: 1, organizationID: 11, name: 'MyProject1', description: 'Lorem ipsum description' },
+      { projectID: 2, organizationID: 12, name: 'MyProject2', description: 'Lorem ipsum description' },
+      { projectID: 3, organizationID: 13, name: 'MyProject3', description: 'Lorem ipsum description' },
+      { projectID: 4, organizationID: 14, name: 'MyProject4', description: 'Lorem ipsum description' },
+    ];
+  }
+
   uploadFile = async (token: string, projectID: number, formData: FormData) => {
     await delay(this.sleepDuration);
     return {};

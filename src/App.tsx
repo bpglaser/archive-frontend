@@ -1,3 +1,4 @@
+import 'bulma';
 import { createHashHistory } from 'history';
 import Cookies from 'js-cookie';
 import React from 'react';
@@ -19,7 +20,7 @@ import ProjectDetails from './Routes/ProjectDetails';
 import Projects from './Routes/Projects';
 import Settings from './Routes/Settings';
 
-const history = createHashHistory()
+const history = createHashHistory();
 
 interface State {
   activeOrganization: Organization | null;
@@ -73,7 +74,10 @@ export default class App extends React.Component<any, State> {
 
         <Switch>
           <Route path="/" exact>
-            <Primary />
+            <Primary
+              backend={this.state.backend}
+              token={this.state.token}
+            />
           </Route>
 
           <Route path="/projects/:id"
@@ -144,7 +148,7 @@ export default class App extends React.Component<any, State> {
             mode={this.state.loginDisplayMode} />
         }
       </BrowserRouter>
-    </div>)
+    </div>);
   }
 
   closeLoginPrompt = () => {
