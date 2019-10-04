@@ -2,6 +2,14 @@
     max-width: 30em;
 }
 
+.error-display {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+}
+
 .hidden {
     visibility: hidden;
 }

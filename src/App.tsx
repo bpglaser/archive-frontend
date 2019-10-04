@@ -20,12 +20,14 @@ import ProjectDetails from './Routes/ProjectDetails';
 import Projects from './Routes/Projects';
 import Settings from './Routes/Settings';
 import ArticleDetails from './Routes/ArticleDetails';
+import ErrorDisplay from './Components/ErrorDisplay';
 
 const history = createHashHistory();
 
 interface State {
   activeOrganization: Organization | null;
   backend: Backend;
+  errorMessages: string[];
   loggedInAs: User | null;
   loginDisplayMode: LoginDisplayMode | null;
   recentOrganizations: Organization[];
@@ -48,6 +50,7 @@ export default class App extends React.Component<any, State> {
     this.state = {
       activeOrganization: null,
       backend: new URLBackend('https://robinsonobservatory.org/'),
+      errorMessages: [],
       loggedInAs: user,
       loginDisplayMode: null,
       recentOrganizations: [],
@@ -72,6 +75,13 @@ export default class App extends React.Component<any, State> {
           recentOrganizations={this.state.recentOrganizations}
           switchOrganization={this.setActiveOrganization}
         />
+
+        {this.state.errorMessages.length > 0 &&
+          <ErrorDisplay
+            close={this.advanceError}
+            errorMessage={this.state.errorMessages[0]}
+          />
+        }
 
         <Switch>
           <Route path="/" exact>
@@ -159,6 +169,20 @@ export default class App extends React.Component<any, State> {
         }
       </BrowserRouter>
     </div>);
+  }
+
+  advanceError = () => {
+    if (this.state.errorMessages.length > 0) {
+      this.setState({
+        errorMessages: this.state.errorMessages.slice(1),
+      });
+    }
+  }
+
+  displayError = (errorMessage: string) => {
+    this.setState({
+      errorMessages: [...this.state.errorMessages, errorMessage],
+    });
   }
 
   closeLoginPrompt = () => {
