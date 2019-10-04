@@ -5,19 +5,8 @@ interface Props {
   errorMessage: string;
 }
 
-interface State {
-
-}
-
-export default class ErrorDisplay extends React.Component<Props, State> {
+export default class ErrorDropdownDisplay extends React.Component<Props> {
   timeoutID?: NodeJS.Timeout;
-
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-
-    };
-  }
 
   componentDidMount() {
     this.timeoutID = setTimeout(this.props.close, 5000);

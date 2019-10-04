@@ -20,7 +20,7 @@ import ProjectDetails from './Routes/ProjectDetails';
 import Projects from './Routes/Projects';
 import Settings from './Routes/Settings';
 import ArticleDetails from './Routes/ArticleDetails';
-import ErrorDisplay from './Components/ErrorDisplay';
+import ErrorDropdownDisplay from './Components/ErrorDropdownDisplay';
 
 const history = createHashHistory();
 
@@ -75,13 +75,6 @@ export default class App extends React.Component<any, State> {
           recentOrganizations={this.state.recentOrganizations}
           switchOrganization={this.setActiveOrganization}
         />
-
-        {this.state.errorMessages.length > 0 &&
-          <ErrorDisplay
-            close={this.advanceError}
-            errorMessage={this.state.errorMessages[0]}
-          />
-        }
 
         <Switch>
           <Route path="/" exact>
@@ -166,6 +159,13 @@ export default class App extends React.Component<any, State> {
             backend={this.state.backend}
             loginSuccess={this.loginCompleted}
             mode={this.state.loginDisplayMode} />
+        }
+
+        {this.state.errorMessages.length > 0 &&
+          <ErrorDropdownDisplay
+            close={this.advanceError}
+            errorMessage={this.state.errorMessages[0]}
+          />
         }
       </BrowserRouter>
     </div>);

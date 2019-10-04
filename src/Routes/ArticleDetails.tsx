@@ -4,6 +4,7 @@ import { Backend } from '../Data/Backend';
 import { Article } from '../Models/Article';
 import Loader from '../Components/Loader';
 import moment from 'moment';
+import ErrorPage from '../Components/ErrorPage';
 
 interface Props extends RouteComponentProps<{ id: string }> {
   backend: Backend;
@@ -41,8 +42,7 @@ export default class ArticleDetails extends React.Component<Props, State> {
     }
 
     if (this.state.errorMessage) {
-      // TODO proper error
-      return <div>{this.state.errorMessage}</div>;
+      return <ErrorPage errorMessage={this.state.errorMessage} retry={this.reloadArticle} />;
     }
 
     // TODO handle updated
@@ -66,8 +66,21 @@ export default class ArticleDetails extends React.Component<Props, State> {
     } catch (err) {
       // TODO fine tune error handling
       this.setState({
-        errorMessage: 'Failed to load article',
+        errorMessage: 'An error occoured while loading the article contents.',
       });
     }
+  }
+
+  reloadArticle = async () => {
+    this.setState({
+      errorMessage: null,
+      loading: true,
+    });
+
+    await this.loadArticle();
+
+    this.setState({
+      loading: false,
+    });
   }
 }
