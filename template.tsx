@@ -22,4 +22,3 @@ export default class FOOBAR extends React.Component<Props, State> {
     </div>);
   }
 }
-

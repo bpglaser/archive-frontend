@@ -61,6 +61,10 @@ export class URLBackend implements Backend {
     await this.mock.declineInvite(token, key);
   }
 
+  getArticles = async () => {
+    return await this.mock.getArticles();
+  }
+
   createOrganization = async (token: string, name: string, description: string) => {
     const url = new URL('/api/organizations/create', this.base);
     const data = { name: name, desc: description };

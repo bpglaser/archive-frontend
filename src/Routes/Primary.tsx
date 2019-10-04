@@ -1,5 +1,6 @@
 import 'bulma';
 import React from 'react';
+import RecentNews from '../Components/RecentNews';
 import RecentProjects from '../Components/RecentProjects';
 import { Backend } from '../Data/Backend';
 
@@ -24,16 +25,28 @@ export default class Primary extends React.Component<Props, State> {
   render() {
     if (this.props.token === null) {
       return (<div>
-        // TODO
+        <h1 className="title">Recent News</h1>
+        <RecentNews
+          backend={this.props.backend}
+        />
       </div>);
     }
 
-    return (<div>
-      <h1 className="title">Your Recent Projects</h1>
-      <RecentProjects
-        backend={this.props.backend}
-        token={this.props.token}
-      />
+    return (<div className="columns">
+      <div className="column is-three-quarters">
+        <h1 className="title">Recent News</h1>
+        <RecentNews
+          backend={this.props.backend}
+        />
+      </div>
+
+      <div className="column">
+        <h1 className="title">Your Recent Projects</h1>
+        <RecentProjects
+          backend={this.props.backend}
+          token={this.props.token}
+        />
+      </div>
     </div>);
   }
 }
