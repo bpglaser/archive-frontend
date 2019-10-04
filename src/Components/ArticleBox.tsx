@@ -11,13 +11,14 @@ export default class ArticleBox extends React.Component<Props> {
   render() {
     // TODO handle updated date
     const { articleID, headline, author, content, published } = this.props.article;
+    const localizedTimeString = moment(published).fromNow();
 
     return (<div className="box">
       <article className="media">
         <div className="media-content">
           <div className="content">
             <p>
-              <strong>{headline}</strong> <small><i className="fas fa-user"></i> {author.email}</small> <small><i className="fas fa-clock"></i> {getLocalizedTimeString(published)}</small>
+              <strong>{headline}</strong> <small><i className="fas fa-user"></i> {author.email}</small> <small><i className="fas fa-clock"></i> {localizedTimeString}</small>
               <br />
               {content}
               <br />
@@ -28,8 +29,4 @@ export default class ArticleBox extends React.Component<Props> {
       </article>
     </div>);
   }
-}
-
-function getLocalizedTimeString(d: Date) {
-  return moment(d).fromNow();
 }

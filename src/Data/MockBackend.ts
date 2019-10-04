@@ -54,6 +54,11 @@ export class MockBackend implements Backend {
     await delay(this.sleepDuration);
   }
 
+  getArticle = async (articleID: number) => {
+    await delay(this.sleepDuration);
+    return { articleID: 1, headline: 'Welcome!', author: { userID: '1', email: 'brad' }, published: new Date(), content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In a dapibus lacus. Phasellus et posuere urna, ac pretium tortor. Ut venenatis fringilla nunc, at pellentesque libero vehicula porta. Sed convallis magna eget nisl pretium cursus. Etiam feugiat hendrerit maximus. Nunc eu sem ligula. In nec rutrum lorem. Nulla facilisi. Ut pellentesque congue mauris, a consectetur sapien efficitur a. Praesent pharetra, risus ut egestas dapibus, mi augue varius nisi, in accumsan risus nunc ac nisl. Suspendisse libero risus, vulputate et vulputate non, vehicula a metus. Phasellus dui arcu, tristique a dapibus vel, venenatis quis leo. Proin in sollicitudin metus. In eget.' };
+  }
+
   getArticles = async () => {
     await delay(this.sleepDuration);
     return [

@@ -19,6 +19,7 @@ import Primary from './Routes/Primary';
 import ProjectDetails from './Routes/ProjectDetails';
 import Projects from './Routes/Projects';
 import Settings from './Routes/Settings';
+import ArticleDetails from './Routes/ArticleDetails';
 
 const history = createHashHistory();
 
@@ -134,6 +135,15 @@ export default class App extends React.Component<any, State> {
               token={this.state.token}
             />
           </Route>
+
+          <Route path="/article/:id"
+            render={(props) =>
+              <ArticleDetails
+                {...props}
+                backend={this.state.backend}
+              />
+            }
+          />
 
           <Route>
             <NotFound />

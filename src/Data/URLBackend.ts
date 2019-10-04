@@ -61,6 +61,10 @@ export class URLBackend implements Backend {
     await this.mock.declineInvite(token, key);
   }
 
+  getArticle = async (articleID: number) => {
+    return await this.mock.getArticle(articleID);
+  }
+
   getArticles = async () => {
     return await this.mock.getArticles();
   }
