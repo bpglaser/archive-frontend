@@ -15,9 +15,11 @@ export interface Backend {
   acceptInvite: (token: string, key: string) => Promise<void>;
   declineInvite: (token: string, key: string) => Promise<void>;
 
-  createArticle: (token: string, title: string, content: string) => Promise<void>;
-  getArticle: (articleID: number) => Promise<Article>;
   getArticles: () => Promise<Article[]>;
+  getArticle: (articleID: number) => Promise<Article>;
+  createArticle: (token: string, title: string, content: string) => Promise<Article>;
+  updateArticle: (token: string, article: Article, title: string, content: string) => Promise<Article>;
+  deleteArticle: (token: string, articleID: number) => Promise<void>;
 
   createOrganization: (token: string, name: string, description: string) => Promise<Organization>;
   editOrganization: (token: string, organizationID: number, name: string, description: string) => Promise<Organization>;

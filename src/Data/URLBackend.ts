@@ -2,6 +2,7 @@ import Axios from 'axios';
 import { readTokenPayload } from '../Helpers';
 import { Backend } from './Backend';
 import { MockBackend } from "./MockBackend";
+import { Article } from '../Models/Article';
 
 export class URLBackend implements Backend {
   base: string | undefined;
@@ -61,16 +62,73 @@ export class URLBackend implements Backend {
     await this.mock.declineInvite(token, key);
   }
 
-  createArticle = async (token: string, title: string, conent: string) => {
-    await this.mock.createArticle(token, title, conent);
+  getArticles = async () => {
+    const url = new URL('/api/articles/', this.base);
+    const result = await Axios.get(url.toString());
+    const entries: any[] = result.data;
+
+    return entries.map((entry) => {
+      return {
+        articleID: Number(entry.articleid),
+        headline: entry.headline as string,
+        author: { userID: String(entry.userid), email: entry.Email },
+        published: new Date(entry.published),
+        content: entry.content as string
+      };
+    });
   }
 
   getArticle = async (articleID: number) => {
-    return await this.mock.getArticle(articleID);
+    const url = new URL('/api/articles/' + articleID, this.base);
+    const result = await Axios.get(url.toString());
+    const entry: any = result.data;
+
+    return {
+      articleID: Number(entry.articleid),
+      headline: entry.headline as string,
+      author: { userID: String(entry.userid), email: entry.Email },
+      published: new Date(entry.published),
+      content: entry.content as string
+    };
   }
 
-  getArticles = async () => {
-    return await this.mock.getArticles();
+  createArticle = async (token: string, title: string, content: string) => {
+    const url = new URL('/api/articles/', this.base);
+    const data = { headline: title, content: content };
+    const config = createAuthorizationConfig(token);
+    const result = await Axios.post(url.toString(), data, config);
+
+    const user = readTokenPayload(token);
+    const article = {
+      articleID: result.data.articleID,
+      headline: title,
+      author: user,
+      content: content,
+      published: new Date(result.data.published),
+    };
+    return article;
+  }
+
+  updateArticle = async (token: string, article: Article, title: string, content: string) => {
+    const url = new URL('/api/articles/' + article.articleID, this.base);
+    const data = { headline: title, content: content };
+    const config = createAuthorizationConfig(token);
+    const result = await Axios.patch(url.toString(), data, config);
+
+    return {
+      articleID: article.articleID,
+      headline: title,
+      author: article.author,
+      content: content,
+      published: article.published,
+      updated: new Date(result.data.updated),
+    };
+  }
+
+  deleteArticle = async (token: string, articleID: number) => {
+    const url = new URL('/api/articles/' + articleID, this.base);
+    const config = createAuthorizationConfig(token);
+    await Axios.delete(url.toString(), config);
   }
 
   createOrganization = async (token: string, name: string, description: string) => {

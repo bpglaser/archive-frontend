@@ -1,11 +1,12 @@
 import React from 'react';
 import { EditorValue } from 'react-rte';
 import { Backend } from '../../Data/Backend';
+import { Article } from '../../Models/Article';
 
 interface Props {
   backend: Backend;
   close: () => void;
-  success: () => void;
+  success: (article: Article) => void;
   title: string;
   token: string;
   value: EditorValue;
@@ -64,8 +65,8 @@ export default class CreateArticleConfrimationPrompt extends React.Component<Pro
         disabled: true,
       });
       const content = this.props.value.toString('html');
-      await this.props.backend.createArticle(this.props.token, this.props.title, content);
-      this.props.success();
+      const article = await this.props.backend.createArticle(this.props.token, this.props.title, content);
+      this.props.success(article);
     } catch (err) {
       this.setState({
         disabled: false,
