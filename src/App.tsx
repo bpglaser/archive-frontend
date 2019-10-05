@@ -4,6 +4,7 @@ import Cookies from 'js-cookie';
 import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import './App.css';
+import ErrorDropdownDisplay from './Components/ErrorDropdownDisplay';
 import Navbar from './Components/Navbar';
 import { LoginDisplayMode, LoginPrompt } from './Components/Prompts/LoginPrompt';
 import { Backend } from './Data/Backend';
@@ -11,6 +12,8 @@ import { URLBackend } from "./Data/URLBackend";
 import { readTokenPayload } from './Helpers';
 import { Organization } from './Models/Organization';
 import { User } from './Models/User';
+import ArticleDetails from './Routes/ArticleDetails';
+import CreateArticle from './Routes/CreateArticle';
 import Invite from './Routes/Invite';
 import NotFound from './Routes/NotFound';
 import OrganizationDetails from './Routes/OrganizationDetails';
@@ -19,8 +22,6 @@ import Primary from './Routes/Primary';
 import ProjectDetails from './Routes/ProjectDetails';
 import Projects from './Routes/Projects';
 import Settings from './Routes/Settings';
-import ArticleDetails from './Routes/ArticleDetails';
-import ErrorDropdownDisplay from './Components/ErrorDropdownDisplay';
 
 const history = createHashHistory();
 
@@ -134,6 +135,13 @@ export default class App extends React.Component<any, State> {
 
           <Route path="/invite" exact>
             <Invite
+              backend={this.state.backend}
+              token={this.state.token}
+            />
+          </Route>
+
+          <Route path="/article/new" exact>
+            <CreateArticle
               backend={this.state.backend}
               token={this.state.token}
             />

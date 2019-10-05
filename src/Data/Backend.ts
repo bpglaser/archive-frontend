@@ -1,9 +1,9 @@
+import { Article } from '../Models/Article';
 import { File } from '../Models/File';
 import { InviteDetails } from '../Models/InviteDetails';
 import { Organization } from '../Models/Organization';
 import { Project } from '../Models/Project';
 import { User } from '../Models/User';
-import { Article } from '../Models/Article';
 
 export interface Backend {
   login: (email: string, password: string) => Promise<{ user: User, token: string }>;
@@ -15,6 +15,7 @@ export interface Backend {
   acceptInvite: (token: string, key: string) => Promise<void>;
   declineInvite: (token: string, key: string) => Promise<void>;
 
+  createArticle: (token: string, title: string, content: string) => Promise<void>;
   getArticle: (articleID: number) => Promise<Article>;
   getArticles: () => Promise<Article[]>;
 
