@@ -14,6 +14,7 @@ import { Organization } from './Models/Organization';
 import { User } from './Models/User';
 import ArticleDetails from './Routes/ArticleDetails';
 import CreateArticle from './Routes/CreateArticle';
+import EditArticle from './Routes/EditArticle';
 import Invite from './Routes/Invite';
 import NotFound from './Routes/NotFound';
 import OrganizationDetails from './Routes/OrganizationDetails';
@@ -22,7 +23,6 @@ import Primary from './Routes/Primary';
 import ProjectDetails from './Routes/ProjectDetails';
 import Projects from './Routes/Projects';
 import Settings from './Routes/Settings';
-import EditArticle from './Routes/EditArticle';
 
 const history = createHashHistory();
 
@@ -163,6 +163,7 @@ export default class App extends React.Component<any, State> {
               <ArticleDetails
                 {...props}
                 backend={this.state.backend}
+                token={this.state.token}
               />
             }
           />

@@ -16,3 +16,17 @@ export const readTokenPayload = (token: string): User => {
   const result: any = jwt.decode(token);
   return { userID: result.userID, email: result.email, admin: result.admin };
 }
+
+export const checkIsAdmin = (token: string | null): boolean => {
+  if (token === null) {
+    return false;
+  }
+
+  const user = readTokenPayload(token);
+
+  if (user.admin === undefined) {
+    return false;
+  }
+
+  return user.admin;
+}
