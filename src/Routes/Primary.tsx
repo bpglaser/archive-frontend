@@ -28,6 +28,7 @@ export default class Primary extends React.Component<Props, State> {
         <h1 className="title">Recent News</h1>
         <RecentNews
           backend={this.props.backend}
+          token={this.props.token}
         />
       </div>);
     }
@@ -37,6 +38,7 @@ export default class Primary extends React.Component<Props, State> {
         <h1 className="title">Recent News</h1>
         <RecentNews
           backend={this.props.backend}
+          token={this.props.token}
         />
       </div>
 

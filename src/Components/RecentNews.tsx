@@ -1,11 +1,12 @@
 import React from 'react';
 import { Backend } from '../Data/Backend';
 import { Article } from '../Models/Article';
-import Loader from './Loader';
 import ArticleBox from './ArticleBox';
+import Loader from './Loader';
 
 interface Props {
   backend: Backend;
+  token: string | null;
 }
 
 interface State {
@@ -50,9 +51,20 @@ export default class RecentNews extends React.Component<Props, State> {
 
     return (<div>
       {
-        this.state.articles.map((article, i) => <ArticleBox article={article} key={i} />)
+        this.state.articles.map((article, i) =>
+          <ArticleBox
+            article={article}
+            articleDeleted={this.articleDeleted}
+            backend={this.props.backend}
+            key={i}
+            token={this.props.token}
+          />)
       }
     </div>);
+  }
+
+  articleDeleted = async () => {
+    await this.loadNews();
   }
 
   loadNews = async () => {
