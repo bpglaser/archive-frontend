@@ -14,5 +14,5 @@ export const validPassword = (s: string): boolean => {
 export const readTokenPayload = (token: string): User => {
   // TODO validate token contents
   const result: any = jwt.decode(token);
-  return { userID: result.userID, email: result.email };
+  return { userID: result.userID, email: result.email, admin: result.admin };
 }

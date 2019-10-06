@@ -22,6 +22,7 @@ import Primary from './Routes/Primary';
 import ProjectDetails from './Routes/ProjectDetails';
 import Projects from './Routes/Projects';
 import Settings from './Routes/Settings';
+import EditArticle from './Routes/EditArticle';
 
 const history = createHashHistory();
 
@@ -146,6 +147,16 @@ export default class App extends React.Component<any, State> {
               token={this.state.token}
             />
           </Route>
+
+          <Route path="/article/edit/:id"
+            render={(props) =>
+              <EditArticle
+                {...props}
+                backend={this.state.backend}
+                token={this.state.token}
+              />
+            }
+          />
 
           <Route path="/article/:id"
             render={(props) =>

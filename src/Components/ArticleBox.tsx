@@ -1,10 +1,11 @@
 import moment from 'moment';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { Backend } from '../Data/Backend';
 import { Article } from '../Models/Article';
 import ArticleDropdown from './ArticleDropdown';
 import DeleteArticleConfirmationPrompt from './Prompts/DeleteArticleConfirmationPrompt';
+import { readTokenPayload } from '../Helpers';
 
 interface Props {
   article: Article;
@@ -14,18 +15,32 @@ interface Props {
 }
 
 interface State {
+  redirectToEdit: boolean;
   promptVisible: boolean;
 }
 
 export default class ArticleBox extends React.Component<Props, State> {
+  readonly isAdmin: boolean;
+
   constructor(props: Props) {
     super(props);
     this.state = {
+      redirectToEdit: false,
       promptVisible: false,
     };
+
+    if (this.props.token) {
+      const user = readTokenPayload(this.props.token);
+      this.isAdmin = user.admin !== undefined && user.admin;
+    } else {
+      this.isAdmin = false;
+    }
   }
 
   render() {
+    if (this.state.redirectToEdit) {
+      return <Redirect to={'/article/edit/' + this.props.article.articleID} />
+    }
     // TODO handle updated date
     const { articleID, headline, author, content, published } = this.props.article;
     const localizedTimeString = moment(published).fromNow();
@@ -48,12 +63,14 @@ export default class ArticleBox extends React.Component<Props, State> {
           </article>
         </div>
 
-        <div className="column is-narrow">
-          <ArticleDropdown
-            editClicked={this.editClicked}
-            deleteClicked={this.deleteClicked}
-          />
-        </div>
+        {this.isAdmin &&
+          <div className="column is-narrow">
+            <ArticleDropdown
+              editClicked={this.editClicked}
+              deleteClicked={this.deleteClicked}
+            />
+          </div>
+        }
       </div>
 
       {this.state.promptVisible &&
@@ -74,10 +91,19 @@ export default class ArticleBox extends React.Component<Props, State> {
   }
 
   editClicked = () => {
-    // TODO
+    if (!this.isAdmin) {
+      return;
+    }
+    this.setState({
+      redirectToEdit: true,
+    });
   }
 
   deleteClicked = () => {
+    if (!this.isAdmin) {
+      return;
+    }
+
     this.setState({
       promptVisible: true,
     });
