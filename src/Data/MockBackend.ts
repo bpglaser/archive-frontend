@@ -155,6 +155,22 @@ export class MockBackend implements Backend {
 
   uploadFile = async (token: string, projectID: number, formData: FormData) => {
     await delay(this.sleepDuration);
-    return {};
+    return { fileID: 123 };
+  }
+
+  getComments = async (token: string, fileID: number) => {
+    await delay(this.sleepDuration);
+    return [
+      { content: 'Lorem ipsum comment content.', published: new Date(), user: { userID: '123', email: 'abc123@gmail.com' } },
+      { content: 'Lorem ipsum comment content.', published: new Date(), user: { userID: '123', email: 'abc123@gmail.com' } },
+      { content: 'Lorem ipsum comment content.', published: new Date(), user: { userID: '123', email: 'abc123@gmail.com' } },
+      { content: 'Lorem ipsum comment content.', published: new Date(), user: { userID: '123', email: 'abc123@gmail.com' } },
+      { content: 'Lorem ipsum comment content.', published: new Date(), user: { userID: '123', email: 'abc123@gmail.com' } },
+      { content: 'Lorem ipsum comment content.', published: new Date(), user: { userID: '123', email: 'abc123@gmail.com' } },
+      { content: 'Lorem ipsum comment content.', published: new Date(), user: { userID: '123', email: 'abc123@gmail.com' } },
+      { content: 'Lorem ipsum comment content.', published: new Date(), user: { userID: '123', email: 'abc123@gmail.com' } },
+      { content: 'Lorem ipsum comment content.', published: new Date(), user: { userID: '123', email: 'abc123@gmail.com' } },
+      { content: 'Lorem ipsum comment content.', published: new Date(), user: { userID: '123', email: 'abc123@gmail.com' } },
+    ];
   }
 }

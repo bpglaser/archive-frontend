@@ -4,6 +4,7 @@ import { InviteDetails } from '../Models/InviteDetails';
 import { Organization } from '../Models/Organization';
 import { Project } from '../Models/Project';
 import { User } from '../Models/User';
+import { Comment } from '../Models/Comment';
 
 export interface Backend {
   login: (email: string, password: string) => Promise<{ user: User, token: string }>;
@@ -35,4 +36,6 @@ export interface Backend {
   getRecentProjects: (token: string) => Promise<Project[]>;
 
   uploadFile: (token: string, projectID: number, formData: FormData) => Promise<File>;
+
+  getComments: (token: string, fileID: number) => Promise<Comment[]>;
 }

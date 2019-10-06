@@ -244,6 +244,10 @@ export class URLBackend implements Backend {
   uploadFile = async (token: string, projectID: number, formData: FormData) => {
     return await this.mock.uploadFile(token, projectID, formData);
   }
+
+  getComments = async (token: string, fileID: number) => {
+    return await this.mock.getComments(token, fileID);
+  }
 }
 
 function createAuthorizationConfig(token: string) {
