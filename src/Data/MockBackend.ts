@@ -158,6 +158,21 @@ export class MockBackend implements Backend {
     return { fileID: 123 };
   }
 
+  getFileDetails = async (token: string, fileID: number) => {
+    await delay(this.sleepDuration);
+    return { fileID: fileID };
+  }
+
+  getNearbyFiles = async (token: string, fileID: number) => {
+    await delay(this.sleepDuration);
+    return [
+      { fileID: 1 },
+      { fileID: 2 },
+      { fileID: 3 },
+      { fileID: 4 },
+    ];
+  }
+
   getComments = async (token: string, fileID: number) => {
     await delay(this.sleepDuration);
     return [

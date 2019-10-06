@@ -241,6 +241,14 @@ export class URLBackend implements Backend {
     return await this.mock.getRecentProjects(token);
   }
 
+  getFileDetails = async (token: string, fileID: number) => {
+    return await this.mock.getFileDetails(token, fileID);
+  }
+
+  getNearbyFiles = async (token: string, fileID: number) => {
+    return await this.mock.getNearbyFiles(token, fileID);
+  }
+
   uploadFile = async (token: string, projectID: number, formData: FormData) => {
     return await this.mock.uploadFile(token, projectID, formData);
   }

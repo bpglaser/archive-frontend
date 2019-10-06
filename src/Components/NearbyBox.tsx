@@ -1,14 +1,15 @@
 import React from 'react';
+import { File } from '../Models/File';
 
 interface Props {
-
+  file: File;
 }
 
 interface State {
 
 }
 
-export default class foo extends React.Component<Props, State> {
+export default class NearbyBox extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -18,7 +19,7 @@ export default class foo extends React.Component<Props, State> {
 
   render() {
     return (<div>
-
+      {this.props.file.fileID}
     </div>);
   }
 }

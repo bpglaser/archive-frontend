@@ -15,6 +15,7 @@ import { User } from './Models/User';
 import ArticleDetails from './Routes/ArticleDetails';
 import CreateArticle from './Routes/CreateArticle';
 import EditArticle from './Routes/EditArticle';
+import FileDetails from './Routes/FileDetails';
 import Invite from './Routes/Invite';
 import NotFound from './Routes/NotFound';
 import OrganizationDetails from './Routes/OrganizationDetails';
@@ -161,6 +162,16 @@ export default class App extends React.Component<any, State> {
           <Route path="/article/:id"
             render={(props) =>
               <ArticleDetails
+                {...props}
+                backend={this.state.backend}
+                token={this.state.token}
+              />
+            }
+          />
+
+          <Route path="/file/:id"
+            render={(props) =>
+              <FileDetails
                 {...props}
                 backend={this.state.backend}
                 token={this.state.token}
