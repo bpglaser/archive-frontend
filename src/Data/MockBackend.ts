@@ -153,16 +153,6 @@ export class MockBackend implements Backend {
     ];
   }
 
-  uploadFile = async (token: string, projectID: number, formData: FormData) => {
-    await delay(this.sleepDuration);
-    return { fileID: 123 };
-  }
-
-  getFileDetails = async (token: string, fileID: number) => {
-    await delay(this.sleepDuration);
-    return { fileID: fileID };
-  }
-
   getNearbyFiles = async (token: string, fileID: number) => {
     await delay(this.sleepDuration);
     return [
@@ -171,6 +161,34 @@ export class MockBackend implements Backend {
       { fileID: 3 },
       { fileID: 4 },
     ];
+  }
+
+  uploadFile = async (token: string, projectID: number, formData: FormData) => {
+    await delay(this.sleepDuration);
+    return { fileID: 123 };
+  }
+
+  downloadFile = async (token: string, fileID: number) => {
+    await delay(this.sleepDuration);
+  }
+
+  listFiles = async (token: string, projID: number) => {
+    await delay(this.sleepDuration);
+    return [
+      { fileID: 1 },
+      { fileID: 2 },
+      { fileID: 3 },
+      { fileID: 4 },
+    ];
+  }
+
+  getFileDetails = async (token: string, fileID: number) => {
+    await delay(this.sleepDuration);
+    return { fileID: fileID };
+  }
+
+  deleteFile = async (token: string, fileID: number) => {
+    await delay(this.sleepDuration);
   }
 
   getComments = async (token: string, fileID: number) => {

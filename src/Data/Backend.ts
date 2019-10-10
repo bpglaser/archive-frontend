@@ -35,9 +35,12 @@ export interface Backend {
   getProjectDetails: (token: string, projectID: number) => Promise<Project>;
   getRecentProjects: (token: string) => Promise<Project[]>;
 
-  getFileDetails: (token: string, fileID: number) => Promise<File>;
   getNearbyFiles: (token: string, fileID: number) => Promise<File[]>;
   uploadFile: (token: string, projectID: number, formData: FormData) => Promise<File>;
+  downloadFile: (token: string, fileID: number) => Promise<void>;
+  listFiles: (token: string, projID: number) => Promise<File[]>;
+  getFileDetails: (token: string, fileID: number) => Promise<File>;
+  deleteFile: (token: string, fileID: number) => Promise<void>;
 
   getComments: (token: string, fileID: number) => Promise<Comment[]>;
 }
