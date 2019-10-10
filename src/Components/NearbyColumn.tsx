@@ -35,8 +35,8 @@ export default class NearbyColumn extends React.Component<Props, State> {
     });
   }
 
-  async componentDidUpdate() {
-    if (this.props.file === null) {
+  async componentDidUpdate(prevProps: Props) {
+    if (this.props.file === prevProps.file || this.props.file === null) {
       return;
     }
 
@@ -55,7 +55,7 @@ export default class NearbyColumn extends React.Component<Props, State> {
 
     return (<div className="column is-narrow">
       {
-        this.state.files.map((file, i) => 
+        this.state.files.map((file, i) =>
           <NearbyBox
             file={file}
             key={i}
