@@ -9,7 +9,7 @@ import { Article } from '../Models/Article';
 
 interface Props extends RouteComponentProps<{ id: string }> {
   backend: Backend;
-  token: string | null;
+  token: string;
 }
 
 interface State {
@@ -23,20 +23,17 @@ interface State {
 }
 
 export default class EditArticle extends React.Component<Props, State> {
-  readonly id: number;
-
   constructor(props: Props) {
     super(props);
     this.state = {
       article: null,
       errorMessage: null,
       loading: true,
-      redirect: this.props.token ? null : '/',
+      redirect: null,
       promptVisible: false,
       title: '',
       value: EditorValue.createEmpty(),
     };
-    this.id = Number(this.props.match.params.id);
   }
 
   async componentDidMount() {
@@ -44,6 +41,18 @@ export default class EditArticle extends React.Component<Props, State> {
     this.setState({
       loading: false,
     });
+  }
+
+  async componentDidUpdate(oldProps: Props) {
+    if (this.props.match.params.id !== oldProps.match.params.id) {
+      this.setState({
+        loading: true,
+      });
+      await this.loadArticle();
+      this.setState({
+        loading: false,
+      });
+    }
   }
 
   render() {
@@ -91,7 +100,7 @@ export default class EditArticle extends React.Component<Props, State> {
           close={this.closePrompt}
           success={this.articleUpdated}
           title={this.state.title}
-          token={this.props.token!}
+          token={this.props.token}
           value={this.state.value}
         />
       }
@@ -120,7 +129,7 @@ export default class EditArticle extends React.Component<Props, State> {
 
   loadArticle = async () => {
     try {
-      const article = await this.props.backend.getArticle(this.id);
+      const article = await this.props.backend.getArticle(this.getID());
       this.setState({
         article: article,
         title: article.headline,
@@ -157,5 +166,9 @@ export default class EditArticle extends React.Component<Props, State> {
     this.setState({
       title: event.target.value,
     });
+  }
+
+  getID = () => {
+    return Number(this.props.match.params.id);
   }
 }

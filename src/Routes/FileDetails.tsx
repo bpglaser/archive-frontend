@@ -1,5 +1,5 @@
 import React from 'react';
-import { Redirect, RouteComponentProps } from 'react-router';
+import { RouteComponentProps } from 'react-router';
 import Comments from '../Components/Comments';
 import NearbyColumn from '../Components/NearbyColumn';
 import { Backend } from '../Data/Backend';
@@ -7,13 +7,12 @@ import { File } from '../Models/File';
 
 interface Props extends RouteComponentProps<{ id: string }> {
   backend: Backend;
-  token: string | null;
+  token: string;
 }
 
 interface State {
   file: File | null,
   loading: boolean;
-  redirect: string | null;
 }
 
 export default class FileDetails extends React.Component<Props, State> {
@@ -24,45 +23,20 @@ export default class FileDetails extends React.Component<Props, State> {
     this.state = {
       file: null,
       loading: true,
-      redirect: this.props.token ? null : '/',
     };
     this.linkRef = React.createRef();
   }
 
   async componentDidMount() {
-    if (this.props.token) {
-      await this.loadFileDetails();
-      this.setState({
-        loading: false,
-      });
-    }
-  }
-
-  async componentDidUpdate(oldProps: Props) {
-    if (this.props.token !== oldProps.token) {
-      this.setState({
-        redirect: this.props.token ? this.state.redirect : '/',
-      });
-
-      if (this.props.token) {
-        this.setState({
-          loading: true,
-        });
-        await this.loadFileDetails();
-        this.setState({
-          loading: false,
-        });
-      }
-    }
+    await this.loadFileDetails();
+    this.setState({
+      loading: false,
+    });
   }
 
   render() {
     /* eslint-disable jsx-a11y/anchor-has-content */
     /* eslint-disable jsx-a11y/anchor-is-valid */
-    if (this.state.redirect) {
-      return <Redirect to={this.state.redirect} />;
-    }
-
     return (<div>
       <div className="columns">
         <div className="column">

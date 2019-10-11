@@ -21,7 +21,7 @@ enum ProjectPrompt {
 interface Props extends RouteComponentProps<{ id: string }> {
   backend: Backend;
   organization: Organization | null;
-  token: string | null;
+  token: string;
 }
 
 interface State {
@@ -41,14 +41,14 @@ export default class ProjectDetails extends React.Component<Props, State> {
       loading: false,
       notFound: false,
       project: null,
-      redirect: this.props.token ? null : '/',
+      redirect: null,
       visiblePrompt: null,
     };
   }
 
   async componentDidMount() {
     const projectID = this.getProjectID();
-    if (this.props.token && projectID) {
+    if (projectID) {
       this.setState({
         loading: true,
       });
@@ -69,7 +69,7 @@ export default class ProjectDetails extends React.Component<Props, State> {
   async componentDidUpdate(oldProps: Props) {
     if (this.props.token !== oldProps.token || this.props.match.params.id !== oldProps.match.params.id) {
       const projectID = this.getProjectID();
-      if (this.props.token && projectID) {
+      if (projectID) {
         this.setState({
           loading: true,
         });
@@ -139,20 +139,21 @@ export default class ProjectDetails extends React.Component<Props, State> {
         <DeleteProjectPrompt
           backend={this.props.backend}
           close={this.closePrompt}
-          organization={this.props.organization!} // TODO validate
+          organization={this.props.organization!}
           project={this.state.project!} // TODO validate
           success={this.closePrompt} // TODO redirect
-          token={this.props.token!} />
+          token={this.props.token}
+        />
       }
 
       {this.state.visiblePrompt === ProjectPrompt.Settings &&
         <ProjectSettingsPrompt
           backend={this.props.backend}
           close={this.closePrompt}
-          project={this.state.project!} // TODO ensure project is not null
+          project={this.state.project!}
           showDeletePrompt={this.showDeletePrompt}
           success={this.projectUpdated}
-          token={this.props.token!} // TODO ensure token not null
+          token={this.props.token}
         />
       }
 
@@ -162,7 +163,7 @@ export default class ProjectDetails extends React.Component<Props, State> {
           close={this.closePrompt}
           closeWithSuccess={this.fileSuccessfullyUploaded}
           project={this.state.project!}
-          token={this.props.token!}
+          token={this.props.token}
         />
       }
     </div>);
@@ -244,5 +245,4 @@ export default class ProjectDetails extends React.Component<Props, State> {
   getProjectID = () => {
     return Number(this.props.match.params.id);
   }
-
 }

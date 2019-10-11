@@ -2,7 +2,7 @@ import 'bulma';
 import { createHashHistory } from 'history';
 import Cookies from 'js-cookie';
 import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import './App.css';
 import ErrorDropdownDisplay from './Components/ErrorDropdownDisplay';
 import Navbar from './Components/Navbar';
@@ -89,65 +89,86 @@ export default class App extends React.Component<any, State> {
 
           <Route path="/projects/:id"
             render={(props) =>
-              <ProjectDetails
-                {...props}
-                backend={this.state.backend}
-                organization={this.state.activeOrganization}
-                token={this.state.token}
-              />
+              this.requireAuthentication(
+                <ProjectDetails
+                  {...props}
+                  backend={this.state.backend}
+                  organization={this.state.activeOrganization}
+                  token={this.state.token!}
+                />
+              )
             }
           />
 
           <Route path="/settings" exact
             render={(props) =>
-              <Settings
-                {...props}
-                backend={this.state.backend}
-                token={this.state.token}
-              />
+              this.requireAuthentication(
+                <Settings
+                  {...props}
+                  backend={this.state.backend}
+                  token={this.state.token!}
+                />
+              )
             }
           />
 
           <Route path="/organizations/:id"
             render={(props) =>
-              <OrganizationDetails
-                {...props}
-                backend={this.state.backend}
-                clearActiveOrganization={() => this.setActiveOrganization(null)}
-                token={this.state.token}
-              />
+              this.requireAuthentication(
+                <OrganizationDetails
+                  {...props}
+                  backend={this.state.backend}
+                  clearActiveOrganization={() => this.setActiveOrganization(null)}
+                  token={this.state.token!}
+                />
+              )
             }
           />
 
-          <Route path="/organizations" exact>
-            <Organizations
-              backend={this.state.backend}
-              setActiveOrganization={this.setActiveOrganization}
-              token={this.state.token}
-            />
-          </Route>
+          <Route path="/organizations" exact
+            render={(props) =>
+              this.requireAuthentication(
+                <Organizations
+                  backend={this.state.backend}
+                  setActiveOrganization={this.setActiveOrganization}
+                  token={this.state.token!}
+                />
+              )
+            }
+          />
 
-          <Route path="/invite" exact>
-            <Invite
-              backend={this.state.backend}
-              token={this.state.token}
-            />
-          </Route>
+          <Route path="/invite" exact
+            render={(props) =>
+              this.requireAuthentication(
+                <Invite
+                  {...props}
+                  backend={this.state.backend}
+                  token={this.state.token!}
+                />
+              )
+            }
+          />
 
-          <Route path="/article/new" exact>
-            <CreateArticle
-              backend={this.state.backend}
-              token={this.state.token}
-            />
-          </Route>
+          <Route path="/article/new" exact
+            render={(props) =>
+              this.requireAuthentication(
+                <CreateArticle
+                  backend={this.state.backend}
+                  token={this.state.token!}
+                />
+              )
+            }
+          />
 
           <Route path="/article/edit/:id"
             render={(props) =>
-              <EditArticle
-                {...props}
-                backend={this.state.backend}
-                token={this.state.token}
-              />
+              this.requireAuthentication(
+                <EditArticle
+                  {...props}
+                  backend={this.state.backend}
+                  token={this.state.token!}
+                />
+              )
             }
           />
 
@@ -163,11 +184,13 @@ export default class App extends React.Component<any, State> {
 
           <Route path="/file/:id"
             render={(props) =>
-              <FileDetails
-                {...props}
-                backend={this.state.backend}
-                token={this.state.token}
-              />
+              this.requireAuthentication(
+                <FileDetails
+                  {...props}
+                  backend={this.state.backend}
+                  token={this.state.token!}
+                />
+              )
             }
           />
 
@@ -305,6 +328,14 @@ export default class App extends React.Component<any, State> {
       });
     } catch (err) {
       // TODO handle
+    }
+  }
+
+  requireAuthentication = (component: any) => {
+    if (this.state.token) {
+      return component;
+    } else {
+      return <Redirect to="/" />;
     }
   }
 }

@@ -15,7 +15,7 @@ enum VisiblePrompt {
 interface Props extends RouteComponentProps<{ id: string }> {
   backend: Backend;
   clearActiveOrganization: () => Promise<void>;
-  token: string | null;
+  token: string;
 }
 
 interface State {
@@ -36,27 +36,17 @@ export default class OrganizationDetails extends React.Component<Props, State> {
       loading: true,
       organization: null,
       projects: [],
-      redirect: this.props.token === null ? '/' : null,
+      redirect: null,
       visiblePrompt: null,
     };
   }
 
   async componentDidMount() {
-    if (this.props.token) {
-      await this.loadOrganization();
-      await this.loadProjects();
-      this.setState({
-        loading: false,
-      });
-    }
-  }
-
-  componentDidUpdate(prevProps: Props) {
-    if (this.props.token !== prevProps.token) {
-      this.setState({
-        redirect: this.props.token === null ? '/' : this.state.redirect,
-      });
-    }
+    await this.loadOrganization();
+    await this.loadProjects();
+    this.setState({
+      loading: false,
+    });
   }
 
   render() {
@@ -67,9 +57,11 @@ export default class OrganizationDetails extends React.Component<Props, State> {
     if (this.state.loading) {
       return <Loader />;
     }
+
     if (this.state.errorMessage !== null) {
       return (<div>{this.state.errorMessage}</div>);
     }
+
     return (<div>
       <nav className="level">
         <div className="level-left">
@@ -94,7 +86,7 @@ export default class OrganizationDetails extends React.Component<Props, State> {
           close={this.hidePrompt}
           organization={this.state.organization}
           success={this.organizationDeleted}
-          token={this.props.token!}
+          token={this.props.token}
         />
       }
 
@@ -105,7 +97,7 @@ export default class OrganizationDetails extends React.Component<Props, State> {
           organization={this.state.organization}
           showDeletePrompt={this.showDeletePrompt}
           success={this.organizationUpdated}
-          token={this.props.token!}
+          token={this.props.token}
         />
       }
     </div>);

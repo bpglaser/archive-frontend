@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Redirect } from 'react-router';
 import Loader from '../Components/Loader';
 import OrganizationCard from '../Components/OrganizationCard';
 import CreateOrganizationPrompt from '../Components/Prompts/CreateOrganizationPrompt';
@@ -9,7 +8,7 @@ import { Organization } from '../Models/Organization';
 interface Props {
   backend: Backend;
   setActiveOrganization: (organization: Organization) => void;
-  token: string | null;
+  token: string;
 }
 
 interface State {
@@ -17,7 +16,6 @@ interface State {
   errorMessage: string | null;
   loading: boolean;
   organizations: Organization[];
-  redirect: string | null;
 }
 
 export default class Organizations extends React.Component<Props, State> {
@@ -28,7 +26,6 @@ export default class Organizations extends React.Component<Props, State> {
       errorMessage: null,
       loading: false,
       organizations: [],
-      redirect: this.props.token ? null : '/',
     };
   }
 
@@ -38,26 +35,21 @@ export default class Organizations extends React.Component<Props, State> {
         loading: true,
       });
 
-      const organizations = await this.props.backend.listOrganizations(this.props.token!); // todo validate token
+      const organizations = await this.props.backend.listOrganizations(this.props.token);
+
       this.setState({
         organizations: organizations,
+        loading: false,
       });
     } catch (err) {
       this.setState({
         errorMessage: 'Error loading organizations',
-      });
-    } finally {
-      this.setState({
         loading: false,
       });
     }
   }
 
   render() {
-    if (this.state.redirect) {
-      return <Redirect to={this.state.redirect} />;
-    }
-
     return (<div>
       <div className="level">
         <div className="level-item">
@@ -97,7 +89,7 @@ export default class Organizations extends React.Component<Props, State> {
           backend={this.props.backend}
           close={this.hideCreateOrganizationPrompt}
           success={this.newOrganizationCreated}
-          token={this.props.token!} />
+          token={this.props.token} />
       }
     </div>);
   }

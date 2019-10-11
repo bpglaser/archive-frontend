@@ -5,15 +5,11 @@ import { Backend } from "../Data/Backend";
 
 interface Props extends RouteComponentProps {
   backend: Backend;
-  token: string | null;
+  token: string;
 }
 
 export default class Settings extends React.Component<Props> {
   render() {
-    if (this.props.token === null) {
-      return <Redirect to="/" />;
-    }
-
     const params = new URLSearchParams(this.props.location.search);
     let details;
     switch (params.get("page")) {

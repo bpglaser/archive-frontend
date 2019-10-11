@@ -7,7 +7,7 @@ import { Article } from '../Models/Article';
 
 interface Props {
   backend: Backend;
-  token: string | null;
+  token: string;
 }
 
 interface State {
@@ -22,7 +22,7 @@ export default class CreateArticle extends React.Component<Props, State> {
     super(props);
     this.state = {
       promptVisible: false,
-      redirect: this.props.token ? null : '/',
+      redirect: null,
       title: '',
       value: RichTextEditor.createEmptyValue(),
     };
@@ -63,7 +63,7 @@ export default class CreateArticle extends React.Component<Props, State> {
           close={this.hidePrompt}
           success={this.articleCreatedSuccess}
           title={this.state.title}
-          token={this.props.token!}
+          token={this.props.token}
           value={this.state.value}
         />
       }

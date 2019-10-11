@@ -1,12 +1,12 @@
 import React from 'react';
-import { Redirect } from 'react-router';
+import { Redirect, RouteComponentProps } from 'react-router';
 import JoinProject from '../Components/JoinProject';
 import { Backend } from '../Data/Backend';
 import { InviteDetails } from '../Models/InviteDetails';
 
-interface Props {
+interface Props extends RouteComponentProps {
   backend: Backend;
-  token: string | null;
+  token: string;
 }
 
 interface State {
@@ -21,23 +21,21 @@ export default class Invite extends React.Component<Props, State> {
     this.state = {
       awaitingResponse: false,
       details: null,
-      redirect: this.props.token ? null : '/',
+      redirect: null,
     };
   }
 
   async componentDidMount() {
     const inviteKey = this.getInviteKey();
-
-    if (this.props.token && inviteKey) {
+    if (inviteKey) {
       await this.loadDetails(this.props.token, inviteKey);
     }
   }
 
   async componentDidUpdate(oldProps: Props) {
-    if (this.props.token !== oldProps.token) {
+    if (this.props.location.search !== oldProps.location.search) {
       const inviteKey = this.getInviteKey();
-
-      if (this.props.token && inviteKey) {
+      if (inviteKey) {
         await this.loadDetails(this.props.token, inviteKey);
       } else {
         this.setState({
@@ -79,7 +77,7 @@ export default class Invite extends React.Component<Props, State> {
     const token = this.props.token;
     const inviteKey = this.getInviteKey();
 
-    if (!token || !inviteKey) {
+    if (!inviteKey) {
       return;
     }
 
@@ -95,7 +93,7 @@ export default class Invite extends React.Component<Props, State> {
     const token = this.props.token;
     const inviteKey = this.getInviteKey();
 
-    if (!token || !inviteKey) {
+    if (!inviteKey) {
       return;
     }
 
@@ -108,7 +106,7 @@ export default class Invite extends React.Component<Props, State> {
   }
 
   getInviteKey = () => {
-    const params = new URLSearchParams((this.props as any).location.search);
+    const params = new URLSearchParams(this.props.location.search);
     return params.get('key');
   }
 }
