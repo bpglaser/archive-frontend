@@ -156,35 +156,36 @@ export class MockBackend implements Backend {
   getNearbyFiles = async (token: string, fileID: number) => {
     await delay(this.sleepDuration);
     return [
-      { fileID: 1 },
-      { fileID: 2 },
-      { fileID: 3 },
-      { fileID: 4 },
+      { fileID: 1, name: 'foo.jpg' },
+      { fileID: 2, name: 'bar.png' },
+      { fileID: 3, name: 'bin.fit' },
+      { fileID: 4, name: 'bazz.fits' },
     ];
   }
 
   uploadFile = async (token: string, projectID: number, formData: FormData) => {
     await delay(this.sleepDuration);
-    return { fileID: 123 };
+    return { fileID: 123, name: 'foo.jpg' };
   }
 
   downloadFile = async (token: string, fileID: number) => {
     await delay(this.sleepDuration);
+    return new Blob();
   }
 
   listFiles = async (token: string, projID: number) => {
     await delay(this.sleepDuration);
     return [
-      { fileID: 1 },
-      { fileID: 2 },
-      { fileID: 3 },
-      { fileID: 4 },
+      { fileID: 1, name: 'foo.jpg' },
+      { fileID: 2, name: 'bar.png' },
+      { fileID: 3, name: 'bin.fit' },
+      { fileID: 4, name: 'bazz.fits' },
     ];
   }
 
   getFileDetails = async (token: string, fileID: number) => {
     await delay(this.sleepDuration);
-    return { fileID: fileID };
+    return { fileID: fileID, name: 'foo.jpg' };
   }
 
   deleteFile = async (token: string, fileID: number) => {

@@ -10,6 +10,7 @@ import { File } from '../Models/File';
 import { Organization } from '../Models/Organization';
 import { Project } from '../Models/Project';
 import NotFound from './NotFound';
+import { Link } from 'react-router-dom';
 
 enum ProjectPrompt {
   Delete,
@@ -24,6 +25,7 @@ interface Props extends RouteComponentProps<{ id: string }> {
 }
 
 interface State {
+  files: File[],
   loading: boolean;
   notFound: boolean;
   project: Project | null;
@@ -36,6 +38,7 @@ export default class ProjectDetails extends React.Component<Props, State> {
   constructor(props: any) {
     super(props)
     this.state = {
+      files: [],
       loading: false,
       notFound: false,
       project: null,
@@ -51,6 +54,7 @@ export default class ProjectDetails extends React.Component<Props, State> {
     });
 
     await this.loadProject();
+    await this.loadFiles();
 
     this.setState({
       loading: false,
@@ -91,6 +95,14 @@ export default class ProjectDetails extends React.Component<Props, State> {
           </p>
         </div>
       </nav>
+
+      {
+        this.state.files.map((file, i) =>
+          <div key={i}>
+            <Link to={'/file/' + file.fileID}>{file.name}</Link>
+          </div>
+        )
+      }
 
       {this.state.visiblePrompt === ProjectPrompt.Delete &&
         <DeleteProjectPrompt
@@ -183,6 +195,18 @@ export default class ProjectDetails extends React.Component<Props, State> {
         // Unknown error
         console.log(err);
       }
+    }
+  }
+
+  loadFiles = async () => {
+    try {
+      const files = await this.props.backend.listFiles(this.props.token!, this.projectID);
+      this.setState({
+        files: files,
+      });
+    } catch (err) {
+      // TODO
+      console.log(err);
     }
   }
 }

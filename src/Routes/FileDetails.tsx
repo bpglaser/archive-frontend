@@ -1,9 +1,9 @@
 import React from 'react';
-import { Backend } from '../Data/Backend';
 import { RouteComponentProps } from 'react-router';
-import { File } from '../Models/File';
 import Comments from '../Components/Comments';
 import NearbyColumn from '../Components/NearbyColumn';
+import { Backend } from '../Data/Backend';
+import { File } from '../Models/File';
 
 interface Props extends RouteComponentProps<{ id: string }> {
   backend: Backend;
@@ -17,6 +17,7 @@ interface State {
 
 export default class FileDetails extends React.Component<Props, State> {
   readonly id: number;
+  readonly linkRef: React.RefObject<HTMLAnchorElement>;
 
   constructor(props: Props) {
     super(props);
@@ -25,6 +26,7 @@ export default class FileDetails extends React.Component<Props, State> {
       loading: true,
     };
     this.id = Number(this.props.match.params.id);
+    this.linkRef = React.createRef();
   }
 
   async componentDidMount() {
@@ -36,10 +38,13 @@ export default class FileDetails extends React.Component<Props, State> {
   }
 
   render() {
+    /* eslint-disable jsx-a11y/anchor-has-content */
+    /* eslint-disable jsx-a11y/anchor-is-valid */
     return (<div>
       <div className="columns">
         <div className="column">
           hello world
+          <button className="button" onClick={this.downloadClicked}>Download</button>
         </div>
 
         <NearbyColumn
@@ -56,7 +61,11 @@ export default class FileDetails extends React.Component<Props, State> {
           token={this.props.token}
         />
       }
+
+      <a style={{ display: 'none' }} ref={this.linkRef}></a>
     </div>);
+    /* eslint-enable jsx-a11y/anchor-has-content */
+    /* eslint-enable jsx-a11y/anchor-is-valid */
   }
 
   loadFileDetails = async () => {
@@ -67,6 +76,20 @@ export default class FileDetails extends React.Component<Props, State> {
       });
     } catch (err) {
       // TODO handle errors properly
+      console.log(err);
+    }
+  }
+
+  downloadClicked = async () => {
+    try {
+      const blob = await this.props.backend.downloadFile(this.props.token!, this.id);
+      const url = window.URL.createObjectURL(blob);
+      this.linkRef.current!.href = url;
+      this.linkRef.current!.download = this.state.file!.name;
+      this.linkRef.current!.click();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      // TODO handle
       console.log(err);
     }
   }

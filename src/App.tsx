@@ -22,7 +22,6 @@ import OrganizationDetails from './Routes/OrganizationDetails';
 import Organizations from './Routes/Organizations';
 import Primary from './Routes/Primary';
 import ProjectDetails from './Routes/ProjectDetails';
-import Projects from './Routes/Projects';
 import Settings from './Routes/Settings';
 
 const history = createHashHistory();
@@ -52,6 +51,7 @@ export default class App extends React.Component<any, State> {
 
     this.state = {
       activeOrganization: null,
+      // backend: new URLBackend('http://localhost:3001/'),
       backend: new URLBackend('https://robinsonobservatory.org/'),
       errorMessages: [],
       loggedInAs: user,
@@ -97,14 +97,6 @@ export default class App extends React.Component<any, State> {
               />
             }
           />
-
-          <Route path="/projects" exact>
-            <Projects
-              backend={this.state.backend}
-              organization={this.state.activeOrganization}
-              token={this.state.token}
-            />
-          </Route>
 
           <Route path="/settings" exact
             render={(props) =>

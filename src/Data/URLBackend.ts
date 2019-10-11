@@ -1,8 +1,8 @@
-import Axios from 'axios';
+import Axios, { AxiosRequestConfig } from 'axios';
 import { readTokenPayload } from '../Helpers';
+import { Article } from '../Models/Article';
 import { Backend } from './Backend';
 import { MockBackend } from "./MockBackend";
-import { Article } from '../Models/Article';
 
 export class URLBackend implements Backend {
   base: string | undefined;
@@ -246,23 +246,53 @@ export class URLBackend implements Backend {
   }
 
   uploadFile = async (token: string, projectID: number, formData: FormData) => {
+    const url = new URL('/api/files/upload/' + projectID, this.base);
+    const config = createAuthorizationConfig(token);
+
+    const result = await Axios.post(url.toString(), formData, config);
+    console.log(result);
+
     return await this.mock.uploadFile(token, projectID, formData);
   }
 
   downloadFile = async (token: string, fileID: number) => {
-    return await this.mock.downloadFile(token, fileID);
+    const url = new URL('/api/files/download/' + fileID, this.base);
+    const config = createAuthorizationConfig(token);
+    config.responseType = 'arraybuffer';
+
+    const result = await Axios.post(url.toString(), null, config);
+    return new Blob([result.data]);
   }
 
-  listFiles = async (token: string, projID: number) => {
-    return await this.mock.listFiles(token, projID);
+  listFiles = async (token: string, projectID: number) => {
+    const url = new URL('/api/files/list/' + projectID, this.base);
+    const config = createAuthorizationConfig(token);
+
+    const result = await Axios.get(url.toString(), config);
+    return result.data.map((entry: any) => {
+      return {
+        fileID: Number(entry.FileID),
+        name: entry.Name,
+      };
+    });
   }
 
   getFileDetails = async (token: string, fileID: number) => {
-    return await this.mock.getFileDetails(token, fileID);
+    const url = new URL('/api/files/' + fileID, this.base);
+    const config = createAuthorizationConfig(token);
+
+    const result = await Axios.get(url.toString(), config);
+    const entry = result.data;
+    return {
+      fileID: Number(entry.FileID),
+      name: entry.Name,
+    };
   }
 
   deleteFile = async (token: string, fileID: number) => {
-    await this.mock.deleteFile(token, fileID);
+    const url = new URL('/api/files/' + fileID, this.base);
+    const config = createAuthorizationConfig(token);
+    await Axios.delete(url.toString(), config);
   }
 
   getComments = async (token: string, fileID: number) => {
@@ -270,6 +300,6 @@ export class URLBackend implements Backend {
   }
 }
 
-function createAuthorizationConfig(token: string) {
+function createAuthorizationConfig(token: string): AxiosRequestConfig {
   return { headers: { Authorization: 'Bearer ' + token } };
 }
