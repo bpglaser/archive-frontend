@@ -25,9 +25,6 @@ interface State {
 }
 
 export default class ArticleDetails extends React.Component<Props, State> {
-  readonly id: number;
-  readonly isAdmin: boolean;
-
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -38,8 +35,6 @@ export default class ArticleDetails extends React.Component<Props, State> {
       redirectToEdit: false,
       redirectToHome: false,
     };
-    this.id = Number(this.props.match.params.id);
-    this.isAdmin = checkIsAdmin(this.props.token);
   }
 
   async componentDidMount() {
@@ -80,7 +75,7 @@ export default class ArticleDetails extends React.Component<Props, State> {
         </div>
       </div>
 
-      {this.isAdmin &&
+      {checkIsAdmin(this.props.token) &&
         <div className="column is-narrow">
           <ArticleDropdown
             editClicked={this.editClicked}
@@ -109,7 +104,7 @@ export default class ArticleDetails extends React.Component<Props, State> {
   }
 
   editClicked = () => {
-    if (!this.isAdmin) {
+    if (!checkIsAdmin(this.props.token)) {
       return;
     }
     this.setState({
@@ -118,7 +113,7 @@ export default class ArticleDetails extends React.Component<Props, State> {
   }
 
   deleteClicked = () => {
-    if (!this.isAdmin) {
+    if (!checkIsAdmin(this.props.token)) {
       return;
     }
 
@@ -135,7 +130,7 @@ export default class ArticleDetails extends React.Component<Props, State> {
 
   loadArticle = async () => {
     try {
-      const article = await this.props.backend.getArticle(this.id);
+      const article = await this.props.backend.getArticle(this.getID());
       this.setState({
         article: article,
       });
@@ -158,5 +153,9 @@ export default class ArticleDetails extends React.Component<Props, State> {
     this.setState({
       loading: false,
     });
+  }
+
+  getID = () => {
+    return Number(this.props.match.params.id);
   }
 }

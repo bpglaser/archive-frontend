@@ -1,5 +1,5 @@
 import React from 'react';
-import { RouteComponentProps, Redirect } from 'react-router';
+import { Redirect, RouteComponentProps } from 'react-router';
 import RichTextEditor, { EditorValue } from 'react-rte';
 import ErrorPage from '../Components/ErrorPage';
 import Loader from '../Components/Loader';
@@ -16,7 +16,7 @@ interface State {
   article: Article | null;
   errorMessage: string | null;
   loading: boolean;
-  needsRedirect: boolean;
+  redirect: string | null;
   promptVisible: boolean;
   title: string;
   value: EditorValue;
@@ -31,7 +31,7 @@ export default class EditArticle extends React.Component<Props, State> {
       article: null,
       errorMessage: null,
       loading: true,
-      needsRedirect: false,
+      redirect: this.props.token ? null : '/',
       promptVisible: false,
       title: '',
       value: EditorValue.createEmpty(),
@@ -47,6 +47,10 @@ export default class EditArticle extends React.Component<Props, State> {
   }
 
   render() {
+    if (this.state.redirect) {
+      return <Redirect to={this.state.redirect} />;
+    }
+
     if (this.state.loading) {
       return <Loader />;
     }
@@ -54,12 +58,6 @@ export default class EditArticle extends React.Component<Props, State> {
     if (this.state.errorMessage) {
       return <ErrorPage errorMessage={this.state.errorMessage} retry={this.reloadArticle} />;
     }
-
-    if (this.state.needsRedirect) {
-      return <Redirect to={'/article/' + this.id} />
-    }
-
-    // TODO redirect non-admin
 
     return (<div>
       <h1 className="title">Edit existing article</h1>
@@ -103,7 +101,7 @@ export default class EditArticle extends React.Component<Props, State> {
   articleUpdated = (article: Article) => {
     this.setState({
       article: article,
-      needsRedirect: true,
+      redirect: '/article/' + article.articleID,
       promptVisible: false,
     });
   }

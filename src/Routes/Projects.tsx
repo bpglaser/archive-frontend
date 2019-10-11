@@ -16,16 +16,18 @@ interface State {
   createNewProjectPromptVisible: boolean;
   loading: boolean;
   projects: Project[];
+  redirect: string | null;
 }
 
 export default class Projects extends React.Component<Props, State> {
   constructor(props: Props) {
-    super(props)
+    super(props);
     this.state = {
       createNewProjectPromptVisible: false,
       loading: false,
       projects: [],
-    }
+      redirect: this.props.organization && this.props.token ? null : '/',
+    };
   }
 
   async componentDidMount() {
@@ -43,10 +45,30 @@ export default class Projects extends React.Component<Props, State> {
     }
   }
 
+  async componentDidUpdate(oldProps: Props) {
+    if (this.props.organization !== oldProps.organization || this.props.token !== oldProps.token) {
+      if (this.props.organization && this.props.token) {
+        this.setState({
+          loading: true,
+        });
+
+        const projects = await this.props.backend.listProjects(this.props.token, this.props.organization.organizationID);
+
+        this.setState({
+          loading: true,
+          projects: projects,
+        });
+      } else {
+        this.setState({
+          redirect: '/',
+        });
+      }
+    }
+  }
+
   render() {
-    if (!this.props.organization || !this.props.token) {
-      // TODO prompt for login
-      return <Redirect to="/" />
+    if (this.state.redirect) {
+      return <Redirect to={this.state.redirect} />;
     }
 
     return (<div>
@@ -76,9 +98,10 @@ export default class Projects extends React.Component<Props, State> {
         <CreateProjectPrompt
           backend={this.props.backend}
           close={this.closeProjectPrompt}
-          organization={this.props.organization}
+          organization={this.props.organization!}
           success={this.newProjectCreated}
-          token={this.props.token} />
+          token={this.props.token!}
+        />
       }
     </div>)
   }

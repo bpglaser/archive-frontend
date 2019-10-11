@@ -1,4 +1,5 @@
 import React from 'react';
+import { Redirect } from 'react-router';
 import RichTextEditor, { EditorValue } from 'react-rte';
 import CreateArticleConfrimationPrompt from '../Components/Prompts/CreateArticleConfirmationPrompt';
 import { Backend } from '../Data/Backend';
@@ -10,6 +11,7 @@ interface Props {
 }
 
 interface State {
+  redirect: string | null;
   promptVisible: boolean;
   title: string;
   value: EditorValue;
@@ -20,12 +22,17 @@ export default class CreateArticle extends React.Component<Props, State> {
     super(props);
     this.state = {
       promptVisible: false,
+      redirect: this.props.token ? null : '/',
       title: '',
       value: RichTextEditor.createEmptyValue(),
     };
   }
 
   render() {
+    if (this.state.redirect) {
+      return <Redirect to={this.state.redirect} />;
+    }
+
     return (<div>
       <h1 className="title">Create a new article</h1>
 
@@ -65,7 +72,9 @@ export default class CreateArticle extends React.Component<Props, State> {
 
   articleCreatedSuccess = (article: Article) => {
     this.hidePrompt();
-    // TODO redirect
+    this.setState({
+      redirect: '/'
+    });
   }
 
 

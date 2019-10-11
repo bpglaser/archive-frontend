@@ -1,5 +1,5 @@
 import React from 'react';
-import { RouteComponentProps } from 'react-router';
+import { Redirect, RouteComponentProps } from 'react-router';
 import Comments from '../Components/Comments';
 import NearbyColumn from '../Components/NearbyColumn';
 import { Backend } from '../Data/Backend';
@@ -13,10 +13,10 @@ interface Props extends RouteComponentProps<{ id: string }> {
 interface State {
   file: File | null,
   loading: boolean;
+  redirect: string | null;
 }
 
 export default class FileDetails extends React.Component<Props, State> {
-  readonly id: number;
   readonly linkRef: React.RefObject<HTMLAnchorElement>;
 
   constructor(props: Props) {
@@ -24,22 +24,45 @@ export default class FileDetails extends React.Component<Props, State> {
     this.state = {
       file: null,
       loading: true,
+      redirect: this.props.token ? null : '/',
     };
-    this.id = Number(this.props.match.params.id);
     this.linkRef = React.createRef();
   }
 
   async componentDidMount() {
-    // TODO handle null token
-    await this.loadFileDetails();
-    this.setState({
-      loading: false,
-    });
+    if (this.props.token) {
+      await this.loadFileDetails();
+      this.setState({
+        loading: false,
+      });
+    }
+  }
+
+  async componentDidUpdate(oldProps: Props) {
+    if (this.props.token !== oldProps.token) {
+      this.setState({
+        redirect: this.props.token ? this.state.redirect : '/',
+      });
+
+      if (this.props.token) {
+        this.setState({
+          loading: true,
+        });
+        await this.loadFileDetails();
+        this.setState({
+          loading: false,
+        });
+      }
+    }
   }
 
   render() {
     /* eslint-disable jsx-a11y/anchor-has-content */
     /* eslint-disable jsx-a11y/anchor-is-valid */
+    if (this.state.redirect) {
+      return <Redirect to={this.state.redirect} />;
+    }
+
     return (<div>
       <div className="columns">
         <div className="column">
@@ -70,7 +93,7 @@ export default class FileDetails extends React.Component<Props, State> {
 
   loadFileDetails = async () => {
     try {
-      const file = await this.props.backend.getFileDetails(this.props.token!, this.id);
+      const file = await this.props.backend.getFileDetails(this.props.token!, this.getID());
       this.setState({
         file: file,
       });
@@ -82,7 +105,7 @@ export default class FileDetails extends React.Component<Props, State> {
 
   downloadClicked = async () => {
     try {
-      const blob = await this.props.backend.downloadFile(this.props.token!, this.id);
+      const blob = await this.props.backend.downloadFile(this.props.token!, this.getID());
       const url = window.URL.createObjectURL(blob);
       this.linkRef.current!.href = url;
       this.linkRef.current!.download = this.state.file!.name;
@@ -92,5 +115,9 @@ export default class FileDetails extends React.Component<Props, State> {
       // TODO handle
       console.log(err);
     }
+  }
+
+  getID = () => {
+    return Number(this.props.match.params.id);
   }
 }

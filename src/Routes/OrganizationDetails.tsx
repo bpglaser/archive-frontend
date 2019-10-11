@@ -21,40 +21,47 @@ interface Props extends RouteComponentProps<{ id: string }> {
 interface State {
   errorMessage: string | null;
   loading: boolean;
-  needsRedirect: boolean;
   organization: Organization | null;
   projects: Project[];
+  redirect: string | null;
   visiblePrompt: VisiblePrompt | null;
 }
 
 export default class OrganizationDetails extends React.Component<Props, State> {
-  readonly id: number;
 
   constructor(props: Props) {
     super(props);
     this.state = {
       errorMessage: null,
       loading: true,
-      needsRedirect: false,
       organization: null,
       projects: [],
+      redirect: this.props.token === null ? '/' : null,
       visiblePrompt: null,
     };
-    this.id = Number(this.props.match.params.id);
-    // TODO validate token
   }
 
   async componentDidMount() {
-    await this.loadOrganization();
-    await this.loadProjects();
-    this.setState({
-      loading: false,
-    });
+    if (this.props.token) {
+      await this.loadOrganization();
+      await this.loadProjects();
+      this.setState({
+        loading: false,
+      });
+    }
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    if (this.props.token !== prevProps.token) {
+      this.setState({
+        redirect: this.props.token === null ? '/' : this.state.redirect,
+      });
+    }
   }
 
   render() {
-    if (this.state.needsRedirect) {
-      return <Redirect to="/organizations" />;
+    if (this.state.redirect) {
+      return <Redirect to={this.state.redirect} />;
     }
 
     if (this.state.loading) {
@@ -81,24 +88,24 @@ export default class OrganizationDetails extends React.Component<Props, State> {
         </div>
       </nav>
 
-      {this.state.visiblePrompt === VisiblePrompt.Delete &&
+      {this.state.visiblePrompt === VisiblePrompt.Delete && this.state.organization &&
         <OrganizationDeletePrompt
           backend={this.props.backend}
           close={this.hidePrompt}
-          organization={this.state.organization!} // TODO ensure that organization is not null
+          organization={this.state.organization}
           success={this.organizationDeleted}
           token={this.props.token!}
         />
       }
 
-      {this.state.visiblePrompt === VisiblePrompt.Settings &&
+      {this.state.visiblePrompt === VisiblePrompt.Settings && this.state.organization &&
         <OrganizationSettingsPrompt
           backend={this.props.backend}
           close={this.hidePrompt}
-          organization={this.state.organization!} // TODO ensure that organization is not null
+          organization={this.state.organization}
           showDeletePrompt={this.showDeletePrompt}
           success={this.organizationUpdated}
-          token={this.props.token!} // TODO ensure not null
+          token={this.props.token!}
         />
       }
     </div>);
@@ -106,7 +113,7 @@ export default class OrganizationDetails extends React.Component<Props, State> {
 
   loadOrganization = async () => {
     try {
-      const organization = await this.props.backend.getOrganizationDetails(this.props.token!, this.id);
+      const organization = await this.props.backend.getOrganizationDetails(this.props.token!, this.getID());
       this.setState({
         organization: organization,
       });
@@ -161,7 +168,11 @@ export default class OrganizationDetails extends React.Component<Props, State> {
     this.hidePrompt();
     await this.props.clearActiveOrganization();
     this.setState({
-      needsRedirect: true,
+      redirect: '/organizations',
     });
+  }
+
+  getID = () => {
+    return Number(this.props.match.params.id);
   }
 }

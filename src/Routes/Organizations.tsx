@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Redirect } from 'react-router';
 import Loader from '../Components/Loader';
 import OrganizationCard from '../Components/OrganizationCard';
 import CreateOrganizationPrompt from '../Components/Prompts/CreateOrganizationPrompt';
@@ -16,6 +17,7 @@ interface State {
   errorMessage: string | null;
   loading: boolean;
   organizations: Organization[];
+  redirect: string | null;
 }
 
 export default class Organizations extends React.Component<Props, State> {
@@ -26,6 +28,7 @@ export default class Organizations extends React.Component<Props, State> {
       errorMessage: null,
       loading: false,
       organizations: [],
+      redirect: this.props.token ? null : '/',
     };
   }
 
@@ -51,6 +54,10 @@ export default class Organizations extends React.Component<Props, State> {
   }
 
   render() {
+    if (this.state.redirect) {
+      return <Redirect to={this.state.redirect} />;
+    }
+
     return (<div>
       <div className="level">
         <div className="level-item">

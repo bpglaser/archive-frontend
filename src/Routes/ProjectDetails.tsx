@@ -1,6 +1,7 @@
 import { NOT_FOUND } from 'http-status-codes';
 import React from 'react';
-import { RouteComponentProps } from 'react-router';
+import { Redirect, RouteComponentProps } from 'react-router';
+import { Link } from 'react-router-dom';
 import Loader from '../Components/Loader';
 import DeleteProjectPrompt from '../Components/Prompts/DeleteProjectPrompt';
 import ProjectSettingsPrompt from '../Components/Prompts/ProjectSettingsPrompt';
@@ -10,7 +11,6 @@ import { File } from '../Models/File';
 import { Organization } from '../Models/Organization';
 import { Project } from '../Models/Project';
 import NotFound from './NotFound';
-import { Link } from 'react-router-dom';
 
 enum ProjectPrompt {
   Delete,
@@ -29,12 +29,11 @@ interface State {
   loading: boolean;
   notFound: boolean;
   project: Project | null;
+  redirect: string | null;
   visiblePrompt: ProjectPrompt | null;
 }
 
 export default class ProjectDetails extends React.Component<Props, State> {
-  readonly projectID: number;
-
   constructor(props: any) {
     super(props)
     this.state = {
@@ -42,26 +41,58 @@ export default class ProjectDetails extends React.Component<Props, State> {
       loading: false,
       notFound: false,
       project: null,
+      redirect: this.props.token ? null : '/',
       visiblePrompt: null,
     };
-
-    this.projectID = Number(this.props.match.params.id);
   }
 
   async componentDidMount() {
-    this.setState({
-      loading: true,
-    });
+    const projectID = this.getProjectID();
+    if (this.props.token && projectID) {
+      this.setState({
+        loading: true,
+      });
 
-    await this.loadProject();
-    await this.loadFiles();
+      await this.loadProject(this.props.token, projectID);
+      await this.loadFiles(this.props.token, projectID);
 
-    this.setState({
-      loading: false,
-    });
+      this.setState({
+        loading: false,
+      });
+    } else {
+      this.setState({
+        redirect: '/'
+      });
+    }
+  }
+
+  async componentDidUpdate(oldProps: Props) {
+    if (this.props.token !== oldProps.token || this.props.match.params.id !== oldProps.match.params.id) {
+      const projectID = this.getProjectID();
+      if (this.props.token && projectID) {
+        this.setState({
+          loading: true,
+        });
+
+        await this.loadProject(this.props.token, projectID);
+        await this.loadFiles(this.props.token, projectID);
+
+        this.setState({
+          loading: false,
+        });
+      } else {
+        this.setState({
+          redirect: '/'
+        });
+      }
+    }
   }
 
   render() {
+    if (this.state.redirect) {
+      return <Redirect to={this.state.redirect} />;
+    }
+
     if (this.state.loading) {
       return <Loader />;
     }
@@ -172,9 +203,9 @@ export default class ProjectDetails extends React.Component<Props, State> {
     });
   }
 
-  loadProject = async () => {
+  loadProject = async (token: string, projectID: number) => {
     try {
-      const loadedProject = await this.props.backend.getProjectDetails(this.props.token!, this.projectID);
+      const loadedProject = await this.props.backend.getProjectDetails(token, projectID);
       this.setState({
         project: loadedProject,
       });
@@ -198,9 +229,9 @@ export default class ProjectDetails extends React.Component<Props, State> {
     }
   }
 
-  loadFiles = async () => {
+  loadFiles = async (token: string, projectID: number) => {
     try {
-      const files = await this.props.backend.listFiles(this.props.token!, this.projectID);
+      const files = await this.props.backend.listFiles(token, projectID);
       this.setState({
         files: files,
       });
@@ -209,4 +240,9 @@ export default class ProjectDetails extends React.Component<Props, State> {
       console.log(err);
     }
   }
+
+  getProjectID = () => {
+    return Number(this.props.match.params.id);
+  }
+
 }

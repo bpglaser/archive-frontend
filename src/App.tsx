@@ -72,7 +72,7 @@ export default class App extends React.Component<any, State> {
         <Navbar
           loggedInAs={this.state.loggedInAs}
           registerClicked={this.registerClicked}
-          logInClicked={this.logInClicked}
+          logInClicked={this.showLoginPrompt}
           logOutClicked={this.logOutClicked}
           activeOrganization={this.state.activeOrganization}
           recentOrganizations={this.state.recentOrganizations}
@@ -181,7 +181,8 @@ export default class App extends React.Component<any, State> {
             close={this.closeLoginPrompt}
             backend={this.state.backend}
             loginSuccess={this.loginCompleted}
-            mode={this.state.loginDisplayMode} />
+            mode={this.state.loginDisplayMode}
+          />
         }
 
         {this.state.errorMessages.length > 0 &&
@@ -220,7 +221,7 @@ export default class App extends React.Component<any, State> {
     });
   }
 
-  logInClicked = () => {
+  showLoginPrompt = () => {
     this.setState({
       loginDisplayMode: LoginDisplayMode.Login,
     });

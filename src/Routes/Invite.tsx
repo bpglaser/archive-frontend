@@ -12,30 +12,44 @@ interface Props {
 interface State {
   awaitingResponse: boolean;
   details: InviteDetails | null;
+  redirect: string | null;
 }
 
 export default class Invite extends React.Component<Props, State> {
-  inviteKey: string | null;
-
   constructor(props: Props) {
     super(props);
     this.state = {
       awaitingResponse: false,
-      details: null
+      details: null,
+      redirect: this.props.token ? null : '/',
     };
-
-    const params = new URLSearchParams((this.props as any).location.search);
-    this.inviteKey = params.get('key');
   }
 
   async componentDidMount() {
-    await this.loadDetails();
+    const inviteKey = this.getInviteKey();
+
+    if (this.props.token && inviteKey) {
+      await this.loadDetails(this.props.token, inviteKey);
+    }
+  }
+
+  async componentDidUpdate(oldProps: Props) {
+    if (this.props.token !== oldProps.token) {
+      const inviteKey = this.getInviteKey();
+
+      if (this.props.token && inviteKey) {
+        await this.loadDetails(this.props.token, inviteKey);
+      } else {
+        this.setState({
+          redirect: '/'
+        });
+      }
+    }
   }
 
   render() {
-    // TODO prompt login if logged out
-    if (!this.inviteKey || !this.props.token) {
-      return <Redirect to="/" />;
+    if (this.state.redirect) {
+      return <Redirect to={this.state.redirect} />;
     }
 
     return (<div className="columns is-centered" style={{ marginTop: "1em" }}>
@@ -44,20 +58,16 @@ export default class Invite extends React.Component<Props, State> {
           acceptClicked={this.acceptClicked}
           buttonsDisabled={this.state.awaitingResponse}
           declineClicked={this.declineClicked}
-          details={this.state.details} />
+          details={this.state.details}
+        />
       </div>
     </div>);
   }
 
-  loadDetails = async () => {
-    if (this.props.token === null || this.inviteKey === null) {
-      // TODO handle
-      return;
-    }
-
+  loadDetails = async (token: string, inviteKey: string) => {
     try {
       this.setState({ details: null });
-      const details = await this.props.backend.invite(this.props.token, this.inviteKey);
+      const details = await this.props.backend.invite(token, inviteKey);
       console.log(details);
       this.setState({ details: details });
     } catch (err) {
@@ -66,20 +76,39 @@ export default class Invite extends React.Component<Props, State> {
   }
 
   acceptClicked = async () => {
+    const token = this.props.token;
+    const inviteKey = this.getInviteKey();
+
+    if (!token || !inviteKey) {
+      return;
+    }
+
     try {
       this.setState({ awaitingResponse: true });
-      await this.props.backend.acceptInvite(this.props.token!, this.inviteKey!);
+      await this.props.backend.acceptInvite(token, inviteKey);
     } finally {
       this.setState({ awaitingResponse: false });
     }
   }
 
   declineClicked = async () => {
+    const token = this.props.token;
+    const inviteKey = this.getInviteKey();
+
+    if (!token || !inviteKey) {
+      return;
+    }
+
     try {
       this.setState({ awaitingResponse: true });
-      await this.props.backend.declineInvite(this.props.token!, this.inviteKey!);
+      await this.props.backend.declineInvite(token, inviteKey);
     } finally {
       this.setState({ awaitingResponse: false });
     }
+  }
+
+  getInviteKey = () => {
+    const params = new URLSearchParams((this.props as any).location.search);
+    return params.get('key');
   }
 }
