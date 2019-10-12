@@ -39,6 +39,12 @@ export default class FileDetails extends React.Component<Props, State> {
     });
   }
 
+  async componentDidUpdate(oldProps: Props) {
+    if (this.props.match.params.id !== oldProps.match.params.id) {
+      await this.reloadFileDetails();
+    }
+  }
+
   render() {
     /* eslint-disable jsx-a11y/anchor-has-content */
     /* eslint-disable jsx-a11y/anchor-is-valid */
@@ -97,6 +103,7 @@ export default class FileDetails extends React.Component<Props, State> {
 
   reloadFileDetails = async () => {
     this.setState({
+      errorMessage: null,
       loading: true,
     });
 

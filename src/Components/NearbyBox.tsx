@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { File } from '../Models/File';
 
 interface Props {
@@ -18,8 +19,10 @@ export default class NearbyBox extends React.Component<Props, State> {
   }
 
   render() {
+    const file = this.props.file;
+
     return (<div>
-      {this.props.file.fileID}
+      <Link to={'/file/' + file.fileID} >{file.name}</Link>
     </div>);
   }
 }
