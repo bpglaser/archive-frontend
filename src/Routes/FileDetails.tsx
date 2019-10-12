@@ -1,16 +1,20 @@
 import React from 'react';
 import { RouteComponentProps } from 'react-router';
 import Comments from '../Components/Comments';
+import ErrorPage from '../Components/ErrorPage';
+import Loader from '../Components/Loader';
 import NearbyColumn from '../Components/NearbyColumn';
 import { Backend } from '../Data/Backend';
 import { File } from '../Models/File';
 
 interface Props extends RouteComponentProps<{ id: string }> {
   backend: Backend;
+  displayError: (s: string) => void;
   token: string;
 }
 
 interface State {
+  errorMessage: string | null;
   file: File | null,
   loading: boolean;
 }
@@ -21,6 +25,7 @@ export default class FileDetails extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
+      errorMessage: null,
       file: null,
       loading: true,
     };
@@ -37,6 +42,17 @@ export default class FileDetails extends React.Component<Props, State> {
   render() {
     /* eslint-disable jsx-a11y/anchor-has-content */
     /* eslint-disable jsx-a11y/anchor-is-valid */
+    if (this.state.errorMessage !== null) {
+      return <ErrorPage
+        errorMessage={this.state.errorMessage}
+        retry={this.reloadFileDetails}
+      />
+    }
+
+    if (this.state.loading) {
+      return <Loader />;
+    }
+
     return (<div>
       <div className="columns">
         <div className="column">
@@ -72,9 +88,23 @@ export default class FileDetails extends React.Component<Props, State> {
         file: file,
       });
     } catch (err) {
-      // TODO handle errors properly
       console.log(err);
+      this.setState({
+        errorMessage: 'Error loading file details.',
+      });
     }
+  }
+
+  reloadFileDetails = async () => {
+    this.setState({
+      loading: true,
+    });
+
+    await this.loadFileDetails();
+
+    this.setState({
+      loading: false,
+    });
   }
 
   downloadClicked = async () => {
@@ -86,8 +116,8 @@ export default class FileDetails extends React.Component<Props, State> {
       this.linkRef.current!.click();
       window.URL.revokeObjectURL(url);
     } catch (err) {
-      // TODO handle
       console.log(err);
+      this.props.displayError('Error encountered while downloading file.');
     }
   }
 
