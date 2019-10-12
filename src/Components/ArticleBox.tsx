@@ -1,11 +1,12 @@
 import moment from 'moment';
 import React from 'react';
+import ReactHTMLParser from 'react-html-parser';
 import { Link, Redirect } from 'react-router-dom';
 import { Backend } from '../Data/Backend';
+import { readTokenPayload } from '../Helpers';
 import { Article } from '../Models/Article';
 import ArticleDropdown from './ArticleDropdown';
 import DeleteArticleConfirmationPrompt from './Prompts/DeleteArticleConfirmationPrompt';
-import { readTokenPayload } from '../Helpers';
 
 interface Props {
   article: Article;
@@ -42,7 +43,7 @@ export default class ArticleBox extends React.Component<Props, State> {
       return <Redirect to={'/article/edit/' + this.props.article.articleID} />
     }
     // TODO handle updated date
-    const { articleID, headline, author, content, published } = this.props.article;
+    const { articleID, headline, author, snippet, published } = this.props.article;
     const localizedTimeString = moment(published).fromNow();
 
     return (<div className="box">
@@ -54,7 +55,7 @@ export default class ArticleBox extends React.Component<Props, State> {
                 <p>
                   <strong>{headline}</strong> <small><i className="fas fa-user"></i> {author.email}</small> <small><i className="fas fa-clock"></i> {localizedTimeString}</small>
                   <br />
-                  {content}
+                  {ReactHTMLParser(snippet!)}
                   <br />
                   <Link to={'/article/' + articleID}>Read more...</Link>
                 </p>

@@ -73,7 +73,8 @@ export class URLBackend implements Backend {
         headline: entry.headline as string,
         author: { userID: String(entry.userid), email: entry.Email },
         published: new Date(entry.published),
-        content: entry.content as string
+        content: entry.content as string,
+        snippet: entry.snippet as string,
       };
     });
   }
@@ -88,7 +89,8 @@ export class URLBackend implements Backend {
       headline: entry.headline as string,
       author: { userID: String(entry.userid), email: entry.Email },
       published: new Date(entry.published),
-      content: entry.content as string
+      content: entry.content as string,
+      snippet: entry.snippet as string,
     };
   }
 

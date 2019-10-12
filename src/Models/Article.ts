@@ -5,6 +5,7 @@ export interface Article {
   headline: string;
   author: User;
   content: string;
+  snippet?: string;
   published: Date;
   updated?: Date;
 }
