@@ -1,6 +1,7 @@
 import React from 'react';
 import { Backend } from '../Data/Backend';
 import { File } from '../Models/File';
+import ErrorPage from './ErrorPage';
 import Loader from './Loader';
 import NearbyBox from './NearbyBox';
 
@@ -11,6 +12,7 @@ interface Props {
 }
 
 interface State {
+  errorMessage: string | null;
   files: File[];
   loading: boolean;
 }
@@ -19,6 +21,7 @@ export default class NearbyColumn extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
+      errorMessage: null,
       files: [],
       loading: true,
     };
@@ -30,6 +33,7 @@ export default class NearbyColumn extends React.Component<Props, State> {
     }
 
     await this.loadNearbyFiles();
+
     this.setState({
       loading: false,
     });
@@ -47,6 +51,13 @@ export default class NearbyColumn extends React.Component<Props, State> {
   }
 
   render() {
+    if (this.state.errorMessage) {
+      return <ErrorPage
+        errorMessage={this.state.errorMessage}
+        retry={this.reloadNearbyFiles}
+      />
+    }
+
     if (this.state.loading) {
       return (<div className="column is-narrow">
         <Loader />
@@ -76,8 +87,22 @@ export default class NearbyColumn extends React.Component<Props, State> {
         files: files,
       });
     } catch (err) {
-      // TODO handle properly
       console.log(err);
+      this.setState({
+        errorMessage: 'Error loading nearby files.',
+      });
     }
+  }
+
+  reloadNearbyFiles = async () => {
+    this.setState({
+      loading: true,
+    });
+
+    await this.loadNearbyFiles();
+
+    this.setState({
+      loading: false,
+    });
   }
 }
