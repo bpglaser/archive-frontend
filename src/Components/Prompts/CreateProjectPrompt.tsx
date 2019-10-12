@@ -2,6 +2,7 @@ import React from 'react';
 import { Backend } from '../../Data/Backend';
 import { Organization } from '../../Models/Organization';
 import { Project } from '../../Models/Project';
+import { registerEscHandler, unregisterEscHandler } from '../../Helpers';
 
 interface Props {
   backend: Backend;
@@ -26,6 +27,14 @@ export default class CreateProjectPrompt extends React.Component<Props, State> {
     };
     this.nameRef = React.createRef();
     this.descriptionRef = React.createRef();
+  }
+
+  componentDidMount() {
+    registerEscHandler(this.props.close);
+  }
+
+  componentWillUnmount() {
+    unregisterEscHandler();
   }
 
   render() {

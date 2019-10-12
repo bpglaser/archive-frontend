@@ -1,6 +1,7 @@
 import React from 'react';
 import { Backend } from '../../Data/Backend';
 import { Organization } from '../../Models/Organization';
+import { registerEscHandler, unregisterEscHandler } from '../../Helpers';
 
 interface Props {
   backend: Backend;
@@ -28,6 +29,14 @@ export default class OrganizationSettingsPrompt extends React.Component<Props, S
     };
     this.nameRef = React.createRef();
     this.descriptionRef = React.createRef();
+  }
+
+  componentDidMount() {
+    registerEscHandler(this.props.close);
+  }
+
+  componentWillUnmount() {
+    unregisterEscHandler();
   }
 
   render() {

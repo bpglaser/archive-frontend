@@ -1,7 +1,7 @@
 import React from 'react';
 import zxcvbn from 'zxcvbn';
 import { Backend } from '../../Data/Backend';
-import { vaildEmail, validPassword } from '../../Helpers';
+import { vaildEmail, validPassword, registerEscHandler, unregisterEscHandler } from '../../Helpers';
 import { User } from '../../Models/User';
 import StrengthIndicator from '../StrengthIndicator';
 import ValidationField from '../ValidationField';
@@ -48,12 +48,7 @@ export class LoginPrompt extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    const escapeKeyCode = 27;
-    document.onkeyup = (event) => {
-      if (event.keyCode === escapeKeyCode) {
-        this.props.close();
-      }
-    };
+    registerEscHandler(this.props.close);
 
     if (this.emailRef.current) {
       this.emailRef.current.focus();
@@ -61,7 +56,7 @@ export class LoginPrompt extends React.Component<Props, State> {
   }
 
   componentWillUnmount() {
-    document.onkeyup = null;
+    unregisterEscHandler();
   }
 
   render() {

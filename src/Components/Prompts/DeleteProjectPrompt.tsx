@@ -2,6 +2,7 @@ import React from 'react';
 import { Backend } from '../../Data/Backend';
 import { Project } from '../../Models/Project';
 import { Organization } from '../../Models/Organization';
+import { registerEscHandler, unregisterEscHandler } from '../../Helpers';
 
 interface Props {
   backend: Backend;
@@ -34,7 +35,12 @@ export default class DeleteProjectPrompt extends React.Component<Props, State> {
   }
 
   componentDidMount() {
+    registerEscHandler(this.props.close);
     this.inputRef.current!.focus();
+  }
+
+  componentWillUnmount() {
+    unregisterEscHandler();
   }
 
   render() {

@@ -2,6 +2,7 @@ import React from 'react';
 import { EditorValue } from 'react-rte';
 import { Backend } from '../../Data/Backend';
 import { Article } from '../../Models/Article';
+import { registerEscHandler, unregisterEscHandler } from '../../Helpers';
 
 interface Props {
   article: Article;
@@ -25,6 +26,14 @@ export default class EditArticleConfirmationPrompt extends React.Component<Props
       disabled: false,
       errorMessage: null,
     };
+  }
+
+  componentDidMount() {
+    registerEscHandler(this.props.close);
+  }
+
+  componentWillUnmount() {
+    unregisterEscHandler();
   }
 
   render() {

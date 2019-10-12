@@ -2,6 +2,7 @@ import * as React from "react";
 import { Backend } from "../../Data/Backend";
 import { Project } from "../../Models/Project";
 import { File } from '../../Models/File';
+import { registerEscHandler, unregisterEscHandler } from "../../Helpers";
 
 interface Props {
   backend: Backend;
@@ -32,6 +33,14 @@ export default class UploadFilePrompt extends React.Component<Props, State> {
       errorMessage: null,
       selectedFile: null,
     };
+  }
+
+  componentDidMount() {
+    registerEscHandler(this.props.close);
+  }
+
+  componentWillUnmount() {
+    unregisterEscHandler();
   }
 
   render() {

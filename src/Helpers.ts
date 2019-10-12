@@ -30,3 +30,16 @@ export const checkIsAdmin = (token: string | null): boolean => {
 
   return user.admin;
 }
+
+export function registerEscHandler(func: () => void) {
+    const escapeKeyCode = 27;
+    document.onkeyup = (event) => {
+      if (event.keyCode === escapeKeyCode) {
+        func();
+      }
+    };
+}
+
+export function unregisterEscHandler() {
+  document.onkeyup = null;
+}

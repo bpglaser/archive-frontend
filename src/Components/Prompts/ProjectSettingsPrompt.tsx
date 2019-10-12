@@ -1,6 +1,7 @@
 import React from 'react';
 import { Backend } from '../../Data/Backend';
 import { Project } from '../../Models/Project';
+import { registerEscHandler, unregisterEscHandler } from '../../Helpers';
 
 interface Props {
   backend: Backend;
@@ -23,6 +24,14 @@ export default class ProjectSettingsPrompt extends React.Component<Props, State>
       disabled: false,
       errorMessage: null,
     };
+  }
+
+  componentDidMount() {
+    registerEscHandler(this.props.close);
+  }
+
+  componentWillUnmount() {
+    unregisterEscHandler();
   }
 
   render() {

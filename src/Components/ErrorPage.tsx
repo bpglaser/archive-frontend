@@ -15,7 +15,7 @@ export default class ErrorPage extends React.Component<Props> {
         <h4 className="title is-4">
           {this.props.errorMessage}
         </h4>
-        <button className="button">
+        <button className="button" onClick={this.props.retry}>
           <span className="icon">
             <i className="fas fa-redo"></i>
           </span>

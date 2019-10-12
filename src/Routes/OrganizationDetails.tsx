@@ -1,6 +1,8 @@
 import React from 'react';
 import { Redirect, RouteComponentProps } from 'react-router';
+import ErrorPage from '../Components/ErrorPage';
 import Loader from '../Components/Loader';
+import ProjectPreviewCard from '../Components/ProjectPreviewCard';
 import OrganizationDeletePrompt from '../Components/Prompts/OrganizationDeletePrompt';
 import OrganizationSettingsPrompt from '../Components/Prompts/OrganizationSettingsPrompt';
 import { Backend } from '../Data/Backend';
@@ -59,7 +61,10 @@ export default class OrganizationDetails extends React.Component<Props, State> {
     }
 
     if (this.state.errorMessage !== null) {
-      return (<div>{this.state.errorMessage}</div>);
+      return <ErrorPage
+        errorMessage={this.state.errorMessage}
+        retry={this.retryLoad}
+      />
     }
 
     return (<div>
@@ -79,6 +84,11 @@ export default class OrganizationDetails extends React.Component<Props, State> {
           </button>
         </div>
       </nav>
+
+      {
+        this.state.projects.map((project, i) =>
+          <ProjectPreviewCard project={project} key={i} />)
+      }
 
       {this.state.visiblePrompt === VisiblePrompt.Delete && this.state.organization &&
         <OrganizationDeletePrompt
@@ -129,6 +139,11 @@ export default class OrganizationDetails extends React.Component<Props, State> {
         errorMessage: 'Failed to load projects',
       });
     }
+  }
+
+  retryLoad = async () => {
+    await this.loadOrganization();
+    await this.loadProjects();
   }
 
   hidePrompt = () => {

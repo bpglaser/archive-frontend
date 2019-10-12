@@ -1,6 +1,7 @@
 import React from 'react';
 import { Backend } from '../../Data/Backend';
 import { Article } from '../../Models/Article';
+import { registerEscHandler, unregisterEscHandler } from '../../Helpers';
 
 interface Props {
   article: Article;
@@ -22,6 +23,14 @@ export default class DeleteArticleConfirmationPrompt extends React.Component<Pro
       disabled: false,
       errorMessage: null,
     };
+  }
+
+  componentDidMount() {
+    registerEscHandler(this.props.close);
+  }
+
+  componentWillUnmount() {
+    unregisterEscHandler();
   }
 
   render() {
