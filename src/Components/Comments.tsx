@@ -4,6 +4,7 @@ import { Comment } from '../Models/Comment';
 import { File } from '../Models/File';
 import CommentDisplayBox from './CommentDisplayBox';
 import Loader from './Loader';
+import CreateCommentBox from './CreateCommentBox';
 
 interface Props {
   backend: Backend;
@@ -38,6 +39,14 @@ export default class Comments extends React.Component<Props, State> {
     }
 
     return (<div>
+      <CreateCommentBox
+        backend={this.props.backend}
+        pushComment={this.pushComment}
+        token={this.props.token}
+      />
+
+      <br />
+
       {
         this.state.comments.map((comment, i) =>
           <CommentDisplayBox
@@ -58,5 +67,13 @@ export default class Comments extends React.Component<Props, State> {
     } catch (err) {
       // TODO handle errr
     }
+  }
+
+  pushComment = (comment: Comment) => {
+    const newComments = [comment, ...this.state.comments];
+    // TODO sort comments
+    this.setState({
+      comments: newComments,
+    });
   }
 }

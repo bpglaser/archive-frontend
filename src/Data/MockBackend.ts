@@ -207,4 +207,9 @@ export class MockBackend implements Backend {
       { content: 'Lorem ipsum comment content.', published: new Date(), user: { userID: '123', email: 'abc123@gmail.com' } },
     ];
   }
+
+  submitComment = async (token: string, content: string) => {
+    await delay(this.sleepDuration);
+    return { content: content, published: new Date(), user: { userID: '123', email: 'abc123@gmail.com' } };
+  }
 }

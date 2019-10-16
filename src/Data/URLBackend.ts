@@ -300,6 +300,10 @@ export class URLBackend implements Backend {
   getComments = async (token: string, fileID: number) => {
     return await this.mock.getComments(token, fileID);
   }
+
+  submitComment = async (token: string, content: string) => {
+    return await this.mock.submitComment(token, content);
+  }
 }
 
 function createAuthorizationConfig(token: string): AxiosRequestConfig {
