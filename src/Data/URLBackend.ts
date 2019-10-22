@@ -321,7 +321,9 @@ export class URLBackend implements Backend {
     const config = createAuthorizationConfig(token);
 
     const result = await Axios.patch(url.toString(), { comment: content }, config);
-    return parseCommentEntry(result.data);
+    const comment = parseCommentEntry(result.data);
+    comment.user = readTokenPayload(token);
+    return comment;
   }
 
   deleteComment = async (token: string, commentID: number) => {
