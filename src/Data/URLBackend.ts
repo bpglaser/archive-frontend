@@ -303,7 +303,9 @@ export class URLBackend implements Backend {
     const config = createAuthorizationConfig(token);
 
     const result = await Axios.post(url.toString(), { comment: content }, config);
-    return parseCommentEntry(result.data);
+    const comment = parseCommentEntry(result.data);
+    comment.user = readTokenPayload(token);
+    return comment;
   }
 
   getComments = async (token: string, fileID: number) => {
@@ -330,13 +332,13 @@ export class URLBackend implements Backend {
 }
 
 function parseCommentEntry(entry: any): Comment {
-    return {
-      commentID: Number(entry.CommentID),
-      content: entry.Comment,
-      published: new Date(entry.Published),
-      user: { userID: Number(entry.UserID), email: entry.Email },
-      updated: entry.Updated ? new Date(entry.Updated) : null,
-    }
+  return {
+    commentID: Number(entry.CommentID),
+    content: entry.Comment,
+    published: new Date(entry.Published),
+    user: { userID: Number(entry.UserID), email: entry.Email },
+    updated: entry.Updated ? new Date(entry.Updated) : null,
+  }
 }
 
 function createAuthorizationConfig(token: string): AxiosRequestConfig {
