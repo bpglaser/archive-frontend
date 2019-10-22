@@ -334,7 +334,7 @@ function parseCommentEntry(entry: any): Comment {
       commentID: Number(entry.CommentID),
       content: entry.Comment,
       published: new Date(entry.Published),
-      user: { userID: Number(entry.userID), email: 'foobar' }, // TODO fix email on backend
+      user: { userID: Number(entry.userID), email: entry.Email },
       updated: entry.Updated ? new Date(entry.Updated) : null,
     }
 }
