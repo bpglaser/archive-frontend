@@ -2,7 +2,7 @@ import moment from 'moment';
 import React from 'react';
 import ReactHTMLParser from 'react-html-parser';
 import { Redirect, RouteComponentProps } from 'react-router';
-import ArticleDropdown from '../Components/ArticleDropdown';
+import EditDeleteDropdown from '../Components/EditDeleteDropdown';
 import ErrorPage from '../Components/ErrorPage';
 import Loader from '../Components/Loader';
 import DeleteArticleConfirmationPrompt from '../Components/Prompts/DeleteArticleConfirmationPrompt';
@@ -77,7 +77,7 @@ export default class ArticleDetails extends React.Component<Props, State> {
 
       {checkIsAdmin(this.props.token) &&
         <div className="column is-narrow">
-          <ArticleDropdown
+          <EditDeleteDropdown
             editClicked={this.editClicked}
             deleteClicked={this.deleteClicked}
           />

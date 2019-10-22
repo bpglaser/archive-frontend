@@ -9,11 +9,10 @@ interface State {
 
 }
 
-export default class ArticleDropdown extends React.Component<Props, State> {
+export default class EditDeleteDropdown extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-
     };
   }
 

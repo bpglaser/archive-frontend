@@ -5,7 +5,7 @@ import { Link, Redirect } from 'react-router-dom';
 import { Backend } from '../Data/Backend';
 import { readTokenPayload } from '../Helpers';
 import { Article } from '../Models/Article';
-import ArticleDropdown from './ArticleDropdown';
+import EditDeleteDropdown from './EditDeleteDropdown';
 import DeleteArticleConfirmationPrompt from './Prompts/DeleteArticleConfirmationPrompt';
 
 interface Props {
@@ -66,7 +66,7 @@ export default class ArticleBox extends React.Component<Props, State> {
 
         {this.isAdmin &&
           <div className="column is-narrow">
-            <ArticleDropdown
+            <EditDeleteDropdown
               editClicked={this.editClicked}
               deleteClicked={this.deleteClicked}
             />
