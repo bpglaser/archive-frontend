@@ -3,6 +3,7 @@ import { readTokenPayload } from '../Helpers';
 import { Article } from '../Models/Article';
 import { Backend } from './Backend';
 import { MockBackend } from "./MockBackend";
+import { Comment } from '../Models/Comment';
 
 export class URLBackend implements Backend {
   base: string | undefined;
@@ -71,7 +72,7 @@ export class URLBackend implements Backend {
       return {
         articleID: Number(entry.articleid),
         headline: entry.headline as string,
-        author: { userID: String(entry.userid), email: entry.Email },
+        author: { userID: Number(entry.userid), email: entry.Email },
         published: new Date(entry.published),
         content: entry.content as string,
         snippet: entry.snippet as string,
@@ -87,7 +88,7 @@ export class URLBackend implements Backend {
     return {
       articleID: Number(entry.articleid),
       headline: entry.headline as string,
-      author: { userID: String(entry.userid), email: entry.Email },
+      author: { userID: Number(entry.userid), email: entry.Email },
       published: new Date(entry.published),
       content: entry.content as string,
       snippet: entry.snippet as string,
@@ -297,13 +298,45 @@ export class URLBackend implements Backend {
     await Axios.delete(url.toString(), config);
   }
 
-  getComments = async (token: string, fileID: number) => {
-    return await this.mock.getComments(token, fileID);
+  submitComment = async (token: string, fileID: number, content: string) => {
+    const url = new URL('/api/comments/' + fileID, this.base);
+    const config = createAuthorizationConfig(token);
+
+    const result = await Axios.post(url.toString(), { comment: content }, config);
+    return parseCommentEntry(result.data);
   }
 
-  submitComment = async (token: string, content: string) => {
-    return await this.mock.submitComment(token, content);
+  getComments = async (token: string, fileID: number) => {
+    const url = new URL('/api/comments/' + fileID, this.base);
+    const config = createAuthorizationConfig(token);
+
+    const result = await Axios.get(url.toString(), config);
+    return result.data.map(parseCommentEntry);
   }
+
+  editComment = async (token: string, commentID: number, content: string) => {
+    const url = new URL('/api/comments/' + commentID, this.base);
+    const config = createAuthorizationConfig(token);
+
+    const result = await Axios.patch(url.toString(), { comment: content }, config);
+    return parseCommentEntry(result.data);
+  }
+
+  deleteComment = async (token: string, commentID: number) => {
+    const url = new URL('/api/comments/' + commentID, this.base);
+    const config = createAuthorizationConfig(token);
+    await Axios.delete(url.toString(), config);
+  }
+}
+
+function parseCommentEntry(entry: any): Comment {
+    return {
+      commentID: Number(entry.CommentID),
+      content: entry.Comment,
+      published: new Date(entry.Published),
+      user: { userID: Number(entry.userID), email: 'foobar' }, // TODO fix email on backend
+      updated: entry.Updated ? new Date(entry.Updated) : null,
+    }
 }
 
 function createAuthorizationConfig(token: string): AxiosRequestConfig {

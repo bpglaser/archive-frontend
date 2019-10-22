@@ -13,7 +13,7 @@ export class MockBackend implements Backend {
     await delay(this.sleepDuration);
     return {
       user: {
-        userID: "1234567890",
+        userID: 1234567890,
         email: email,
       },
       token: "abc123",
@@ -24,7 +24,7 @@ export class MockBackend implements Backend {
     await delay(this.sleepDuration);
     return {
       user: {
-        userID: "1234567890",
+        userID: 1234567890,
         email: email,
       },
       token: "abc123",
@@ -42,7 +42,7 @@ export class MockBackend implements Backend {
   invite = async (token: string, key: string) => {
     await delay(this.sleepDuration);
     return {
-      inviter: { userID: 'brad-iD', email: 'brad@foo.com' },
+      inviter: { userID: 123, email: 'brad@foo.com' },
       project: { projectID: 1234, organizationID: 1, name: 'Example Project', description: 'Everyone is having fun lol' },
     };
   }
@@ -58,27 +58,27 @@ export class MockBackend implements Backend {
   getArticles = async () => {
     await delay(this.sleepDuration);
     return [
-      { articleID: 1, headline: 'Welcome!', author: { userID: '1', email: 'brad' }, published: new Date(), content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In a dapibus lacus. Phasellus et posuere urna, ac pretium tortor. Ut venenatis fringilla nunc, at pellentesque libero vehicula porta. Sed convallis magna eget nisl pretium cursus. Etiam feugiat hendrerit maximus. Nunc eu sem ligula. In nec rutrum lorem. Nulla facilisi. Ut pellentesque congue mauris, a consectetur sapien efficitur a. Praesent pharetra, risus ut egestas dapibus, mi augue varius nisi, in accumsan risus nunc ac nisl. Suspendisse libero risus, vulputate et vulputate non, vehicula a metus. Phasellus dui arcu, tristique a dapibus vel, venenatis quis leo. Proin in sollicitudin metus. In eget.', snippet: 'foo' },
-      { articleID: 1, headline: 'Welcome!', author: { userID: '1', email: 'brad' }, published: new Date(), content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In a dapibus lacus. Phasellus et posuere urna, ac pretium tortor. Ut venenatis fringilla nunc, at pellentesque libero vehicula porta. Sed convallis magna eget nisl pretium cursus. Etiam feugiat hendrerit maximus. Nunc eu sem ligula. In nec rutrum lorem. Nulla facilisi. Ut pellentesque congue mauris, a consectetur sapien efficitur a. Praesent pharetra, risus ut egestas dapibus, mi augue varius nisi, in accumsan risus nunc ac nisl. Suspendisse libero risus, vulputate et vulputate non, vehicula a metus. Phasellus dui arcu, tristique a dapibus vel, venenatis quis leo. Proin in sollicitudin metus. In eget.', snippet: 'foo' },
-      { articleID: 1, headline: 'Welcome!', author: { userID: '1', email: 'brad' }, published: new Date(), content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In a dapibus lacus. Phasellus et posuere urna, ac pretium tortor. Ut venenatis fringilla nunc, at pellentesque libero vehicula porta. Sed convallis magna eget nisl pretium cursus. Etiam feugiat hendrerit maximus. Nunc eu sem ligula. In nec rutrum lorem. Nulla facilisi. Ut pellentesque congue mauris, a consectetur sapien efficitur a. Praesent pharetra, risus ut egestas dapibus, mi augue varius nisi, in accumsan risus nunc ac nisl. Suspendisse libero risus, vulputate et vulputate non, vehicula a metus. Phasellus dui arcu, tristique a dapibus vel, venenatis quis leo. Proin in sollicitudin metus. In eget.', snippet: 'foo' },
-      { articleID: 1, headline: 'Welcome!', author: { userID: '1', email: 'brad' }, published: new Date(), content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In a dapibus lacus. Phasellus et posuere urna, ac pretium tortor. Ut venenatis fringilla nunc, at pellentesque libero vehicula porta. Sed convallis magna eget nisl pretium cursus. Etiam feugiat hendrerit maximus. Nunc eu sem ligula. In nec rutrum lorem. Nulla facilisi. Ut pellentesque congue mauris, a consectetur sapien efficitur a. Praesent pharetra, risus ut egestas dapibus, mi augue varius nisi, in accumsan risus nunc ac nisl. Suspendisse libero risus, vulputate et vulputate non, vehicula a metus. Phasellus dui arcu, tristique a dapibus vel, venenatis quis leo. Proin in sollicitudin metus. In eget.', snippet: 'foo' },
-      { articleID: 1, headline: 'Welcome!', author: { userID: '1', email: 'brad' }, published: new Date(), content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In a dapibus lacus. Phasellus et posuere urna, ac pretium tortor. Ut venenatis fringilla nunc, at pellentesque libero vehicula porta. Sed convallis magna eget nisl pretium cursus. Etiam feugiat hendrerit maximus. Nunc eu sem ligula. In nec rutrum lorem. Nulla facilisi. Ut pellentesque congue mauris, a consectetur sapien efficitur a. Praesent pharetra, risus ut egestas dapibus, mi augue varius nisi, in accumsan risus nunc ac nisl. Suspendisse libero risus, vulputate et vulputate non, vehicula a metus. Phasellus dui arcu, tristique a dapibus vel, venenatis quis leo. Proin in sollicitudin metus. In eget.', snippet: 'foo' },
+      { articleID: 1, headline: 'Welcome!', author: { userID: 1, email: 'brad' }, published: new Date(), content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In a dapibus lacus. Phasellus et posuere urna, ac pretium tortor. Ut venenatis fringilla nunc, at pellentesque libero vehicula porta. Sed convallis magna eget nisl pretium cursus. Etiam feugiat hendrerit maximus. Nunc eu sem ligula. In nec rutrum lorem. Nulla facilisi. Ut pellentesque congue mauris, a consectetur sapien efficitur a. Praesent pharetra, risus ut egestas dapibus, mi augue varius nisi, in accumsan risus nunc ac nisl. Suspendisse libero risus, vulputate et vulputate non, vehicula a metus. Phasellus dui arcu, tristique a dapibus vel, venenatis quis leo. Proin in sollicitudin metus. In eget.', snippet: 'foo' },
+      { articleID: 1, headline: 'Welcome!', author: { userID: 1, email: 'brad' }, published: new Date(), content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In a dapibus lacus. Phasellus et posuere urna, ac pretium tortor. Ut venenatis fringilla nunc, at pellentesque libero vehicula porta. Sed convallis magna eget nisl pretium cursus. Etiam feugiat hendrerit maximus. Nunc eu sem ligula. In nec rutrum lorem. Nulla facilisi. Ut pellentesque congue mauris, a consectetur sapien efficitur a. Praesent pharetra, risus ut egestas dapibus, mi augue varius nisi, in accumsan risus nunc ac nisl. Suspendisse libero risus, vulputate et vulputate non, vehicula a metus. Phasellus dui arcu, tristique a dapibus vel, venenatis quis leo. Proin in sollicitudin metus. In eget.', snippet: 'foo' },
+      { articleID: 1, headline: 'Welcome!', author: { userID: 1, email: 'brad' }, published: new Date(), content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In a dapibus lacus. Phasellus et posuere urna, ac pretium tortor. Ut venenatis fringilla nunc, at pellentesque libero vehicula porta. Sed convallis magna eget nisl pretium cursus. Etiam feugiat hendrerit maximus. Nunc eu sem ligula. In nec rutrum lorem. Nulla facilisi. Ut pellentesque congue mauris, a consectetur sapien efficitur a. Praesent pharetra, risus ut egestas dapibus, mi augue varius nisi, in accumsan risus nunc ac nisl. Suspendisse libero risus, vulputate et vulputate non, vehicula a metus. Phasellus dui arcu, tristique a dapibus vel, venenatis quis leo. Proin in sollicitudin metus. In eget.', snippet: 'foo' },
+      { articleID: 1, headline: 'Welcome!', author: { userID: 1, email: 'brad' }, published: new Date(), content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In a dapibus lacus. Phasellus et posuere urna, ac pretium tortor. Ut venenatis fringilla nunc, at pellentesque libero vehicula porta. Sed convallis magna eget nisl pretium cursus. Etiam feugiat hendrerit maximus. Nunc eu sem ligula. In nec rutrum lorem. Nulla facilisi. Ut pellentesque congue mauris, a consectetur sapien efficitur a. Praesent pharetra, risus ut egestas dapibus, mi augue varius nisi, in accumsan risus nunc ac nisl. Suspendisse libero risus, vulputate et vulputate non, vehicula a metus. Phasellus dui arcu, tristique a dapibus vel, venenatis quis leo. Proin in sollicitudin metus. In eget.', snippet: 'foo' },
+      { articleID: 1, headline: 'Welcome!', author: { userID: 1, email: 'brad' }, published: new Date(), content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In a dapibus lacus. Phasellus et posuere urna, ac pretium tortor. Ut venenatis fringilla nunc, at pellentesque libero vehicula porta. Sed convallis magna eget nisl pretium cursus. Etiam feugiat hendrerit maximus. Nunc eu sem ligula. In nec rutrum lorem. Nulla facilisi. Ut pellentesque congue mauris, a consectetur sapien efficitur a. Praesent pharetra, risus ut egestas dapibus, mi augue varius nisi, in accumsan risus nunc ac nisl. Suspendisse libero risus, vulputate et vulputate non, vehicula a metus. Phasellus dui arcu, tristique a dapibus vel, venenatis quis leo. Proin in sollicitudin metus. In eget.', snippet: 'foo' },
     ];
   }
 
   getArticle = async (articleID: number) => {
     await delay(this.sleepDuration);
-    return { articleID: 1, headline: 'Welcome!', author: { userID: '1', email: 'brad' }, published: new Date(), content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In a dapibus lacus. Phasellus et posuere urna, ac pretium tortor. Ut venenatis fringilla nunc, at pellentesque libero vehicula porta. Sed convallis magna eget nisl pretium cursus. Etiam feugiat hendrerit maximus. Nunc eu sem ligula. In nec rutrum lorem. Nulla facilisi. Ut pellentesque congue mauris, a consectetur sapien efficitur a. Praesent pharetra, risus ut egestas dapibus, mi augue varius nisi, in accumsan risus nunc ac nisl. Suspendisse libero risus, vulputate et vulputate non, vehicula a metus. Phasellus dui arcu, tristique a dapibus vel, venenatis quis leo. Proin in sollicitudin metus. In eget.', snippet: 'foo' };
+    return { articleID: 1, headline: 'Welcome!', author: { userID: 1, email: 'brad' }, published: new Date(), content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In a dapibus lacus. Phasellus et posuere urna, ac pretium tortor. Ut venenatis fringilla nunc, at pellentesque libero vehicula porta. Sed convallis magna eget nisl pretium cursus. Etiam feugiat hendrerit maximus. Nunc eu sem ligula. In nec rutrum lorem. Nulla facilisi. Ut pellentesque congue mauris, a consectetur sapien efficitur a. Praesent pharetra, risus ut egestas dapibus, mi augue varius nisi, in accumsan risus nunc ac nisl. Suspendisse libero risus, vulputate et vulputate non, vehicula a metus. Phasellus dui arcu, tristique a dapibus vel, venenatis quis leo. Proin in sollicitudin metus. In eget.', snippet: 'foo' };
   }
 
   createArticle = async (token: string, title: string, content: string) => {
     await delay(this.sleepDuration);
-    return { articleID: 1, headline: title, author: { userID: '1', email: 'brad' }, published: new Date(), content: content, snippet: content.slice(0, 100) };
+    return { articleID: 1, headline: title, author: { userID: 1, email: 'brad' }, published: new Date(), content: content, snippet: content.slice(0, 100) };
   }
 
   updateArticle = async (token: string, article: Article, title: string, content: string) => {
     await delay(this.sleepDuration);
-    return { articleID: article.articleID, headline: title, author: { userID: '1', email: 'brad' }, published: new Date(), content: content, snippet: content.slice(0, 100) };
+    return { articleID: article.articleID, headline: title, author: { userID: 1, email: 'brad' }, published: new Date(), content: content, snippet: content.slice(0, 100) };
   }
 
   deleteArticle = async (token: string, articleID: number) => {
@@ -192,24 +192,32 @@ export class MockBackend implements Backend {
     await delay(this.sleepDuration);
   }
 
+  submitComment = async (token: string, fileID: number, content: string) => {
+    await delay(this.sleepDuration);
+    return { commentID: 1, content: 'Lorem ipsum comment content.', published: new Date(), updated: null, user: { userID: 123, email: 'abc123@gmail.com' } };
+  }
+
   getComments = async (token: string, fileID: number) => {
     await delay(this.sleepDuration);
     return [
-      { content: 'Lorem ipsum comment content.', published: new Date(), user: { userID: '123', email: 'abc123@gmail.com' } },
-      { content: 'Lorem ipsum comment content.', published: new Date(), user: { userID: '123', email: 'abc123@gmail.com' } },
-      { content: 'Lorem ipsum comment content.', published: new Date(), user: { userID: '123', email: 'abc123@gmail.com' } },
-      { content: 'Lorem ipsum comment content.', published: new Date(), user: { userID: '123', email: 'abc123@gmail.com' } },
-      { content: 'Lorem ipsum comment content.', published: new Date(), user: { userID: '123', email: 'abc123@gmail.com' } },
-      { content: 'Lorem ipsum comment content.', published: new Date(), user: { userID: '123', email: 'abc123@gmail.com' } },
-      { content: 'Lorem ipsum comment content.', published: new Date(), user: { userID: '123', email: 'abc123@gmail.com' } },
-      { content: 'Lorem ipsum comment content.', published: new Date(), user: { userID: '123', email: 'abc123@gmail.com' } },
-      { content: 'Lorem ipsum comment content.', published: new Date(), user: { userID: '123', email: 'abc123@gmail.com' } },
-      { content: 'Lorem ipsum comment content.', published: new Date(), user: { userID: '123', email: 'abc123@gmail.com' } },
+      { commentID: 1, content: 'Lorem ipsum comment content.', published: new Date(), updated: null, user: { userID: 123, email: 'abc123@gmail.com' } },
+      { commentID: 2, content: 'Lorem ipsum comment content.', published: new Date(), updated: null, user: { userID: 123, email: 'abc123@gmail.com' } },
+      { commentID: 3, content: 'Lorem ipsum comment content.', published: new Date(), updated: null, user: { userID: 123, email: 'abc123@gmail.com' } },
+      { commentID: 4, content: 'Lorem ipsum comment content.', published: new Date(), updated: null, user: { userID: 123, email: 'abc123@gmail.com' } },
+      { commentID: 5, content: 'Lorem ipsum comment content.', published: new Date(), updated: null, user: { userID: 123, email: 'abc123@gmail.com' } },
+      { commentID: 6, content: 'Lorem ipsum comment content.', published: new Date(), updated: null, user: { userID: 123, email: 'abc123@gmail.com' } },
+      { commentID: 7, content: 'Lorem ipsum comment content.', published: new Date(), updated: null, user: { userID: 123, email: 'abc123@gmail.com' } },
+      { commentID: 8, content: 'Lorem ipsum comment content.', published: new Date(), updated: null, user: { userID: 123, email: 'abc123@gmail.com' } },
+      { commentID: 9, content: 'Lorem ipsum comment content.', published: new Date(), updated: null, user: { userID: 123, email: 'abc123@gmail.com' } },
     ];
   }
 
-  submitComment = async (token: string, content: string) => {
+  editComment = async (token: string, commentID: number, content: string) => {
     await delay(this.sleepDuration);
-    return { content: content, published: new Date(), user: { userID: '123', email: 'abc123@gmail.com' } };
+    return { commentID: commentID, content: content, published: new Date(), updated: new Date(), user: { userID: 123, email: 'abc123@gmail.com' } };
+  }
+
+  deleteComment = async (token: string, commentID: number) => {
+    await delay(this.sleepDuration);
   }
 }

@@ -1,9 +1,11 @@
 import React, { ChangeEvent } from 'react';
 import { Backend } from '../Data/Backend';
 import { Comment } from '../Models/Comment';
+import { File } from '../Models/File';
 
 interface Props {
   backend: Backend;
+  file: File;
   pushComment: (comment: Comment) => void;
   token: string;
 }
@@ -74,7 +76,7 @@ export default class CreateCommentBox extends React.Component<Props, State> {
     });
 
     try {
-      const response = await this.props.backend.submitComment(this.props.token, this.state.commentContent);
+      const response = await this.props.backend.submitComment(this.props.token, this.props.file.fileID, this.state.commentContent);
       this.props.pushComment(response);
       this.setState({
         commentContent: '',

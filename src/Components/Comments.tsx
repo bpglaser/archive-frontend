@@ -48,6 +48,7 @@ export default class Comments extends React.Component<Props, State> {
     return (<div>
       <CreateCommentBox
         backend={this.props.backend}
+        file={this.props.file}
         pushComment={this.pushComment}
         token={this.props.token}
       />

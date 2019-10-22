@@ -42,6 +42,8 @@ export interface Backend {
   getFileDetails: (token: string, fileID: number) => Promise<File>;
   deleteFile: (token: string, fileID: number) => Promise<void>;
 
+  submitComment: (token: string, fileID: number, content: string) => Promise<Comment>;
   getComments: (token: string, fileID: number) => Promise<Comment[]>;
-  submitComment: (token: string, content: string) => Promise<Comment>;
+  editComment: (token: string, commentID: number, content: string) => Promise<Comment>;
+  deleteComment: (token: string, commentID: number) => Promise<void>;
 }
