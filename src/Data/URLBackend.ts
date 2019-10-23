@@ -1,23 +1,39 @@
-import Axios, { AxiosRequestConfig } from 'axios';
+import Axios, { AxiosRequestConfig, AxiosInstance } from 'axios';
 import { readTokenPayload } from '../Helpers';
 import { Article } from '../Models/Article';
 import { Backend } from './Backend';
 import { MockBackend } from "./MockBackend";
 import { Comment } from '../Models/Comment';
+import { UNAUTHORIZED } from 'http-status-codes';
 
 export class URLBackend implements Backend {
-  base: string | undefined;
-  mock: MockBackend;
+  readonly base: string | undefined;
+  readonly mock: MockBackend;
+  readonly instance: AxiosInstance;
 
-  constructor(base?: string) {
+  constructor(base?: string, clientLogout?: () => void) {
     this.base = base;
     this.mock = new MockBackend(500);
+
+    this.instance = Axios.create();
+    if (clientLogout) {
+      this.instance.interceptors.response.use(
+        (response) => response,
+        (error) => {
+          if (error.response && error.response.status === UNAUTHORIZED) {
+            console.log('Caught UNAUTHORIZED return code. Logging out.')
+            clientLogout();
+          }
+          return Promise.reject(error);
+        }
+      );
+    }
   }
 
   login = async (email: string, password: string) => {
     const url = new URL('/api/users/login', this.base);
     const data = { email: email, password: password };
-    const response = await Axios.post(url.toString(), data);
+    const response = await this.instance.post(url.toString(), data);
     if (response.data.token === undefined) {
       throw new Error('Server returned invalid payload.');
     }
@@ -29,7 +45,7 @@ export class URLBackend implements Backend {
   register = async (email: string, password: string) => {
     const url = new URL('/api/users/create', this.base);
     const data = { email: email, password: password };
-    const response = await Axios.post(url.toString(), data);
+    const response = await this.instance.post(url.toString(), data);
     if (response.data.token === undefined) {
       throw new Error('Server returned invalid payload.');
     }
@@ -41,14 +57,14 @@ export class URLBackend implements Backend {
   logout = async (token: string) => {
     const url = new URL('/api/users/logout', this.base);
     const config = createAuthorizationConfig(token);
-    await Axios.post(url.toString(), null, config);
+    await this.instance.post(url.toString(), null, config);
   }
 
   updatePassword = async (token: string, oldPassword: string, newPassword: string) => {
     const url = new URL('/api/users/password', this.base);
     const data = { old: oldPassword, new: newPassword };
     const config = createAuthorizationConfig(token);
-    await Axios.post(url.toString(), data, config);
+    await this.instance.post(url.toString(), data, config);
   }
 
   invite = async (token: string, key: string) => {
@@ -65,7 +81,7 @@ export class URLBackend implements Backend {
 
   getArticles = async () => {
     const url = new URL('/api/articles/', this.base);
-    const result = await Axios.get(url.toString());
+    const result = await this.instance.get(url.toString());
     const entries: any[] = result.data;
 
     return entries.map((entry) => {
@@ -82,7 +98,7 @@ export class URLBackend implements Backend {
 
   getArticle = async (articleID: number) => {
     const url = new URL('/api/articles/' + articleID, this.base);
-    const result = await Axios.get(url.toString());
+    const result = await this.instance.get(url.toString());
     const entry: any = result.data;
 
     return {
@@ -99,7 +115,7 @@ export class URLBackend implements Backend {
     const url = new URL('/api/articles/', this.base);
     const data = { headline: title, content: content };
     const config = createAuthorizationConfig(token);
-    const result = await Axios.post(url.toString(), data, config);
+    const result = await this.instance.post(url.toString(), data, config);
 
     const user = readTokenPayload(token);
     const article = {
@@ -116,7 +132,7 @@ export class URLBackend implements Backend {
     const url = new URL('/api/articles/' + article.articleID, this.base);
     const data = { headline: title, content: content };
     const config = createAuthorizationConfig(token);
-    const result = await Axios.patch(url.toString(), data, config);
+    const result = await this.instance.patch(url.toString(), data, config);
 
     return {
       articleID: article.articleID,
@@ -131,7 +147,7 @@ export class URLBackend implements Backend {
   deleteArticle = async (token: string, articleID: number) => {
     const url = new URL('/api/articles/' + articleID, this.base);
     const config = createAuthorizationConfig(token);
-    await Axios.delete(url.toString(), config);
+    await this.instance.delete(url.toString(), config);
   }
 
   createOrganization = async (token: string, name: string, description: string) => {
@@ -139,7 +155,7 @@ export class URLBackend implements Backend {
     const data = { name: name, desc: description };
     const config = createAuthorizationConfig(token);
 
-    const response = await Axios.post(url.toString(), data, config);
+    const response = await this.instance.post(url.toString(), data, config);
     const organizationID = response.data.orgID;
     if (organizationID === undefined) {
       throw new Error('Invalid fields on response.');
@@ -152,7 +168,7 @@ export class URLBackend implements Backend {
     const data = { orgID: organizationID, name: name, desc: description };
     const config = createAuthorizationConfig(token);
 
-    await Axios.post(url.toString(), data, config);
+    await this.instance.post(url.toString(), data, config);
     return { organizationID: organizationID, name: name, description: description };
   }
 
@@ -161,14 +177,14 @@ export class URLBackend implements Backend {
     const data = { orgID: organizationID };
     const config = createAuthorizationConfig(token);
 
-    await Axios.post(url.toString(), data, config);
+    await this.instance.post(url.toString(), data, config);
   }
 
   listOrganizations = async (token: string) => {
     const url = new URL('/api/organizations/list', this.base);
     const config = createAuthorizationConfig(token);
 
-    const response = await Axios.get(url.toString(), config);
+    const response = await this.instance.get(url.toString(), config);
     return response.data.map((entry: any) => {
       return { organizationID: entry.OrgID, name: entry.Name, description: entry.Description };
     });
@@ -178,7 +194,7 @@ export class URLBackend implements Backend {
     const url = new URL('/api/organizations/details/' + organizationID, this.base);
     const config = createAuthorizationConfig(token);
 
-    const response = await Axios.get(url.toString(), config);
+    const response = await this.instance.get(url.toString(), config);
     const entry = response.data;
     return {
       organizationID: entry.OrgID,
@@ -192,7 +208,7 @@ export class URLBackend implements Backend {
     const data = { orgID: organizationID, name: name, desc: description };
     const config = createAuthorizationConfig(token);
 
-    const response = await Axios.post(url.toString(), data, config);
+    const response = await this.instance.post(url.toString(), data, config);
     if (response.data.projID === undefined) {
       throw new Error('Invalid field on project creation response');
     }
@@ -204,7 +220,7 @@ export class URLBackend implements Backend {
     const data = { projID: projectID, orgID: organizationID, name: name, desc: description };
     const config = createAuthorizationConfig(token);
 
-    await Axios.post(url.toString(), data, config);
+    await this.instance.post(url.toString(), data, config);
     return { projectID: projectID, organizationID: organizationID, name: name, description: description };
   }
 
@@ -213,14 +229,14 @@ export class URLBackend implements Backend {
     const data = { projID: projectID };
     const config = createAuthorizationConfig(token);
 
-    await Axios.post(url.toString(), data, config);
+    await this.instance.post(url.toString(), data, config);
   }
 
   listProjects = async (token: string, organizationID: number) => {
     const url = new URL('/api/projects/list/' + organizationID, this.base);
     const config = createAuthorizationConfig(token);
 
-    const result = await Axios.get(url.toString(), config);
+    const result = await this.instance.get(url.toString(), config);
     return result.data.map((entry: any) => {
       return { projectID: entry.ProjID, organizationID: entry.OrgID, name: entry.Name, description: entry.Description };
     });
@@ -230,7 +246,7 @@ export class URLBackend implements Backend {
     const url = new URL('/api/projects/details/' + projectID, this.base);
     const config = createAuthorizationConfig(token);
 
-    const result = await Axios.get(url.toString(), config);
+    const result = await this.instance.get(url.toString(), config);
     const entry = result.data;
     return {
       projectID: entry.ProjID,
@@ -252,7 +268,7 @@ export class URLBackend implements Backend {
     const url = new URL('/api/files/upload/' + projectID, this.base);
     const config = createAuthorizationConfig(token);
 
-    const result = await Axios.post(url.toString(), formData, config);
+    const result = await this.instance.post(url.toString(), formData, config);
     console.log(result);
 
     return await this.mock.uploadFile(token, projectID, formData);
@@ -263,7 +279,7 @@ export class URLBackend implements Backend {
     const config = createAuthorizationConfig(token);
     config.responseType = 'arraybuffer';
 
-    const result = await Axios.post(url.toString(), null, config);
+    const result = await this.instance.post(url.toString(), null, config);
     return new Blob([result.data]);
   }
 
@@ -271,7 +287,7 @@ export class URLBackend implements Backend {
     const url = new URL('/api/files/list/' + projectID, this.base);
     const config = createAuthorizationConfig(token);
 
-    const result = await Axios.get(url.toString(), config);
+    const result = await this.instance.get(url.toString(), config);
     return result.data.map((entry: any) => {
       return {
         fileID: Number(entry.FileID),
@@ -284,7 +300,7 @@ export class URLBackend implements Backend {
     const url = new URL('/api/files/' + fileID, this.base);
     const config = createAuthorizationConfig(token);
 
-    const result = await Axios.get(url.toString(), config);
+    const result = await this.instance.get(url.toString(), config);
     const entry = result.data;
     return {
       fileID: Number(entry.FileID),
@@ -295,14 +311,14 @@ export class URLBackend implements Backend {
   deleteFile = async (token: string, fileID: number) => {
     const url = new URL('/api/files/' + fileID, this.base);
     const config = createAuthorizationConfig(token);
-    await Axios.delete(url.toString(), config);
+    await this.instance.delete(url.toString(), config);
   }
 
   submitComment = async (token: string, fileID: number, content: string) => {
     const url = new URL('/api/comments/' + fileID, this.base);
     const config = createAuthorizationConfig(token);
 
-    const result = await Axios.post(url.toString(), { comment: content }, config);
+    const result = await this.instance.post(url.toString(), { comment: content }, config);
     const comment = parseCommentEntry(result.data);
     comment.user = readTokenPayload(token);
     return comment;
@@ -312,7 +328,7 @@ export class URLBackend implements Backend {
     const url = new URL('/api/comments/' + fileID, this.base);
     const config = createAuthorizationConfig(token);
 
-    const result = await Axios.get(url.toString(), config);
+    const result = await this.instance.get(url.toString(), config);
     return result.data.map(parseCommentEntry);
   }
 
@@ -320,7 +336,7 @@ export class URLBackend implements Backend {
     const url = new URL('/api/comments/' + commentID, this.base);
     const config = createAuthorizationConfig(token);
 
-    const result = await Axios.patch(url.toString(), { comment: content }, config);
+    const result = await this.instance.patch(url.toString(), { comment: content }, config);
     const comment = parseCommentEntry(result.data);
     comment.user = readTokenPayload(token);
     return comment;
@@ -329,7 +345,7 @@ export class URLBackend implements Backend {
   deleteComment = async (token: string, commentID: number) => {
     const url = new URL('/api/comments/' + commentID, this.base);
     const config = createAuthorizationConfig(token);
-    await Axios.delete(url.toString(), config);
+    await this.instance.delete(url.toString(), config);
   }
 }
 

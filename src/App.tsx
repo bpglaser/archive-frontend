@@ -51,8 +51,8 @@ export default class App extends React.Component<any, State> {
 
     this.state = {
       activeOrganization: null,
-      // backend: new URLBackend('http://localhost:3001/'),
-      backend: new URLBackend('https://robinsonobservatory.org/'),
+      // backend: new URLBackend('http://localhost:3001/', this.clientLogout),
+      backend: new URLBackend('https://robinsonobservatory.org/', this.clientLogout),
       errorMessages: [],
       loggedInAs: user,
       loginDisplayMode: null,
@@ -263,16 +263,13 @@ export default class App extends React.Component<any, State> {
     await this.populateActiveOrganization();
   }
 
-  logOutClicked = async () => {
+  clientLogout = () => {
     if (this.state.token !== null) {
-      try {
-        await this.state.backend.logout(this.state.token);
-      } catch (err) {
-        console.log('Error while logging out. Just clearing the cookies.');
-        console.log(err);
-      }
+      console.log('Doing client logout');
+      this.displayError('Login Expired');
 
       Cookies.remove('login-token');
+
       this.setState({
         loggedInAs: null,
         token: null,
@@ -282,6 +279,18 @@ export default class App extends React.Component<any, State> {
       if (history.location.pathname !== '/') {
         history.push('/');
       }
+    }
+  }
+
+  logOutClicked = async () => {
+    if (this.state.token !== null) {
+      try {
+        await this.state.backend.logout(this.state.token);
+      } catch (err) {
+        console.log('Error while logging out. Just clearing the cookies.');
+        console.log(err);
+      }
+      this.clientLogout();
     }
   }
 
