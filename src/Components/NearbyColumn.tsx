@@ -65,6 +65,7 @@ export default class NearbyColumn extends React.Component<Props, State> {
     }
 
     return (<div className="column is-narrow">
+      <h1 className="title">What's Nearby</h1>
       {
         this.state.files.map((file, i) =>
           <NearbyBox
