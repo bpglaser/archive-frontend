@@ -3,6 +3,8 @@ import React from 'react';
 import RecentNews from '../Components/RecentNews';
 import RecentProjects from '../Components/RecentProjects';
 import { Backend } from '../Data/Backend';
+import { readTokenPayload } from '../Helpers';
+import { Link } from 'react-router-dom';
 
 interface Props {
   backend: Backend;
@@ -35,7 +37,29 @@ export default class Primary extends React.Component<Props, State> {
 
     return (<div className="columns">
       <div className="column is-three-quarters">
-        <h1 className="title">Recent News</h1>
+        <nav className="level">
+          <div className="level-left">
+            <div className="level-item">
+              <h1 className="title">Recent News</h1>
+            </div>
+          </div>
+
+          {this.isAdmin() &&
+            <div className="level-right">
+              <div className="level-item">
+                <Link to="/article/new" className="button">
+                  <span className="icon">
+                    <i className="fas fa-plus"></i>
+                  </span>
+                  <span>
+                    Create New Article
+                  </span>
+                </Link>
+              </div>
+            </div>
+          }
+        </nav>
+
         <RecentNews
           backend={this.props.backend}
           token={this.props.token}
@@ -50,5 +74,19 @@ export default class Primary extends React.Component<Props, State> {
         />
       </div>
     </div>);
+  }
+
+  isAdmin = () => {
+    if (!this.props.token) {
+      return false;
+    }
+
+    const user = readTokenPayload(this.props.token);
+
+    if (user.admin === undefined) {
+      return false;
+    } else {
+      return user.admin;
+    }
   }
 }
