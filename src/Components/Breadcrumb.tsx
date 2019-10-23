@@ -27,8 +27,8 @@ export default class Breadcrumb extends React.Component<Props, State> {
     return (<nav className="breadcrumb" aria-label="breadcrumbs">
       <ul>
         {
-          links.slice(0, links.length - 1).map(([name, link]) => {
-            return <li><Link to={link}>{name}</Link></li>
+          links.slice(0, links.length - 1).map(([name, link], i) => {
+            return <li key={i}><Link to={link}>{name}</Link></li>
           })
         }
         {lastEntry &&
