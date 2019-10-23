@@ -64,6 +64,14 @@ export default class FileDetails extends React.Component<Props, State> {
         <div className="column">
           hello world
           <button className="button" onClick={this.downloadClicked}>Download</button>
+
+          {this.state.file &&
+            <Comments
+              backend={this.props.backend}
+              file={this.state.file}
+              token={this.props.token}
+            />
+          }
         </div>
 
         <NearbyColumn
@@ -72,14 +80,6 @@ export default class FileDetails extends React.Component<Props, State> {
           token={this.props.token!}
         />
       </div>
-
-      {this.state.file && this.props.token &&
-        <Comments
-          backend={this.props.backend}
-          file={this.state.file}
-          token={this.props.token}
-        />
-      }
 
       <a style={{ display: 'none' }} ref={this.linkRef}></a>
     </div>);
