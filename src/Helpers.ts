@@ -43,3 +43,17 @@ export function registerEscHandler(func: () => void) {
 export function unregisterEscHandler() {
   document.onkeyup = null;
 }
+
+export function isAdmin(token?: string) {
+    if (!token) {
+      return false;
+    }
+
+    const user = readTokenPayload(token);
+
+    if (user.admin === undefined) {
+      return false;
+    } else {
+      return user.admin;
+    }
+}

@@ -1,10 +1,10 @@
 import 'bulma';
 import React from 'react';
+import { Link } from 'react-router-dom';
 import RecentNews from '../Components/RecentNews';
 import RecentProjects from '../Components/RecentProjects';
 import { Backend } from '../Data/Backend';
-import { readTokenPayload } from '../Helpers';
-import { Link } from 'react-router-dom';
+import { isAdmin } from '../Helpers';
 
 interface Props {
   backend: Backend;
@@ -44,7 +44,7 @@ export default class Primary extends React.Component<Props, State> {
             </div>
           </div>
 
-          {this.isAdmin() &&
+          {isAdmin(this.props.token) &&
             <div className="level-right">
               <div className="level-item">
                 <Link to="/article/new" className="button">
@@ -74,19 +74,5 @@ export default class Primary extends React.Component<Props, State> {
         />
       </div>
     </div>);
-  }
-
-  isAdmin = () => {
-    if (!this.props.token) {
-      return false;
-    }
-
-    const user = readTokenPayload(this.props.token);
-
-    if (user.admin === undefined) {
-      return false;
-    } else {
-      return user.admin;
-    }
   }
 }
