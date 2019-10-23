@@ -8,6 +8,7 @@ import OrganizationSettingsPrompt from '../Components/Prompts/OrganizationSettin
 import { Backend } from '../Data/Backend';
 import { Organization } from '../Models/Organization';
 import { Project } from '../Models/Project';
+import Breadcrumb from '../Components/Breadcrumb';
 
 enum VisiblePrompt {
   Delete,
@@ -68,6 +69,12 @@ export default class OrganizationDetails extends React.Component<Props, State> {
     }
 
     return (<div>
+      <Breadcrumb
+        links={[
+          [this.state.organization!.name, "/organizations/" + this.state.organization!.organizationID],
+        ]}
+      />
+
       <nav className="level">
         <div className="level-left">
         </div>

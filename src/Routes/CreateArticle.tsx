@@ -4,6 +4,7 @@ import RichTextEditor, { EditorValue } from 'react-rte';
 import CreateArticleConfrimationPrompt from '../Components/Prompts/CreateArticleConfirmationPrompt';
 import { Backend } from '../Data/Backend';
 import { Article } from '../Models/Article';
+import Breadcrumb from '../Components/Breadcrumb';
 
 interface Props {
   backend: Backend;
@@ -34,6 +35,12 @@ export default class CreateArticle extends React.Component<Props, State> {
     }
 
     return (<div>
+      <Breadcrumb
+        links={[
+          ["Create Article", "/article/new"],
+        ]}
+      />
+
       <h1 className="title">Create a new article</h1>
 
       <div className="field">

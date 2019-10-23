@@ -11,6 +11,7 @@ import { File } from '../Models/File';
 import { Organization } from '../Models/Organization';
 import { Project } from '../Models/Project';
 import NotFound from './NotFound';
+import Breadcrumb from '../Components/Breadcrumb';
 
 enum ProjectPrompt {
   Delete,
@@ -20,7 +21,7 @@ enum ProjectPrompt {
 
 interface Props extends RouteComponentProps<{ id: string }> {
   backend: Backend;
-  organization: Organization | null;
+  organization: Organization | null; // TODO refactor to loading organization
   token: string;
 }
 
@@ -38,7 +39,7 @@ export default class ProjectDetails extends React.Component<Props, State> {
     super(props)
     this.state = {
       files: [],
-      loading: false,
+      loading: true,
       notFound: false,
       project: null,
       redirect: null,
@@ -102,6 +103,13 @@ export default class ProjectDetails extends React.Component<Props, State> {
     }
 
     return (<div>
+      <Breadcrumb
+        links={[
+          [this.props.organization!.name, "/organizations/" + this.props.organization!.organizationID],
+          [this.state.project!.name, "/projects/" + this.state.project!.projectID],
+        ]}
+      />
+
       <nav className="level">
         <div className="level-left">
         </div>

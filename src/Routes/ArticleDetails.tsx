@@ -9,6 +9,7 @@ import DeleteArticleConfirmationPrompt from '../Components/Prompts/DeleteArticle
 import { Backend } from '../Data/Backend';
 import { checkIsAdmin } from '../Helpers';
 import { Article } from '../Models/Article';
+import Breadcrumb from '../Components/Breadcrumb';
 
 interface Props extends RouteComponentProps<{ id: string }> {
   backend: Backend;
@@ -50,7 +51,15 @@ export default class ArticleDetails extends React.Component<Props, State> {
     }
 
     if (this.state.errorMessage) {
-      return <ErrorPage errorMessage={this.state.errorMessage} retry={this.reloadArticle} />;
+      return (<div>
+        <Breadcrumb
+          links={[
+            ["Unknown Article", "#"],
+          ]}
+        />
+
+        <ErrorPage errorMessage={this.state.errorMessage} retry={this.reloadArticle} />;
+      </div>);
     }
 
     if (this.state.redirectToEdit) {
@@ -64,35 +73,43 @@ export default class ArticleDetails extends React.Component<Props, State> {
     // TODO handle updated
     const { headline, author, content, published } = this.state.article!;
     const localizedTimeString = moment(published).fromNow();
-    return (<div className="columns">
-      <div className="column">
-        <h1 className="title">{headline}</h1>
-        <i className="fas fa-user"></i> {author.email} <i className="fas fa-clock"></i> {localizedTimeString}
-        <br />
-        <br />
-        <div className="content">
-          {ReactHTMLParser(content)}
-        </div>
-      </div>
+    return (<div>
+      <Breadcrumb
+        links={[
+          [this.state.article!.headline, "/article/" + this.state.article!.articleID],
+        ]}
+      />
 
-      {checkIsAdmin(this.props.token) &&
-        <div className="column is-narrow">
-          <EditDeleteDropdown
-            editClicked={this.editClicked}
-            deleteClicked={this.deleteClicked}
+      <div className="columns">
+        <div className="column">
+          <h1 className="title">{headline}</h1>
+          <i className="fas fa-user"></i> {author.email} <i className="fas fa-clock"></i> {localizedTimeString}
+          <br />
+          <br />
+          <div className="content">
+            {ReactHTMLParser(content)}
+          </div>
+        </div>
+
+        {checkIsAdmin(this.props.token) &&
+          <div className="column is-narrow">
+            <EditDeleteDropdown
+              editClicked={this.editClicked}
+              deleteClicked={this.deleteClicked}
+            />
+          </div>
+        }
+
+        {this.state.promptVisible &&
+          <DeleteArticleConfirmationPrompt
+            article={this.state.article!}
+            backend={this.props.backend}
+            close={this.hidePrompt}
+            success={this.articleDeleted}
+            token={this.props.token!}
           />
-        </div>
-      }
-
-      {this.state.promptVisible &&
-        <DeleteArticleConfirmationPrompt
-          article={this.state.article!}
-          backend={this.props.backend}
-          close={this.hidePrompt}
-          success={this.articleDeleted}
-          token={this.props.token!}
-        />
-      }
+        }
+      </div>
     </div>);
   }
 

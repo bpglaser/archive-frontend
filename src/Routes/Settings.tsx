@@ -2,6 +2,7 @@ import * as React from "react";
 import { Redirect, RouteComponentProps } from "react-router";
 import AccountSettings from "../Components/Settings/AccountSettings";
 import { Backend } from "../Data/Backend";
+import Breadcrumb from "../Components/Breadcrumb";
 
 interface Props extends RouteComponentProps {
   backend: Backend;
@@ -21,6 +22,12 @@ export default class Settings extends React.Component<Props> {
     }
 
     return (<div>
+      <Breadcrumb
+        links={[
+          ["Settings", "/settings"],
+        ]}
+      />
+
       <h1 className="title">Settings</h1>
 
       <div className="columns">

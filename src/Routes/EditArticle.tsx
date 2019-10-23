@@ -6,6 +6,7 @@ import Loader from '../Components/Loader';
 import EditArticleConfirmationPrompt from '../Components/Prompts/EditArticleConfirmationPrompt';
 import { Backend } from '../Data/Backend';
 import { Article } from '../Models/Article';
+import Breadcrumb from '../Components/Breadcrumb';
 
 interface Props extends RouteComponentProps<{ id: string }> {
   backend: Backend;
@@ -69,7 +70,13 @@ export default class EditArticle extends React.Component<Props, State> {
     }
 
     return (<div>
-      <h1 className="title">Edit existing article</h1>
+      <Breadcrumb
+        links={[
+          ["Edit Article", "/article/edit/" + this.getID()]
+        ]}
+      />
+
+      <h1 className="title">Edit Existing Article</h1>
 
       <div className="field">
         <label className="label">Title</label>

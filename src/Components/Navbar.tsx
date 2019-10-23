@@ -48,7 +48,6 @@ export default class Navbar extends React.Component<Props, State> {
 
       <div className={this.modifyClassName("navbar-menu")}>
         <div className="navbar-start">
-          <Link to="/" className="navbar-item">Home</Link>
         </div>
 
         <div className="navbar-end">
