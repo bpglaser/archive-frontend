@@ -7,6 +7,9 @@ import NearbyColumn from '../Components/NearbyColumn';
 import { Backend } from '../Data/Backend';
 import { File } from '../Models/File';
 import DownloadFileDropdown from '../Components/DownloadFileDropdown';
+import { Project } from '../Models/Project';
+import { Organization } from '../Models/Organization';
+import Breadcrumb from '../Components/Breadcrumb';
 
 interface Props extends RouteComponentProps<{ id: string }> {
   backend: Backend;
@@ -19,6 +22,8 @@ interface State {
   file: File | null,
   imageDisplayUrl: string | null;
   loading: boolean;
+  project: Project | null;
+  organization: Organization | null;
 }
 
 export default class FileDetails extends React.Component<Props, State> {
@@ -31,6 +36,8 @@ export default class FileDetails extends React.Component<Props, State> {
       file: null,
       imageDisplayUrl: null,
       loading: true,
+      project: null,
+      organization: null,
     };
     this.linkRef = React.createRef();
   }
@@ -42,6 +49,8 @@ export default class FileDetails extends React.Component<Props, State> {
     });
 
     await this.loadFileDetails();
+    await this.loadProjectDetails();
+    await this.loadOrganizationDetails();
     await this.downloadDisplayImage();
 
     this.setState({
@@ -70,6 +79,14 @@ export default class FileDetails extends React.Component<Props, State> {
     }
 
     return (<div>
+      <Breadcrumb
+        links={[
+          [this.state.organization!.name, '/organizations/' + this.state.organization!.organizationID],
+          [this.state.project!.name, '/projects/' + this.state.project!.projectID],
+          [this.state.file!.name, '/file/' + this.getID()],
+        ]}
+      />
+
       <div className="columns">
         <div className="column">
           <nav className="level">
@@ -130,6 +147,42 @@ export default class FileDetails extends React.Component<Props, State> {
       const file = await this.props.backend.getFileDetails(this.props.token!, this.getID());
       this.setState({
         file: file,
+      });
+    } catch (err) {
+      console.log(err);
+      this.setState({
+        errorMessage: 'Error loading file details.',
+      });
+    }
+  }
+
+  loadProjectDetails = async () => {
+    if (!this.state.file || !this.state.file.projID) {
+      return;
+    }
+
+    try {
+      const project = await this.props.backend.getProjectDetails(this.props.token, this.state.file!.projID!);
+      this.setState({
+        project: project,
+      });
+    } catch (err) {
+      console.log(err);
+      this.setState({
+        errorMessage: 'Error loading file details.',
+      });
+    }
+  }
+
+  loadOrganizationDetails = async () => {
+    if (!this.state.project) {
+      return;
+    }
+
+    try {
+      const organization = await this.props.backend.getOrganizationDetails(this.props.token, this.state.project.organizationID);
+      this.setState({
+        organization: organization,
       });
     } catch (err) {
       console.log(err);

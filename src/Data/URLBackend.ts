@@ -308,6 +308,7 @@ export class URLBackend implements Backend {
     return {
       fileID: Number(entry.FileID),
       name: entry.Name,
+      projID: Number(entry.ProjID),
     };
   }
 
