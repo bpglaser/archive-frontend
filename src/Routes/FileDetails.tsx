@@ -6,6 +6,7 @@ import Loader from '../Components/Loader';
 import NearbyColumn from '../Components/NearbyColumn';
 import { Backend } from '../Data/Backend';
 import { File } from '../Models/File';
+import DownloadFileDropdown from '../Components/DownloadFileDropdown';
 
 interface Props extends RouteComponentProps<{ id: string }> {
   backend: Backend;
@@ -71,7 +72,32 @@ export default class FileDetails extends React.Component<Props, State> {
     return (<div>
       <div className="columns">
         <div className="column">
-          <button className="button" onClick={this.downloadClicked}>Download</button>
+          <nav className="level">
+            <div className="level-left">
+              <div className="level-item">
+                <h1 className="title">{this.state.file!.name}</h1>
+              </div>
+            </div>
+
+            <div className="level-right">
+              <div className="level-item">
+                <button className="button is-primary" onClick={() => this.downloadClicked()}>
+                  <span className="icon">
+                    <i className="fas fa-download"></i>
+                  </span>
+                  <span>
+                    Download Original
+                    </span>
+                </button>
+              </div>
+              <div className="level-item">
+                <DownloadFileDropdown
+                  downloadClicked={this.downloadClicked}
+                  formatList={["png", "jpg"]}
+                />
+              </div>
+            </div>
+          </nav>
 
           {this.state.imageDisplayUrl &&
             <img src={this.state.imageDisplayUrl} alt="preview" />
@@ -113,12 +139,12 @@ export default class FileDetails extends React.Component<Props, State> {
     }
   }
 
-  downloadClicked = async () => {
+  downloadClicked = async (extension?: string) => {
     try {
-      const blob = await this.props.backend.downloadFile(this.props.token, this.getID());
+      const blob = await this.props.backend.downloadFile(this.props.token, this.getID(), extension);
       const url = window.URL.createObjectURL(blob);
       this.linkRef.current!.href = url;
-      this.linkRef.current!.download = this.state.file!.name;
+      this.linkRef.current!.download = replaceExtension(this.state.file!.name, extension);
       this.linkRef.current!.click();
       window.URL.revokeObjectURL(url);
     } catch (err) {
@@ -143,4 +169,12 @@ export default class FileDetails extends React.Component<Props, State> {
   getID = () => {
     return Number(this.props.match.params.id);
   }
+}
+
+function replaceExtension(path: string, extension?: string) {
+  if (extension === undefined) {
+    return path;
+  }
+  const i = path.lastIndexOf('.');
+  return path.substring(0, i + 1) + extension;
 }
