@@ -16,6 +16,7 @@ interface Props extends RouteComponentProps<{ id: string }> {
 interface State {
   errorMessage: string | null;
   file: File | null,
+  imageDisplayUrl: string | null;
   loading: boolean;
 }
 
@@ -27,13 +28,21 @@ export default class FileDetails extends React.Component<Props, State> {
     this.state = {
       errorMessage: null,
       file: null,
+      imageDisplayUrl: null,
       loading: true,
     };
     this.linkRef = React.createRef();
   }
 
   async componentDidMount() {
+    this.setState({
+      errorMessage: null,
+      loading: true,
+    });
+
     await this.loadFileDetails();
+    await this.downloadDisplayImage();
+
     this.setState({
       loading: false,
     });
@@ -41,7 +50,7 @@ export default class FileDetails extends React.Component<Props, State> {
 
   async componentDidUpdate(oldProps: Props) {
     if (this.props.match.params.id !== oldProps.match.params.id) {
-      await this.reloadFileDetails();
+      await this.componentDidMount();
     }
   }
 
@@ -51,7 +60,7 @@ export default class FileDetails extends React.Component<Props, State> {
     if (this.state.errorMessage !== null) {
       return <ErrorPage
         errorMessage={this.state.errorMessage}
-        retry={this.reloadFileDetails}
+        retry={this.componentDidMount}
       />
     }
 
@@ -62,8 +71,11 @@ export default class FileDetails extends React.Component<Props, State> {
     return (<div>
       <div className="columns">
         <div className="column">
-          hello world
           <button className="button" onClick={this.downloadClicked}>Download</button>
+
+          {this.state.imageDisplayUrl &&
+            <img src={this.state.imageDisplayUrl} alt="preview" />
+          }
 
           {this.state.file &&
             <Comments
@@ -101,22 +113,9 @@ export default class FileDetails extends React.Component<Props, State> {
     }
   }
 
-  reloadFileDetails = async () => {
-    this.setState({
-      errorMessage: null,
-      loading: true,
-    });
-
-    await this.loadFileDetails();
-
-    this.setState({
-      loading: false,
-    });
-  }
-
   downloadClicked = async () => {
     try {
-      const blob = await this.props.backend.downloadFile(this.props.token!, this.getID());
+      const blob = await this.props.backend.downloadFile(this.props.token, this.getID());
       const url = window.URL.createObjectURL(blob);
       this.linkRef.current!.href = url;
       this.linkRef.current!.download = this.state.file!.name;
@@ -125,6 +124,19 @@ export default class FileDetails extends React.Component<Props, State> {
     } catch (err) {
       console.log(err);
       this.props.displayError('Error encountered while downloading file.');
+    }
+  }
+
+  downloadDisplayImage = async () => {
+    try {
+      const blob = await this.props.backend.downloadFile(this.props.token, this.getID(), 'png');
+      const url = window.URL.createObjectURL(blob);
+      this.setState({
+        imageDisplayUrl: url,
+      });
+    } catch (err) {
+      console.log(err);
+      this.props.displayError('Error encountered while loading display image.');
     }
   }
 

@@ -274,8 +274,11 @@ export class URLBackend implements Backend {
     return await this.mock.uploadFile(token, projectID, formData);
   }
 
-  downloadFile = async (token: string, fileID: number) => {
+  downloadFile = async (token: string, fileID: number, extension?: string) => {
     const url = new URL('/api/files/download/' + fileID, this.base);
+    if (extension) {
+      url.searchParams.set('extension', extension);
+    }
     const config = createAuthorizationConfig(token);
     config.responseType = 'arraybuffer';
 
