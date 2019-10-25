@@ -55,9 +55,11 @@ export default class ProjectDetails extends React.Component<Props, State> {
         loading: true,
       });
 
-      await this.loadProject(this.props.token, projectID);
-      await this.loadOrganization(this.props.token, this.state.project!.organizationID);
+      const project = await this.loadProject(this.props.token, projectID);
       await this.loadFiles(this.props.token, projectID);
+      if (project) {
+        await this.loadOrganization(this.props.token, project.organizationID);
+      }
 
       this.setState({
         loading: false,
@@ -229,6 +231,7 @@ export default class ProjectDetails extends React.Component<Props, State> {
       this.setState({
         project: loadedProject,
       });
+      return loadedProject;
     } catch (err) {
       if (err.response) {
         if (err.response.status === NOT_FOUND) {
@@ -247,6 +250,7 @@ export default class ProjectDetails extends React.Component<Props, State> {
         console.log(err);
       }
     }
+    return null;
   }
 
   loadOrganization = async (token: string, organizationID: number) => {
