@@ -255,34 +255,34 @@ export default class App extends React.Component<any, State> {
   }
 
   clientLogout = () => {
-    if (this.state.token !== null) {
-      console.log('Doing client logout');
-      this.displayError('Login Expired');
+    console.log('Doing client logout');
+    Cookies.remove('login-token');
 
-      Cookies.remove('login-token');
+    this.setState({
+      loggedInAs: null,
+      token: null,
+    });
 
-      this.setState({
-        loggedInAs: null,
-        token: null,
-      });
-
-      // Redirect to root.
-      if (history.location.pathname !== '/') {
-        history.push('/');
-      }
+    // Redirect to root.
+    if (history.location.pathname !== '/') {
+      history.push('/');
     }
   }
 
   logOutClicked = async () => {
-    if (this.state.token !== null) {
-      try {
-        await this.state.backend.logout(this.state.token);
-      } catch (err) {
-        console.log('Error while logging out. Just clearing the cookies.');
-        console.log(err);
-      }
-      this.clientLogout();
+    if (this.state.token === null) {
+      return;
     }
+
+    try {
+      await this.state.backend.logout(this.state.token);
+    } catch (err) {
+      console.log('Error while logging out. Just clearing the cookies.');
+      console.log(err);
+    }
+
+    // Do the client logout even if there was an error
+    this.clientLogout();
   }
 
   populateRecentOrganizations = async () => {
