@@ -1,22 +1,21 @@
 import React from 'react';
-import { ArchiveEntry } from '../Models/ArchiveEntry';
+import { File } from '../Models/File';
+import { Link } from 'react-router-dom';
 
 interface Props {
   active: boolean;
-  entry: ArchiveEntry;
-  onClickCallback: (entry: ArchiveEntry) => void;
+  file: File;
   rowNum: number;
 }
 
 export default class BrowserRow extends React.Component<Props> {
   render() {
-    const entry = this.props.entry;
+    const file = this.props.file;
     const className = this.props.active ? 'is-selected' : undefined;
 
-    return (<tr className={className} onMouseOver={() => this.props.onClickCallback(entry)}>
-      <td>{entry.name}</td>
-      <td>{entry.owner}</td>
-      <td>{entry.uploaded.toISOString()}</td>
+    return (<tr className={className}>
+      <td><Link to={"/file/" + this.props.file.fileID}>{file.name}</Link></td>
+      <td>{file.uploader ? file.uploader.email : ''}</td>
     </tr>);
   }
 }

@@ -1,15 +1,10 @@
 import React from 'react';
-import { ArchiveEntry } from '../Models/ArchiveEntry';
+import { File } from '../Models/File';
 import BrowserRow from './BrowserRow';
-import Loader from './Loader';
-import Pager from './Pager';
+import Preview from './Preview';
 
 interface Props {
-  activeEntry: ArchiveEntry;
-  entries: ArchiveEntry[];
-  loading: boolean;
-  maxPages: number;
-  rowClickedCallback: (entry: ArchiveEntry) => void;
+  files: File[];
 }
 
 interface State {
@@ -25,72 +20,71 @@ export default class Browser extends React.Component<Props, State> {
   }
 
   render() {
-    return (<div className="column is-three-quarters">
-      {this.props.loading &&
-        <Loader />
-      }
+    return (<div className="columns">
+      <div className="column is-three-quarters">
+        <table className="table is-fullwidth">
+          <thead>
+            {createKey()}
+          </thead>
 
-      <table className="table is-fullwidth">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Owner</th>
-            <th>Date</th>
-          </tr>
-        </thead>
+          <tfoot>
+            {createKey()}
+          </tfoot>
 
-        <tfoot>
-          <tr>
-            <th>Name</th>
-            <th>Owner</th>
-            <th>Date</th>
-          </tr>
-        </tfoot>
+          <tbody>
+            {
+              this.props.files.map((file, i) =>
+                <BrowserRow
+                  active={false}
+                  file={file}
+                  key={i}
+                  rowNum={i} />
+              )
+            }
+          </tbody>
+        </table>
 
-        <tbody>
-          {
-            this.props.entries.map((entry, i) =>
-              <BrowserRow
-                active={this.props.activeEntry === entry}
-                entry={entry}
-                onClickCallback={this.props.rowClickedCallback}
-                key={i}
-                rowNum={i} />
-            )
-          }
-        </tbody>
-      </table>
+        {/* <Pager
+          max={this.props.maxPages}
+          nextButtonClicked={this.nextButtonClicked}
+          numberButtonClicked={this.numberButtonClicked}
+          previousButtonClicked={this.previousButtonClicked}
+          selected={this.state.selected} /> */}
+      </div>
 
-      <Pager
-        max={this.props.maxPages}
-        nextButtonClicked={this.nextButtonClicked}
-        numberButtonClicked={this.numberButtonClicked}
-        previousButtonClicked={this.previousButtonClicked}
-        selected={this.state.selected} />
+      <Preview
+      />
     </div>)
   }
 
-  nextButtonClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
-    if (this.state.selected < this.props.maxPages) {
-      this.setState({
-        selected: this.state.selected + 1,
-      })
-    }
-  }
+  // nextButtonClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
+  //   if (this.state.selected < this.props.maxPages) {
+  //     this.setState({
+  //       selected: this.state.selected + 1,
+  //     })
+  //   }
+  // }
 
-  numberButtonClicked = (n: number) => {
-    if (n >= 1 && n <= this.props.maxPages) {
-      this.setState({
-        selected: n,
-      })
-    }
-  }
+  // numberButtonClicked = (n: number) => {
+  //   if (n >= 1 && n <= this.props.maxPages) {
+  //     this.setState({
+  //       selected: n,
+  //     })
+  //   }
+  // }
 
-  previousButtonClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
-    if (this.state.selected > 1) {
-      this.setState({
-        selected: this.state.selected - 1,
-      })
-    }
-  }
+  // previousButtonClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
+  //   if (this.state.selected > 1) {
+  //     this.setState({
+  //       selected: this.state.selected - 1,
+  //     })
+  //   }
+  // }
+}
+
+function createKey() {
+  return (<tr>
+    <th>Name</th>
+    <th>Uploader</th>
+  </tr>);
 }

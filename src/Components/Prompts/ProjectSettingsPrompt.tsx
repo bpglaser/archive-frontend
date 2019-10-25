@@ -13,16 +13,20 @@ interface Props {
 }
 
 interface State {
+  description: string;
   disabled: boolean;
   errorMessage: string | null;
+  name: string;
 }
 
 export default class ProjectSettingsPrompt extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
+      description: '',
       disabled: false,
       errorMessage: null,
+      name: '',
     };
   }
 
@@ -52,7 +56,8 @@ export default class ProjectSettingsPrompt extends React.Component<Props, State>
                 className="input"
                 type="text"
                 placeholder="Project Name"
-                // ref={this.nameRef}
+                value={this.state.name}
+                onChange={this.nameUpdated}
                 disabled={this.state.disabled} />
             </div>
           </div>
@@ -63,7 +68,8 @@ export default class ProjectSettingsPrompt extends React.Component<Props, State>
               <textarea
                 className="textarea"
                 placeholder="Description"
-                // ref={this.descriptionRef}
+                value={this.state.description}
+                onChange={this.descriptionUpdated}
                 disabled={this.state.disabled} />
             </div>
           </div>
@@ -98,23 +104,33 @@ export default class ProjectSettingsPrompt extends React.Component<Props, State>
     try {
       this.setState({
         disabled: true,
+        errorMessage: null,
       });
 
       const { projectID, organizationID } = this.props.project;
 
-      const name = ''; // TODO
-      const description = ''; // TODO
+      const name = this.state.name;
+      const description = this.state.description;
 
       const newProject = await this.props.backend.editProject(this.props.token, projectID, organizationID, name, description);
       this.props.success(newProject);
     } catch (err) {
       this.setState({
+        disabled: false,
         errorMessage: 'Failed to update settings.',
       });
-    } finally {
-      this.setState({
-        disabled: false,
-      });
     }
+  }
+
+  nameUpdated = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({
+      name: event.target.value,
+    });
+  }
+
+  descriptionUpdated = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    this.setState({
+      description: event.target.value,
+    });
   }
 }

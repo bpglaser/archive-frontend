@@ -5,6 +5,7 @@ import { Backend } from './Backend';
 import { MockBackend } from "./MockBackend";
 import { Comment } from '../Models/Comment';
 import { UNAUTHORIZED } from 'http-status-codes';
+import { File } from '../Models/File';
 
 export class URLBackend implements Backend {
   readonly base: string | undefined;
@@ -303,12 +304,7 @@ export class URLBackend implements Backend {
     const config = createAuthorizationConfig(token);
 
     const result = await this.instance.get(url.toString(), config);
-    return result.data.map((entry: any) => {
-      return {
-        fileID: Number(entry.FileID),
-        name: entry.Name,
-      };
-    });
+    return result.data.map(parseFileEntry);
   }
 
   getFileDetails = async (token: string, fileID: number) => {
@@ -317,11 +313,7 @@ export class URLBackend implements Backend {
 
     const result = await this.instance.get(url.toString(), config);
     const entry = result.data;
-    return {
-      fileID: Number(entry.FileID),
-      name: entry.Name,
-      projID: Number(entry.ProjID),
-    };
+    return parseFileEntry(entry);
   }
 
   deleteFile = async (token: string, fileID: number) => {
@@ -373,6 +365,26 @@ function parseCommentEntry(entry: any): Comment {
     user: { userID: Number(entry.UserID), email: entry.Email },
     updated: entry.Updated ? new Date(entry.Updated) : null,
   }
+}
+
+function parseFileEntry(entry: any): File {
+  const result: File = {
+    fileID: Number(entry.FileID),
+    name: entry.Name,
+  };
+  
+  if (entry.ProjID) {
+    result.projID = Number(entry.ProjID);
+  }
+
+  if (entry.Uploader) {
+    result.uploader = {
+      userID: Number(entry.Uploader.UserID),
+      email: entry.Uploader.Email,
+    };
+  }
+
+  return result;
 }
 
 function createAuthorizationConfig(token: string): AxiosRequestConfig {

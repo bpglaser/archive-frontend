@@ -1,8 +1,8 @@
 import { NOT_FOUND } from 'http-status-codes';
 import React from 'react';
 import { Redirect, RouteComponentProps } from 'react-router';
-import { Link } from 'react-router-dom';
 import Breadcrumb from '../Components/Breadcrumb';
+import Browser from '../Components/Browser';
 import Loader from '../Components/Loader';
 import DeleteProjectPrompt from '../Components/Prompts/DeleteProjectPrompt';
 import ProjectSettingsPrompt from '../Components/Prompts/ProjectSettingsPrompt';
@@ -114,6 +114,9 @@ export default class ProjectDetails extends React.Component<Props, State> {
 
       <nav className="level">
         <div className="level-left">
+          <h1 className="title">
+            {this.state.project!.name}
+          </h1>
         </div>
 
         <div className="level-right">
@@ -137,21 +140,21 @@ export default class ProjectDetails extends React.Component<Props, State> {
         </div>
       </nav>
 
-      {
-        this.state.files.map((file, i) =>
-          <div key={i}>
-            <Link to={'/file/' + file.fileID}>{file.name}</Link>
-          </div>
-        )
-      }
+      <p className="content">
+        {this.state.project!.description}
+      </p>
+
+      <Browser
+        files={this.state.files}
+      />
 
       {this.state.visiblePrompt === ProjectPrompt.Delete &&
         <DeleteProjectPrompt
           backend={this.props.backend}
           close={this.closePrompt}
           organization={this.state.organization!}
-          project={this.state.project!} // TODO validate
-          success={this.redirectToOrganization} // TODO redirect
+          project={this.state.project!}
+          success={this.redirectToOrganization}
           token={this.props.token}
         />
       }
@@ -213,7 +216,7 @@ export default class ProjectDetails extends React.Component<Props, State> {
       visiblePrompt: null,
     });
   }
-  
+
   redirectToOrganization = () => {
     this.setState({
       redirect: '/organizations/' + this.state.organization!.organizationID,
