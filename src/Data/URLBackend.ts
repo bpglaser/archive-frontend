@@ -257,7 +257,19 @@ export class URLBackend implements Backend {
   }
 
   getRecentProjects = async (token: string) => {
-    return await this.mock.getRecentProjects(token);
+    console.log('loading recent');
+    const url = new URL('/api/projects/list/modified?count=5', this.base);
+    const config = createAuthorizationConfig(token);
+    const result = await this.instance.get(url.toString(), config);
+    return result.data.map((entry: any) => {
+      return {
+        projectID: Number(entry.ProjID),
+        organizationID: Number(entry.OrgID),
+        name: entry.Name,
+        description: entry.Description,
+        lastModified: new Date(entry.LastModified),
+      }
+    });
   }
 
   getNearbyFiles = async (token: string, fileID: number) => {

@@ -3,4 +3,5 @@ export interface Project {
   organizationID: number;
   name: string;
   description: string;
+  lastModified?: Date;
 }
