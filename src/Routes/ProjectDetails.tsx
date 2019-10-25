@@ -151,7 +151,7 @@ export default class ProjectDetails extends React.Component<Props, State> {
           close={this.closePrompt}
           organization={this.state.organization!}
           project={this.state.project!} // TODO validate
-          success={this.closePrompt} // TODO redirect
+          success={this.redirectToOrganization} // TODO redirect
           token={this.props.token}
         />
       }
@@ -211,6 +211,12 @@ export default class ProjectDetails extends React.Component<Props, State> {
     this.setState({
       project: project,
       visiblePrompt: null,
+    });
+  }
+  
+  redirectToOrganization = () => {
+    this.setState({
+      redirect: '/organizations/' + this.state.organization!.organizationID,
     });
   }
 
