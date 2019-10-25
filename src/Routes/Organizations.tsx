@@ -4,6 +4,7 @@ import OrganizationCard from '../Components/OrganizationCard';
 import CreateOrganizationPrompt from '../Components/Prompts/CreateOrganizationPrompt';
 import { Backend } from '../Data/Backend';
 import { Organization } from '../Models/Organization';
+import Breadcrumb from '../Components/Breadcrumb';
 
 interface Props {
   backend: Backend;
@@ -50,6 +51,12 @@ export default class Organizations extends React.Component<Props, State> {
 
   render() {
     return (<div>
+      <Breadcrumb
+        links={[
+          ["Organizations", "/organizations"],
+        ]}
+      />
+
       <div className="level">
         <div className="level-item">
           <h1 className="title">My Organizations</h1>

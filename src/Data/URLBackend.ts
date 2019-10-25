@@ -258,7 +258,6 @@ export class URLBackend implements Backend {
   }
 
   getRecentProjects = async (token: string) => {
-    console.log('loading recent');
     const url = new URL('/api/projects/list/modified?count=5', this.base);
     const config = createAuthorizationConfig(token);
     const result = await this.instance.get(url.toString(), config);
