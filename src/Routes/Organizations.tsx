@@ -7,7 +7,6 @@ import { Organization } from '../Models/Organization';
 
 interface Props {
   backend: Backend;
-  setActiveOrganization: (organization: Organization) => void;
   token: string;
 }
 

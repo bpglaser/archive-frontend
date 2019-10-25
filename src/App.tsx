@@ -27,7 +27,6 @@ import Settings from './Routes/Settings';
 const history = createHashHistory();
 
 interface State {
-  activeOrganization: Organization | null;
   backend: Backend;
   errorMessages: string[];
   loggedInAs: User | null;
@@ -50,7 +49,6 @@ export default class App extends React.Component<any, State> {
     }
 
     this.state = {
-      activeOrganization: null,
       // backend: new URLBackend('http://localhost:3001/', this.clientLogout),
       backend: new URLBackend('https://robinsonobservatory.org/', this.clientLogout),
       errorMessages: [],
@@ -63,7 +61,6 @@ export default class App extends React.Component<any, State> {
 
   async componentDidMount() {
     await this.populateRecentOrganizations();
-    await this.populateActiveOrganization();
   }
 
   render() {
@@ -74,9 +71,7 @@ export default class App extends React.Component<any, State> {
           registerClicked={this.registerClicked}
           logInClicked={this.showLoginPrompt}
           logOutClicked={this.logOutClicked}
-          activeOrganization={this.state.activeOrganization}
           recentOrganizations={this.state.recentOrganizations}
-          switchOrganization={this.setActiveOrganization}
         />
 
         <Switch>
@@ -93,7 +88,6 @@ export default class App extends React.Component<any, State> {
                 <ProjectDetails
                   {...props}
                   backend={this.state.backend}
-                  organization={this.state.activeOrganization}
                   token={this.state.token!}
                 />
               )
@@ -118,7 +112,6 @@ export default class App extends React.Component<any, State> {
                 <OrganizationDetails
                   {...props}
                   backend={this.state.backend}
-                  clearActiveOrganization={() => this.setActiveOrganization(null)}
                   token={this.state.token!}
                 />
               )
@@ -130,7 +123,6 @@ export default class App extends React.Component<any, State> {
               this.requireAuthentication(
                 <Organizations
                   backend={this.state.backend}
-                  setActiveOrganization={this.setActiveOrganization}
                   token={this.state.token!}
                 />
               )
@@ -260,7 +252,6 @@ export default class App extends React.Component<any, State> {
     });
 
     await this.populateRecentOrganizations();
-    await this.populateActiveOrganization();
   }
 
   clientLogout = () => {
@@ -291,38 +282,6 @@ export default class App extends React.Component<any, State> {
         console.log(err);
       }
       this.clientLogout();
-    }
-  }
-
-  setActiveOrganization = async (organization: Organization | null) => {
-    if (organization) {
-      Cookies.set('active-organization-id', organization.organizationID.toString());
-    } else {
-      Cookies.remove('active-organization-id');
-    }
-    await this.populateRecentOrganizations();
-    await this.populateActiveOrganization();
-  }
-
-  populateActiveOrganization = async () => {
-    if (this.state.token === null) {
-      return;
-    }
-
-    try {
-      const activeOrganizationID = Cookies.get('active-organization-id');
-      if (!activeOrganizationID) {
-        return;
-      }
-
-      const activeOrganization = this.state.recentOrganizations.find(org => org.organizationID === Number(activeOrganizationID));
-      if (activeOrganization) {
-        this.setState({
-          activeOrganization: activeOrganization,
-        });
-      }
-    } catch (err) {
-      // TODO
     }
   }
 

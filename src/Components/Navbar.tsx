@@ -9,9 +9,7 @@ interface Props {
   registerClicked: () => void;
   logInClicked: () => void;
   logOutClicked: () => void;
-  activeOrganization: Organization | null;
   recentOrganizations: Organization[];
-  switchOrganization: (organization: Organization) => void;
 }
 
 interface State {
@@ -53,9 +51,7 @@ export default class Navbar extends React.Component<Props, State> {
         <div className="navbar-end">
           {this.props.loggedInAs !== null &&
             <OrganizationNavbarItem
-              activeOrganization={this.props.activeOrganization}
               recentOrganizations={this.props.recentOrganizations}
-              switchOrganization={this.props.switchOrganization}
             />
           }
 

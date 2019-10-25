@@ -2,6 +2,7 @@ import { NOT_FOUND } from 'http-status-codes';
 import React from 'react';
 import { Redirect, RouteComponentProps } from 'react-router';
 import { Link } from 'react-router-dom';
+import Breadcrumb from '../Components/Breadcrumb';
 import Loader from '../Components/Loader';
 import DeleteProjectPrompt from '../Components/Prompts/DeleteProjectPrompt';
 import ProjectSettingsPrompt from '../Components/Prompts/ProjectSettingsPrompt';
@@ -11,7 +12,6 @@ import { File } from '../Models/File';
 import { Organization } from '../Models/Organization';
 import { Project } from '../Models/Project';
 import NotFound from './NotFound';
-import Breadcrumb from '../Components/Breadcrumb';
 
 enum ProjectPrompt {
   Delete,
@@ -21,7 +21,6 @@ enum ProjectPrompt {
 
 interface Props extends RouteComponentProps<{ id: string }> {
   backend: Backend;
-  organization: Organization | null; // TODO refactor to loading organization
   token: string;
 }
 
@@ -29,6 +28,7 @@ interface State {
   files: File[],
   loading: boolean;
   notFound: boolean;
+  organization: Organization | null;
   project: Project | null;
   redirect: string | null;
   visiblePrompt: ProjectPrompt | null;
@@ -41,6 +41,7 @@ export default class ProjectDetails extends React.Component<Props, State> {
       files: [],
       loading: true,
       notFound: false,
+      organization: null,
       project: null,
       redirect: null,
       visiblePrompt: null,
@@ -55,6 +56,7 @@ export default class ProjectDetails extends React.Component<Props, State> {
       });
 
       await this.loadProject(this.props.token, projectID);
+      await this.loadOrganization(this.props.token, this.state.project!.organizationID);
       await this.loadFiles(this.props.token, projectID);
 
       this.setState({
@@ -105,7 +107,7 @@ export default class ProjectDetails extends React.Component<Props, State> {
     return (<div>
       <Breadcrumb
         links={[
-          [this.props.organization!.name, "/organizations/" + this.props.organization!.organizationID],
+          [this.state.organization!.name, "/organizations/" + this.state.organization!.organizationID],
           [this.state.project!.name, "/projects/" + this.state.project!.projectID],
         ]}
       />
@@ -147,7 +149,7 @@ export default class ProjectDetails extends React.Component<Props, State> {
         <DeleteProjectPrompt
           backend={this.props.backend}
           close={this.closePrompt}
-          organization={this.props.organization!}
+          organization={this.state.organization!}
           project={this.state.project!} // TODO validate
           success={this.closePrompt} // TODO redirect
           token={this.props.token}
@@ -235,6 +237,18 @@ export default class ProjectDetails extends React.Component<Props, State> {
         // Unknown error
         console.log(err);
       }
+    }
+  }
+
+  loadOrganization = async (token: string, organizationID: number) => {
+    try {
+      const organization = await this.props.backend.getOrganizationDetails(token, organizationID);
+      this.setState({
+        organization: organization,
+      });
+    } catch (err) {
+      console.log(err);
+      // TODO handle error
     }
   }
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Redirect, RouteComponentProps } from 'react-router';
+import Breadcrumb from '../Components/Breadcrumb';
 import ErrorPage from '../Components/ErrorPage';
 import Loader from '../Components/Loader';
 import ProjectPreviewCard from '../Components/ProjectPreviewCard';
@@ -8,7 +9,6 @@ import OrganizationSettingsPrompt from '../Components/Prompts/OrganizationSettin
 import { Backend } from '../Data/Backend';
 import { Organization } from '../Models/Organization';
 import { Project } from '../Models/Project';
-import Breadcrumb from '../Components/Breadcrumb';
 
 enum VisiblePrompt {
   Delete,
@@ -17,7 +17,6 @@ enum VisiblePrompt {
 
 interface Props extends RouteComponentProps<{ id: string }> {
   backend: Backend;
-  clearActiveOrganization: () => Promise<void>;
   token: string;
 }
 
@@ -180,7 +179,6 @@ export default class OrganizationDetails extends React.Component<Props, State> {
 
   organizationDeleted = async () => {
     this.hidePrompt();
-    await this.props.clearActiveOrganization();
     this.setState({
       redirect: '/organizations',
     });
