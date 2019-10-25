@@ -29,26 +29,38 @@ interface State {
   visiblePrompt: VisiblePrompt | null;
 }
 
-export default class OrganizationDetails extends React.Component<Props, State> {
+function initialState(): State {
+  return {
+    errorMessage: null,
+    loading: true,
+    organization: null,
+    projects: [],
+    redirect: null,
+    visiblePrompt: null,
+  };
+}
 
+export default class OrganizationDetails extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = {
-      errorMessage: null,
-      loading: true,
-      organization: null,
-      projects: [],
-      redirect: null,
-      visiblePrompt: null,
-    };
+    this.state = initialState();
   }
 
   async componentDidMount() {
+    this.setState(initialState());
+
     await this.loadOrganization();
     await this.loadProjects();
+
     this.setState({
       loading: false,
     });
+  }
+
+  async componentDidUpdate(oldProps: Props) {
+    if (this.props.match.params.id !== oldProps.match.params.id) {
+      this.componentDidMount();
+    }
   }
 
   render() {
