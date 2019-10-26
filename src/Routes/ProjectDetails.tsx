@@ -1,8 +1,8 @@
 import { NOT_FOUND } from 'http-status-codes';
 import React from 'react';
 import { Redirect, RouteComponentProps } from 'react-router';
+import ReactTable from 'react-table';
 import Breadcrumb from '../Components/Breadcrumb';
-import Browser from '../Components/Browser';
 import Loader from '../Components/Loader';
 import DeleteProjectPrompt from '../Components/Prompts/DeleteProjectPrompt';
 import ProjectSettingsPrompt from '../Components/Prompts/ProjectSettingsPrompt';
@@ -12,6 +12,8 @@ import { File } from '../Models/File';
 import { Organization } from '../Models/Organization';
 import { Project } from '../Models/Project';
 import NotFound from './NotFound';
+import 'react-table/react-table.css';
+import { Link } from 'react-router-dom';
 
 enum ProjectPrompt {
   Delete,
@@ -146,9 +148,17 @@ export default class ProjectDetails extends React.Component<Props, State> {
         {this.state.project!.description}
       </p>
 
-      <Browser
-        files={this.state.files}
-      />
+      <div className="content">
+        <ReactTable
+          columns={[
+            { Header: 'Name', accessor: 'name', Cell: props => <Link to={"/file/" + props.original.fileID}>{props.value}</Link> },
+            { Header: 'Uploader', accessor: f => f.uploader ? f.uploader.email : '', id: 'uploader' },
+          ]}
+          data={this.state.files}
+          defaultPageSize={10}
+          defaultSorted={[{ id: 'name', desc: false }]}
+        />
+      </div>
 
       {this.state.visiblePrompt === ProjectPrompt.Delete &&
         <DeleteProjectPrompt
