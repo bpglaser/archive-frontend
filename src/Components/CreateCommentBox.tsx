@@ -40,12 +40,14 @@ export default class CreateCommentBox extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    const current = this.contentRef.current;
-    if (current) {
-      current.focus();
-      // Jump the cursor to the end of the selection
-      const i = current.value.length;
-      current.setSelectionRange(i, i);
+    if (this.props.mode === CreateCommentMode.Edit) {
+      const current = this.contentRef.current;
+      if (current) {
+        current.focus();
+        // Jump the cursor to the end of the selection
+        const i = current.value.length;
+        current.setSelectionRange(i, i);
+      }
     }
   }
 

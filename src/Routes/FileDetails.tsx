@@ -1,15 +1,16 @@
 import React from 'react';
 import { RouteComponentProps } from 'react-router';
+import Breadcrumb from '../Components/Breadcrumb';
 import Comments from '../Components/Comments';
+import DownloadFileDropdown from '../Components/DownloadFileDropdown';
 import ErrorPage from '../Components/ErrorPage';
 import Loader from '../Components/Loader';
 import NearbyColumn from '../Components/NearbyColumn';
+import Tags from '../Components/Tags';
 import { Backend } from '../Data/Backend';
 import { File } from '../Models/File';
-import DownloadFileDropdown from '../Components/DownloadFileDropdown';
-import { Project } from '../Models/Project';
 import { Organization } from '../Models/Organization';
-import Breadcrumb from '../Components/Breadcrumb';
+import { Project } from '../Models/Project';
 
 interface Props extends RouteComponentProps<{ id: string }> {
   backend: Backend;
@@ -22,8 +23,9 @@ interface State {
   file: File | null,
   imageDisplayUrl: string | null;
   loading: boolean;
-  project: Project | null;
   organization: Organization | null;
+  project: Project | null;
+  tags: string[];
 }
 
 export default class FileDetails extends React.Component<Props, State> {
@@ -36,8 +38,9 @@ export default class FileDetails extends React.Component<Props, State> {
       file: null,
       imageDisplayUrl: null,
       loading: true,
-      project: null,
       organization: null,
+      project: null,
+      tags: [],
     };
     this.linkRef = React.createRef();
   }
@@ -48,7 +51,10 @@ export default class FileDetails extends React.Component<Props, State> {
       loading: true,
     });
 
-    await this.loadFileDetails();
+    const file = await this.loadFileDetails();
+    if (file) {
+      await this.loadTags(file);
+    }
     await this.loadProjectDetails();
     await this.loadOrganizationDetails();
     await this.downloadDisplayImage();
@@ -116,6 +122,15 @@ export default class FileDetails extends React.Component<Props, State> {
             </div>
           </nav>
 
+          <Tags
+            backend={this.props.backend}
+            displayError={this.props.displayError}
+            file={this.state.file!}
+            tagsUpdated={this.updateTags}
+            tags={this.state.tags}
+            token={this.props.token}
+          />
+
           {this.state.imageDisplayUrl &&
             <img src={this.state.imageDisplayUrl} alt="preview" />
           }
@@ -148,11 +163,25 @@ export default class FileDetails extends React.Component<Props, State> {
       this.setState({
         file: file,
       });
+      return file;
     } catch (err) {
       console.log(err);
       this.setState({
         errorMessage: 'Error loading file details.',
       });
+    }
+    return null;
+  }
+
+  loadTags = async (file: File) => {
+    try {
+      const tags = await this.props.backend.getTags(this.props.token, file.fileID);
+      this.setState({
+        tags: tags,
+      });
+    } catch (err) {
+      console.log(err);
+      this.props.displayError('Error loading tags.');
     }
   }
 
@@ -217,6 +246,12 @@ export default class FileDetails extends React.Component<Props, State> {
       console.log(err);
       this.props.displayError('Error encountered while loading display image.');
     }
+  }
+
+  updateTags = (tags: string[]) => {
+    this.setState({
+      tags: tags,
+    });
   }
 
   getID = () => {

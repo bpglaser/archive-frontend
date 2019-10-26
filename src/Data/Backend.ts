@@ -46,4 +46,7 @@ export interface Backend {
   getComments: (token: string, fileID: number) => Promise<Comment[]>;
   editComment: (token: string, commentID: number, content: string) => Promise<Comment>;
   deleteComment: (token: string, commentID: number) => Promise<void>;
+
+  getTags: (token: string, fileID: number) => Promise<string[]>;
+  setTags: (token: string, fileID: number, tags: string[]) => Promise<string[]>;
 }

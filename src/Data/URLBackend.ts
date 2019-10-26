@@ -354,6 +354,14 @@ export class URLBackend implements Backend {
     const config = createAuthorizationConfig(token);
     await this.instance.delete(url.toString(), config);
   }
+
+  getTags = async (token: string, fileID: number) => {
+    return await this.mock.getTags(token, fileID);
+  }
+
+  setTags = async (token: string, fileID: number, tags: string[]) => {
+    return await this.mock.setTags(token, fileID, tags);
+  }
 }
 
 function parseCommentEntry(entry: any): Comment {

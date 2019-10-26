@@ -35,6 +35,11 @@
     justify-content: space-evenly;
 }
 
-.tags {
-    max-width: 200px;
+.transparent-button {
+    background-color: transparent;
+    background-repeat: no-repeat;
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    outline: none;
 }

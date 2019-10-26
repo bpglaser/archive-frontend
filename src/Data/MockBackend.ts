@@ -220,4 +220,14 @@ export class MockBackend implements Backend {
   deleteComment = async (token: string, commentID: number) => {
     await delay(this.sleepDuration);
   }
+
+  getTags = async (token: string, fileID: number) => {
+    await delay(this.sleepDuration);
+    return ['foo', 'bar', 'bin', 'bazz'];
+  }
+
+  setTags = async (token: string, fileID: number, tags: string[]) => {
+    await delay(this.sleepDuration);
+    return tags;
+  }
 }
