@@ -2,7 +2,7 @@ import { NOT_FOUND } from 'http-status-codes';
 import React from 'react';
 import { Redirect, RouteComponentProps } from 'react-router';
 import { Link } from 'react-router-dom';
-import ReactTable from 'react-table';
+import ReactTable, { Filter } from 'react-table';
 import 'react-table/react-table.css';
 import Breadcrumb from '../Components/Breadcrumb';
 import Loader from '../Components/Loader';
@@ -141,11 +141,12 @@ export default class ProjectDetails extends React.Component<Props, State> {
           columns={[
             { Header: 'Name', accessor: 'name', Cell: props => <Link to={"/file/" + props.original.fileID}>{props.value}</Link> },
             { Header: 'Uploader', accessor: f => f.uploader ? f.uploader.email : '', id: 'uploader' },
-            { Header: 'Tags', accessor: 'tags', Cell: props => props.value.join(', ') },
+            { Header: 'Tags', accessor: 'tags', Cell: props => props.value.join(', '), filterMethod: tagFilterMethod },
           ]}
           data={this.state.files}
           defaultPageSize={10}
           defaultSorted={[{ id: 'name', desc: false }]}
+          filterable
         />
       </div>
 
@@ -299,4 +300,14 @@ export default class ProjectDetails extends React.Component<Props, State> {
   getProjectID = () => {
     return Number(this.props.match.params.id);
   }
+}
+
+function tagFilterMethod(filter: Filter, row: any, column: any) {
+  const tags: string[] = row[filter.id];
+  for (const tag of tags) {
+    if (tag.startsWith(filter.value) || tag.endsWith(filter.value)) {
+      return true;
+    }
+  }
+  return false;
 }
