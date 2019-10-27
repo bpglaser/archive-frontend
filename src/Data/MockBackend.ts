@@ -226,8 +226,11 @@ export class MockBackend implements Backend {
     return ['foo', 'bar', 'bin', 'bazz'];
   }
 
-  setTags = async (token: string, fileID: number, tags: string[]) => {
+  addTag = async (token: string, fileID: number, tag: string) => {
     await delay(this.sleepDuration);
-    return tags;
+  }
+
+  deleteTag = async (token: string, fileID: number, tag: string) => {
+    await delay(this.sleepDuration);
   }
 }

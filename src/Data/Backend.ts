@@ -48,5 +48,6 @@ export interface Backend {
   deleteComment: (token: string, commentID: number) => Promise<void>;
 
   getTags: (token: string, fileID: number) => Promise<string[]>;
-  setTags: (token: string, fileID: number, tags: string[]) => Promise<string[]>;
+  addTag: (token: string, fileID: number, tag: string) => Promise<void>;
+  deleteTag: (token: string, fileID: number, tag: string) => Promise<void>;
 }

@@ -99,40 +99,55 @@ export default class Tags extends React.Component<Props, State> {
     </div>);
   }
 
-  updateTagsOnBackend = async (tags: string[]) => {
+  deleteTagClicked = async (tagIndex: number) => {
     this.setState({
       awaitingResponse: true,
     });
 
     try {
-      const result = await this.props.backend.setTags(this.props.token, this.props.file.fileID, tags);
-      this.props.tagsUpdated(result);
+      const tag = this.props.tags[tagIndex];
+      this.props.backend.deleteTag(this.props.token, this.props.file.fileID, tag);
 
-      this.setState({
-        awaitingResponse: false,
-      });
+      const newTags = [...this.props.tags];
+      newTags.splice(tagIndex, 1);
+      this.props.tagsUpdated(newTags);
     } catch (err) {
       console.log(err);
-      this.props.displayError('Unable to update tags.');
+      this.props.displayError('Failed to delete tag.');
     }
-  }
 
-  deleteTagClicked = async (tagIndex: number) => {
-    const newTags = [...this.props.tags];
-    newTags.splice(tagIndex, 1);
-    await this.updateTagsOnBackend(newTags);
+    this.setState({
+      awaitingResponse: false,
+    });
   }
 
   newTagClicked = async () => {
     if (this.state.newTagValue.trim() === '') {
       return;
     }
-    const newTags = [...this.props.tags, this.state.newTagValue];
-    await this.updateTagsOnBackend(newTags);
+
     this.setState({
-      newTagValue: ''
+      awaitingResponse: true,
     });
-    this.requestInputFocus();
+
+    try {
+      const tag = this.state.newTagValue;
+      this.props.backend.addTag(this.props.token, this.props.file.fileID, tag);
+
+      this.setState({
+        newTagValue: ''
+      });
+      this.requestInputFocus();
+      const newTags = [...this.props.tags, this.state.newTagValue];
+      this.props.tagsUpdated(newTags);
+    } catch (err) {
+      console.log(err);
+      this.props.displayError('Failed to add new tag.');
+    }
+
+    this.setState({
+      awaitingResponse: false,
+    });
   }
 
   handleTagValueOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {

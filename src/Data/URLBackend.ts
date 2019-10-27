@@ -359,8 +359,12 @@ export class URLBackend implements Backend {
     return await this.mock.getTags(token, fileID);
   }
 
-  setTags = async (token: string, fileID: number, tags: string[]) => {
-    return await this.mock.setTags(token, fileID, tags);
+  addTag = async (token: string, fileID: number, tag: string) => {
+    return await this.mock.addTag(token, fileID, tag);
+  }
+
+  deleteTag = async (token: string, fileID: number, tag: string) => {
+    return await this.mock.deleteTag(token, fileID, tag);
   }
 }
 
