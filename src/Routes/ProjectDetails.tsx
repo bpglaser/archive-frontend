@@ -1,7 +1,9 @@
 import { NOT_FOUND } from 'http-status-codes';
 import React from 'react';
 import { Redirect, RouteComponentProps } from 'react-router';
+import { Link } from 'react-router-dom';
 import ReactTable from 'react-table';
+import 'react-table/react-table.css';
 import Breadcrumb from '../Components/Breadcrumb';
 import Loader from '../Components/Loader';
 import DeleteProjectPrompt from '../Components/Prompts/DeleteProjectPrompt';
@@ -12,8 +14,6 @@ import { File } from '../Models/File';
 import { Organization } from '../Models/Organization';
 import { Project } from '../Models/Project';
 import NotFound from './NotFound';
-import 'react-table/react-table.css';
-import { Link } from 'react-router-dom';
 
 enum ProjectPrompt {
   Delete,
@@ -58,9 +58,13 @@ export default class ProjectDetails extends React.Component<Props, State> {
       });
 
       const project = await this.loadProject(this.props.token, projectID);
-      await this.loadFiles(this.props.token, projectID);
       if (project) {
         await this.loadOrganization(this.props.token, project.organizationID);
+      }
+
+      const files = await this.loadFiles(this.props.token, projectID);
+      if (files) {
+        await this.loadTags(this.props.token, files);
       }
 
       this.setState({
@@ -75,23 +79,7 @@ export default class ProjectDetails extends React.Component<Props, State> {
 
   async componentDidUpdate(oldProps: Props) {
     if (this.props.token !== oldProps.token || this.props.match.params.id !== oldProps.match.params.id) {
-      const projectID = this.getProjectID();
-      if (projectID) {
-        this.setState({
-          loading: true,
-        });
-
-        await this.loadProject(this.props.token, projectID);
-        await this.loadFiles(this.props.token, projectID);
-
-        this.setState({
-          loading: false,
-        });
-      } else {
-        this.setState({
-          redirect: '/'
-        });
-      }
+      await this.componentDidMount();
     }
   }
 
@@ -153,6 +141,7 @@ export default class ProjectDetails extends React.Component<Props, State> {
           columns={[
             { Header: 'Name', accessor: 'name', Cell: props => <Link to={"/file/" + props.original.fileID}>{props.value}</Link> },
             { Header: 'Uploader', accessor: f => f.uploader ? f.uploader.email : '', id: 'uploader' },
+            { Header: 'Tags', accessor: 'tags', Cell: props => props.value.join(', ') },
           ]}
           data={this.state.files}
           defaultPageSize={10}
@@ -281,9 +270,29 @@ export default class ProjectDetails extends React.Component<Props, State> {
       this.setState({
         files: files,
       });
+      return files;
     } catch (err) {
       // TODO
       console.log(err);
+    }
+    return null;
+  }
+
+  loadTags = async (token: string, files: File[]) => {
+    try {
+      const fileTags = await Promise.all(
+        files.map((file) => this.props.backend.getTags(token, file.fileID)));
+
+      const modifiedFiles: File[] = [];
+      fileTags.forEach((tags, i) => {
+        modifiedFiles.push({ ...files[i], tags: tags });
+      });
+      this.setState({
+        files: modifiedFiles,
+      });
+    } catch (err) {
+      console.log(err);
+      // TODO
     }
   }
 
