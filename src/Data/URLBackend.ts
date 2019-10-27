@@ -356,15 +356,24 @@ export class URLBackend implements Backend {
   }
 
   getTags = async (token: string, fileID: number) => {
-    return await this.mock.getTags(token, fileID);
+    const url = new URL('/api/tags/' + fileID, this.base);
+    const config = createAuthorizationConfig(token);
+    const response = await this.instance.get(url.toString(), config);
+    return response.data;
   }
 
   addTag = async (token: string, fileID: number, tag: string) => {
-    return await this.mock.addTag(token, fileID, tag);
+    const url = new URL('/api/tags/' + fileID, this.base);
+    const config = createAuthorizationConfig(token);
+    const data = { tag: tag };
+    await this.instance.post(url.toString(), data, config);
   }
 
   deleteTag = async (token: string, fileID: number, tag: string) => {
-    return await this.mock.deleteTag(token, fileID, tag);
+    const url = new URL('/api/tags/' + fileID, this.base);
+    const config = createAuthorizationConfig(token);
+    config.data = { tag: tag };
+    await this.instance.delete(url.toString(), config);
   }
 }
 
@@ -383,7 +392,7 @@ function parseFileEntry(entry: any): File {
     fileID: Number(entry.FileID),
     name: entry.Name,
   };
-  
+
   if (entry.ProjID) {
     result.projID = Number(entry.ProjID);
   }
