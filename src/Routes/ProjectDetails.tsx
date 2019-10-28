@@ -146,6 +146,7 @@ export default class ProjectDetails extends React.Component<Props, State> {
           data={this.state.files}
           defaultPageSize={10}
           defaultSorted={[{ id: 'name', desc: false }]}
+          defaultFilterMethod={lowercaseFilterMethod}
           filterable
         />
       </div>
@@ -302,10 +303,14 @@ export default class ProjectDetails extends React.Component<Props, State> {
   }
 }
 
+function lowercaseFilterMethod(filter: Filter, row: any, column: any) {
+  return row[filter.id].toString().toLowerCase().includes(filter.value.toString().toLowerCase());
+}
+
 function tagFilterMethod(filter: Filter, row: any, column: any) {
   const tags: string[] = row[filter.id];
   for (const tag of tags) {
-    if (tag.startsWith(filter.value) || tag.endsWith(filter.value)) {
+    if (tag.toLowerCase().includes(filter.value.toLowerCase())) {
       return true;
     }
   }
