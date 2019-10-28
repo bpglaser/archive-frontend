@@ -45,7 +45,7 @@ export default class Tags extends React.Component<Props, State> {
   render() {
     return (<div style={{ marginBottom: '1em' }}>
       <div className="tags">
-        {
+        {this.props.tags.length > 0 &&
           this.props.tags.map((entry, i) =>
             <span className="tag" key={i}>
               {entry}
@@ -54,6 +54,12 @@ export default class Tags extends React.Component<Props, State> {
               }
             </span>
           )
+        }
+
+        {this.props.tags.length === 0 &&
+          <span className="tag">
+            No Tags
+          </span>
         }
 
         {!this.state.editMode &&
