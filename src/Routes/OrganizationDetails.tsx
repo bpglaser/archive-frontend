@@ -9,8 +9,10 @@ import OrganizationSettingsPrompt from '../Components/Prompts/OrganizationSettin
 import { Backend } from '../Data/Backend';
 import { Organization } from '../Models/Organization';
 import { Project } from '../Models/Project';
+import CreateProjectPrompt from '../Components/Prompts/CreateProjectPrompt';
 
 enum VisiblePrompt {
+  Create,
   Delete,
   Settings,
 }
@@ -95,17 +97,40 @@ export default class OrganizationDetails extends React.Component<Props, State> {
         </div>
 
         <div className="level-right">
-          <button className="button" onClick={this.showSettingsPrompt}>
-            <span className="icon">
-              <i className="fas fa-cog"></i>
-            </span>
-          </button>
+          <p className="level-item">
+            <button className="button" onClick={this.showCreatePrompt}>
+              <span className="icon">
+                <i className="fas fa-plus"></i>
+              </span>
+              <span>
+                Create New Project
+              </span>
+            </button>
+          </p>
+
+          <p className="level-item">
+            <button className="button" onClick={this.showSettingsPrompt}>
+              <span className="icon">
+                <i className="fas fa-cog"></i>
+              </span>
+            </button>
+          </p>
         </div>
       </nav>
 
       {
         this.state.projects.map((project, i) =>
           <ProjectPreviewCard project={project} key={i} />)
+      }
+
+      {this.state.visiblePrompt === VisiblePrompt.Create && this.state.organization &&
+        <CreateProjectPrompt
+          backend={this.props.backend}
+          close={this.hidePrompt}
+          organization={this.state.organization}
+          success={this.projectCreated}
+          token={this.props.token}
+        />
       }
 
       {this.state.visiblePrompt === VisiblePrompt.Delete && this.state.organization &&
@@ -170,6 +195,12 @@ export default class OrganizationDetails extends React.Component<Props, State> {
     });
   }
 
+  showCreatePrompt = () => {
+    this.setState({
+      visiblePrompt: VisiblePrompt.Create,
+    });
+  }
+
   showSettingsPrompt = () => {
     this.setState({
       visiblePrompt: VisiblePrompt.Settings,
@@ -194,6 +225,13 @@ export default class OrganizationDetails extends React.Component<Props, State> {
     this.setState({
       redirect: '/organizations',
     });
+  }
+
+  projectCreated = (project: Project) => {
+    this.setState((prev) => ({
+      projects: [project, ...prev.projects],
+      visiblePrompt: null,
+    }));
   }
 
   getID = () => {
