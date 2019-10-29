@@ -281,9 +281,9 @@ export class URLBackend implements Backend {
     const config = createAuthorizationConfig(token);
 
     const result = await this.instance.post(url.toString(), formData, config);
-    console.log(result); // TODO parse response
-
-    return await this.mock.uploadFile(token, projectID, formData);
+    const file = parseFileEntry(result.data);
+    file.uploader = readTokenPayload(token);
+    return file;
   }
 
   downloadFile = async (token: string, fileID: number, extension?: string) => {
