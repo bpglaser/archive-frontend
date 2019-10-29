@@ -90,11 +90,16 @@ export default class FileSettingsPrompt extends React.Component<Props, State> {
   }
 
   submitChanges = async () => {
+    this.setState({
+      disabled: true,
+    });
+
     try {
       const file = await this.props.backend.updateFile(this.props.token, this.props.file, this.state.name);
       this.props.success(file);
     } catch (err) {
       this.setState({
+        disabled: false,
         errorMessage: 'Failed to update filename.',
       });
     }

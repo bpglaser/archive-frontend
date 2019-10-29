@@ -1,5 +1,5 @@
 import React from 'react';
-import { RouteComponentProps } from 'react-router';
+import { RouteComponentProps, Redirect } from 'react-router';
 import Breadcrumb from '../Components/Breadcrumb';
 import Comments from '../Components/Comments';
 import DownloadFileDropdown from '../Components/DownloadFileDropdown';
@@ -12,6 +12,7 @@ import { File } from '../Models/File';
 import { Organization } from '../Models/Organization';
 import { Project } from '../Models/Project';
 import FileSettingsPrompt from '../Components/Prompts/FileSettingsPrompt';
+import FileDeletePrompt from '../Components/Prompts/FileDeletePrompt';
 
 enum FilePrompt {
   Delete,
@@ -31,6 +32,7 @@ interface State {
   loading: boolean;
   organization: Organization | null;
   project: Project | null;
+  redirect: string | null;
   tags: string[];
   visiblePrompt: FilePrompt | null;
 }
@@ -47,6 +49,7 @@ export default class FileDetails extends React.Component<Props, State> {
       loading: true,
       organization: null,
       project: null,
+      redirect: null,
       tags: [],
       visiblePrompt: null,
     };
@@ -90,6 +93,10 @@ export default class FileDetails extends React.Component<Props, State> {
 
     if (this.state.loading) {
       return <Loader />;
+    }
+
+    if (this.state.redirect) {
+      return <Redirect to={this.state.redirect} />;
     }
 
     return (<div>
@@ -166,7 +173,17 @@ export default class FileDetails extends React.Component<Props, State> {
         />
       </div>
 
-      {this.state.visiblePrompt &&
+      {this.state.visiblePrompt === FilePrompt.Delete &&
+        <FileDeletePrompt
+          backend={this.props.backend}
+          close={this.hidePrompt}
+          file={this.state.file!}
+          success={this.setRedirectToProject}
+          token={this.props.token}
+        />
+      }
+
+      {this.state.visiblePrompt === FilePrompt.Settings &&
         <FileSettingsPrompt
           backend={this.props.backend}
           close={this.hidePrompt}
@@ -303,6 +320,18 @@ export default class FileDetails extends React.Component<Props, State> {
       file: file,
     });
     this.hidePrompt();
+  }
+
+  setRedirectToProject = () => {
+    if (!this.state.project) {
+      this.setState({
+        redirect: '/'
+      });
+    } else {
+      this.setState({
+        redirect: '/projects/' + this.state.project.projectID,
+      });
+    }
   }
 
   getID = () => {
