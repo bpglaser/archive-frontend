@@ -11,6 +11,12 @@ import { Backend } from '../Data/Backend';
 import { File } from '../Models/File';
 import { Organization } from '../Models/Organization';
 import { Project } from '../Models/Project';
+import FileSettingsPrompt from '../Components/Prompts/FileSettingsPrompt';
+
+enum FilePrompt {
+  Delete,
+  Settings,
+}
 
 interface Props extends RouteComponentProps<{ id: string }> {
   backend: Backend;
@@ -26,6 +32,7 @@ interface State {
   organization: Organization | null;
   project: Project | null;
   tags: string[];
+  visiblePrompt: FilePrompt | null;
 }
 
 export default class FileDetails extends React.Component<Props, State> {
@@ -41,6 +48,7 @@ export default class FileDetails extends React.Component<Props, State> {
       organization: null,
       project: null,
       tags: [],
+      visiblePrompt: null,
     };
     this.linkRef = React.createRef();
   }
@@ -119,6 +127,13 @@ export default class FileDetails extends React.Component<Props, State> {
                   formatList={["png", "jpg"]}
                 />
               </div>
+              <div className="level-item">
+                <button className="button" onClick={this.showSettingsPrompt}>
+                  <span className="icon">
+                    <i className="fas fa-cog"></i>
+                  </span>
+                </button>
+              </div>
             </div>
           </nav>
 
@@ -150,6 +165,17 @@ export default class FileDetails extends React.Component<Props, State> {
           token={this.props.token!}
         />
       </div>
+
+      {this.state.visiblePrompt &&
+        <FileSettingsPrompt
+          backend={this.props.backend}
+          close={this.hidePrompt}
+          file={this.state.file!}
+          showDeletePrompt={this.showDeletePrompt}
+          success={this.settingsSuccessfullyChanged}
+          token={this.props.token}
+        />
+      }
 
       <a style={{ display: 'none' }} ref={this.linkRef}></a>
     </div>);
@@ -252,6 +278,31 @@ export default class FileDetails extends React.Component<Props, State> {
     this.setState({
       tags: tags,
     });
+  }
+
+  hidePrompt = () => {
+    this.setState({
+      visiblePrompt: null,
+    });
+  }
+
+  showDeletePrompt = () => {
+    this.setState({
+      visiblePrompt: FilePrompt.Delete,
+    });
+  }
+
+  showSettingsPrompt = () => {
+    this.setState({
+      visiblePrompt: FilePrompt.Settings,
+    });
+  }
+
+  settingsSuccessfullyChanged = (file: File) => {
+    this.setState({
+      file: file,
+    });
+    this.hidePrompt();
   }
 
   getID = () => {

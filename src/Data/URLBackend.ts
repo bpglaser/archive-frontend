@@ -281,7 +281,7 @@ export class URLBackend implements Backend {
     const config = createAuthorizationConfig(token);
 
     const result = await this.instance.post(url.toString(), formData, config);
-    console.log(result);
+    console.log(result); // TODO parse response
 
     return await this.mock.uploadFile(token, projectID, formData);
   }
@@ -313,6 +313,15 @@ export class URLBackend implements Backend {
     const result = await this.instance.get(url.toString(), config);
     const entry = result.data;
     return parseFileEntry(entry);
+  }
+
+  updateFile = async (token: string, file: File, name: string) => {
+    const url = new URL('/api/files/' + file.fileID, this.base);
+    const config = createAuthorizationConfig(token);
+    const data = { name: name };
+
+    await this.instance.patch(url.toString(), data, config);
+    return { ...file, name: name };
   }
 
   deleteFile = async (token: string, fileID: number) => {

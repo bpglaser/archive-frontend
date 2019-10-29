@@ -1,6 +1,7 @@
 import { delay } from 'q';
 import { Article } from '../Models/Article';
 import { Backend } from './Backend';
+import { File } from '../Models/File';
 
 export class MockBackend implements Backend {
   sleepDuration: number;
@@ -186,6 +187,11 @@ export class MockBackend implements Backend {
   getFileDetails = async (token: string, fileID: number) => {
     await delay(this.sleepDuration);
     return { fileID: fileID, name: 'foo.jpg' };
+  }
+
+  updateFile = async (token: string, file: File, name: string) => {
+    await delay(this.sleepDuration);
+    return { ...file, name: name };
   }
 
   deleteFile = async (token: string, fileID: number) => {

@@ -40,6 +40,7 @@ export interface Backend {
   downloadFile: (token: string, fileID: number, extension?: string) => Promise<Blob>;
   listFiles: (token: string, projID: number) => Promise<File[]>;
   getFileDetails: (token: string, fileID: number) => Promise<File>;
+  updateFile: (token: string, file: File, name: string) => Promise<File>;
   deleteFile: (token: string, fileID: number) => Promise<void>;
 
   submitComment: (token: string, fileID: number, content: string) => Promise<Comment>;
