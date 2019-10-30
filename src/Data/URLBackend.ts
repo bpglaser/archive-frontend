@@ -386,7 +386,10 @@ export class URLBackend implements Backend {
   }
 
   getMetadata = async (token: string, fileID: number) => {
-    return await this.mock.getMetadata(token, fileID);
+    const url = new URL('/api/metadata/' + fileID, this.base);
+    const config = createAuthorizationConfig(token);
+    const result = await this.instance.get(url.toString(), config);
+    return result.data;
   }
 }
 

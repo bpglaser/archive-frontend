@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactTable from 'react-table';
+import ReactTable, { Filter } from 'react-table';
 
 interface Props {
   metadata: { [key: string]: string };
@@ -24,11 +24,17 @@ export default class MetadataDisplay extends React.Component<Props, State> {
     }
 
     return (<ReactTable
-      columns={[{ accessor: 'key' }, { accessor: 'value' }]}
+      columns={[{ Header: "Key", accessor: "key" }, { Header: "Value", accessor: "value" }]}
       data={rows}
       defaultPageSize={10}
+      defaultFilterMethod={lowercaseFilterMethod}
       filterable
+      sortable
     />);
   }
+}
+
+function lowercaseFilterMethod(filter: Filter, row: any, column: any) {
+  return row[filter.id].toString().toLowerCase().includes(filter.value.toString().toLowerCase());
 }
 
