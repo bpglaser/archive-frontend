@@ -239,4 +239,12 @@ export class MockBackend implements Backend {
   deleteTag = async (token: string, fileID: number, tag: string) => {
     await delay(this.sleepDuration);
   }
+
+  getMetadata = async (token: string, fileID: number) => {
+    await delay(this.sleepDuration);
+    return {
+      'foo': 'bar',
+      'bin': 'bazz',
+    };
+  }
 }

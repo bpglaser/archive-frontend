@@ -51,4 +51,6 @@ export interface Backend {
   getTags: (token: string, fileID: number) => Promise<string[]>;
   addTag: (token: string, fileID: number, tag: string) => Promise<void>;
   deleteTag: (token: string, fileID: number, tag: string) => Promise<void>;
+
+  getMetadata: (token: string, fileID: number) => Promise<{ [key: string]: string }>;
 }

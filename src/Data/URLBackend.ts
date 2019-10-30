@@ -384,6 +384,10 @@ export class URLBackend implements Backend {
     config.data = { tag: tag };
     await this.instance.delete(url.toString(), config);
   }
+
+  getMetadata = async (token: string, fileID: number) => {
+    return await this.mock.getMetadata(token, fileID);
+  }
 }
 
 function parseCommentEntry(entry: any): Comment {

@@ -13,6 +13,7 @@ import { Organization } from '../Models/Organization';
 import { Project } from '../Models/Project';
 import FileSettingsPrompt from '../Components/Prompts/FileSettingsPrompt';
 import FileDeletePrompt from '../Components/Prompts/FileDeletePrompt';
+import MetadataDisplay from '../Components/MetadataDisplay';
 
 enum FilePrompt {
   Delete,
@@ -30,6 +31,7 @@ interface State {
   file: File | null,
   imageDisplayUrl: string | null;
   loading: boolean;
+  metadata: { [key: string]: string } | null;
   organization: Organization | null;
   project: Project | null;
   redirect: string | null;
@@ -47,6 +49,7 @@ export default class FileDetails extends React.Component<Props, State> {
       file: null,
       imageDisplayUrl: null,
       loading: true,
+      metadata: null,
       organization: null,
       project: null,
       redirect: null,
@@ -65,6 +68,7 @@ export default class FileDetails extends React.Component<Props, State> {
     const file = await this.loadFileDetails();
     if (file) {
       await this.loadTags(file);
+      await this.loadMetadata(file);
     }
     await this.loadProjectDetails();
     await this.loadOrganizationDetails();
@@ -157,6 +161,12 @@ export default class FileDetails extends React.Component<Props, State> {
             <img src={this.state.imageDisplayUrl} alt="preview" />
           }
 
+          {this.state.metadata &&
+            <MetadataDisplay
+              metadata={this.state.metadata}
+            />
+          }
+
           {this.state.file &&
             <Comments
               backend={this.props.backend}
@@ -225,6 +235,18 @@ export default class FileDetails extends React.Component<Props, State> {
     } catch (err) {
       console.log(err);
       this.props.displayError('Error loading tags.');
+    }
+  }
+
+  loadMetadata = async (file: File) => {
+    try {
+      const metadata = await this.props.backend.getMetadata(this.props.token, file.fileID);
+      this.setState({
+        metadata: metadata,
+      });
+    } catch (err) {
+      console.log(err);
+      this.props.displayError('Error loading metadata.');
     }
   }
 
