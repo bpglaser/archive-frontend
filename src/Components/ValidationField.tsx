@@ -1,16 +1,17 @@
 import * as React from 'react';
 
 interface Props {
-  disabled: boolean,
-  innerInputRef: React.RefObject<HTMLInputElement>,
-  inputPlaceholder: string,
-  inputType: string,
-  invalid: boolean,
-  invalidMessage: string,
-  leftIconName: string,
-  onInput?: (element: React.FormEvent<HTMLInputElement>) => void,
-  submit: () => void,
-  rightIconName: string,
+  disabled: boolean;
+  innerInputRef?: React.RefObject<HTMLInputElement>;
+  inputPlaceholder: string;
+  inputType: string;
+  invalid: boolean;
+  invalidMessage: string;
+  leftIconName: string;
+  submit: () => void;
+  rightIconName: string;
+  onChange: React.ChangeEventHandler<HTMLInputElement>;
+  value: string;
 }
 
 export default class ValidationField extends React.Component<Props> {
@@ -22,9 +23,11 @@ export default class ValidationField extends React.Component<Props> {
           type={this.props.inputType}
           placeholder={this.props.inputPlaceholder}
           disabled={this.props.disabled}
-          onInput={this.props.onInput}
+          onChange={this.props.onChange}
           onKeyUp={this.inputOnKeyUp}
-          ref={this.props.innerInputRef} />
+          ref={this.props.innerInputRef}
+          value={this.props.value}
+        />
 
         <span className="icon is-small is-left">
           <i className={"fas " + this.props.leftIconName}></i>
