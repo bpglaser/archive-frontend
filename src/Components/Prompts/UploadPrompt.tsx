@@ -58,7 +58,7 @@ export default class UploadFilePrompt extends React.Component<Props, State> {
             <label className="file-label">
               <input
                 className="file-input"
-                accept=".fit,.fits,image/*"
+                accept=".bmp,.fit,.fits,.gif,.jpg,.jpeg,.png"
                 disabled={this.state.disabled}
                 type="file"
                 name="image"
