@@ -20,12 +20,12 @@ interface Props {
 
 interface State {
   email: string;
-  emailInvalid: boolean,
+  emailValid: boolean,
   errorMessage: string | null;
   loading: boolean;
   password: string;
   passwordConfirmation: string;
-  passwordInvalid: boolean,
+  passwordValid: boolean,
   passwordsMatch: boolean,
   passwordStrength: zxcvbn.ZXCVBNResult | null,
 }
@@ -38,12 +38,12 @@ export class LoginPrompt extends React.Component<Props, State> {
     this.emailRef = React.createRef();
     this.state = {
       email: '',
-      emailInvalid: false,
+      emailValid: true,
       errorMessage: null,
       loading: false,
       password: '',
       passwordConfirmation: '',
-      passwordInvalid: false,
+      passwordValid: true,
       passwordsMatch: true,
       passwordStrength: null,
     };
@@ -76,7 +76,7 @@ export class LoginPrompt extends React.Component<Props, State> {
           <ValidationField
             disabled={this.state.loading}
             innerInputRef={this.emailRef}
-            invalid={this.state.emailInvalid}
+            invalid={!this.state.emailValid}
             invalidMessage="Invalid email address"
             leftIconName="fa-envelope"
             inputPlaceholder="Email"
@@ -89,7 +89,7 @@ export class LoginPrompt extends React.Component<Props, State> {
 
           <ValidationField
             disabled={this.state.loading}
-            invalid={this.state.passwordInvalid}
+            invalid={!this.state.passwordValid}
             invalidMessage="Invalid password"
             leftIconName="fa-lock"
             inputPlaceholder="Password"
@@ -159,32 +159,9 @@ export class LoginPrompt extends React.Component<Props, State> {
   }
 
   validateFields = (): boolean => {
-    let valid = true;
-
-    if (vaildEmail(this.state.email)) {
-      this.setState({ emailInvalid: false });
-    } else {
-      this.setState({ emailInvalid: true });
-      valid = false;
-    }
-
-    if (validPassword(this.state.password)) {
-      this.setState({ passwordInvalid: false });
-    } else {
-      this.setState({ passwordInvalid: true });
-      valid = false;
-    }
-
-    if (this.props.mode === LoginDisplayMode.Register) {
-      if (this.state.password === this.state.passwordConfirmation) {
-        this.setState({ passwordsMatch: true });
-      } else {
-        this.setState({ passwordsMatch: false });
-        valid = false;
-      }
-    }
-
-    return valid;
+    return this.state.emailValid
+      && this.state.passwordValid
+      && this.state.passwordsMatch;
   }
 
   login = async () => {
@@ -257,30 +234,29 @@ export class LoginPrompt extends React.Component<Props, State> {
   }
 
   emailOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const email = event.target.value;
     this.setState({
-      email: event.target.value,
+      email: email,
+      emailValid: vaildEmail(email),
     });
   }
 
   passwordOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    if (value.trim() === '') {
-      this.setState({
-        password: value,
-        passwordStrength: null
-      });
-    } else {
-      const result = zxcvbn(value);
-      this.setState({
-        password: value,
-        passwordStrength: result
-      });
-    }
+    const password = event.target.value;
+    const strength = password.trim() === '' ? null : zxcvbn(password);
+    this.setState((oldState) => ({
+      password: password,
+      passwordValid: validPassword(password),
+      passwordsMatch: password === oldState.passwordConfirmation,
+      passwordStrength: strength,
+    }));
   }
 
   passwordConfirmationOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({
-      passwordConfirmation: event.target.value,
-    });
+    const passwordConfirmation = event.target.value;
+    this.setState((oldState) => ({
+      passwordConfirmation: passwordConfirmation,
+      passwordsMatch: oldState.password === passwordConfirmation,
+    }));
   }
 }
