@@ -1,6 +1,8 @@
 import { BAD_REQUEST, INTERNAL_SERVER_ERROR, UNAUTHORIZED } from "http-status-codes";
 import React from "react";
 import { Backend } from "../../Data/Backend";
+import { User } from "../../Models/User";
+import { validUsername } from "../../Helpers";
 
 enum Validation {
   Undetermined,
@@ -54,13 +56,19 @@ const PasswordField: React.FC<PasswordFieldProps> =
 
 interface Props {
   backend: Backend;
+  displayError: (errorMessage: string) => void;
   token: string;
+  user: User;
+  updateLogin: (user: User, token: string) => void;
 }
 
 interface State {
   awaitingUpdateResponse: boolean;
+  awaitingUsernameResponse: boolean;
   displayMessage: string | null;
   displayMessageClassNameSuffix: string;
+  username: string;
+  usernameButtonDisabled: boolean;
   validation: Validation;
 }
 
@@ -78,14 +86,41 @@ export default class AccountSettings extends React.Component<Props, State> {
 
     this.state = {
       awaitingUpdateResponse: false,
+      awaitingUsernameResponse: false,
       displayMessage: null,
       displayMessageClassNameSuffix: "",
+      username: this.props.user.email, // TODO change to username
+      usernameButtonDisabled: true,
       validation: Validation.Undetermined,
     };
   }
 
   render() {
     return (<div className="account-settings">
+      <h3 className="title is-4">Update Username</h3>
+
+      <div className="field">
+        <label className="label">Update Username</label>
+        <input
+          className="input"
+          type="text"
+          placeholder="Username"
+          onChange={this.usernameOnChange}
+          value={this.state.username}
+        />
+      </div>
+
+      <button
+        className={this.state.awaitingUsernameResponse ? "button is-success is-loading" : "button is-success"}
+        disabled={this.state.usernameButtonDisabled}
+        onClick={this.setUsername}
+      >
+        Set Username
+      </button>
+
+      <br />
+      <br />
+
       <h3 className="title is-4">Update Password</h3>
 
       <div className="field">
@@ -209,5 +244,37 @@ export default class AccountSettings extends React.Component<Props, State> {
         awaitingUpdateResponse: false,
       });
     }
+  }
+
+  usernameOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const username = event.target.value;
+    this.setState({
+      username: username,
+      usernameButtonDisabled: !validUsername(username),
+    });
+  }
+
+  setUsername = async () => {
+    if (this.state.usernameButtonDisabled) {
+      return;
+    }
+
+    this.setState({
+      awaitingUsernameResponse: true,
+      usernameButtonDisabled: true,
+    });
+
+    try {
+      const { user, token } = await this.props.backend.updateUsername(this.props.token, this.state.username);
+      this.props.updateLogin(user, token);
+    } catch (err) {
+      console.log(err);
+      this.props.displayError('Error encountered while updating username.');
+    }
+
+    this.setState({
+      awaitingUsernameResponse: false,
+      usernameButtonDisabled: false,
+    });
   }
 }

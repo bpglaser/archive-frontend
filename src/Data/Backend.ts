@@ -11,6 +11,7 @@ export interface Backend {
   register: (email: string, password: string) => Promise<{ user: User, token: string }>;
   logout: (token: string) => Promise<void>;
   updatePassword: (token: string, oldPassword: string, newPassword: string) => Promise<void>;
+  updateUsername: (token: string, username: string) => Promise<{ user: User, token: string }>;
 
   invite: (token: string, key: string) => Promise<InviteDetails>;
   acceptInvite: (token: string, key: string) => Promise<void>;

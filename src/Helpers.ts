@@ -1,6 +1,11 @@
 import * as jwt from 'jsonwebtoken';
 import { User } from './Models/User';
 
+export function validUsername(s: string): boolean {
+  // TODO proper validation
+  return s.trim() !== '';
+}
+
 export const vaildEmail = (s: string): boolean => {
   // TODO proper validation
   return s.trim() !== '';
@@ -32,12 +37,12 @@ export const checkIsAdmin = (token: string | null): boolean => {
 }
 
 export function registerEscHandler(func: () => void) {
-    const escapeKeyCode = 27;
-    document.onkeyup = (event) => {
-      if (event.keyCode === escapeKeyCode) {
-        func();
-      }
-    };
+  const escapeKeyCode = 27;
+  document.onkeyup = (event) => {
+    if (event.keyCode === escapeKeyCode) {
+      func();
+    }
+  };
 }
 
 export function unregisterEscHandler() {
@@ -45,15 +50,15 @@ export function unregisterEscHandler() {
 }
 
 export function isAdmin(token?: string) {
-    if (!token) {
-      return false;
-    }
+  if (!token) {
+    return false;
+  }
 
-    const user = readTokenPayload(token);
+  const user = readTokenPayload(token);
 
-    if (user.admin === undefined) {
-      return false;
-    } else {
-      return user.admin;
-    }
+  if (user.admin === undefined) {
+    return false;
+  } else {
+    return user.admin;
+  }
 }

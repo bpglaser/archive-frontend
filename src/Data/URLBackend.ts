@@ -1,11 +1,11 @@
-import Axios, { AxiosRequestConfig, AxiosInstance } from 'axios';
+import Axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
+import { UNAUTHORIZED } from 'http-status-codes';
 import { readTokenPayload } from '../Helpers';
 import { Article } from '../Models/Article';
+import { Comment } from '../Models/Comment';
+import { File } from '../Models/File';
 import { Backend } from './Backend';
 import { MockBackend } from "./MockBackend";
-import { Comment } from '../Models/Comment';
-import { UNAUTHORIZED } from 'http-status-codes';
-import { File } from '../Models/File';
 
 export class URLBackend implements Backend {
   readonly base: string | undefined;
@@ -66,6 +66,10 @@ export class URLBackend implements Backend {
     const data = { old: oldPassword, new: newPassword };
     const config = createAuthorizationConfig(token);
     await this.instance.post(url.toString(), data, config);
+  }
+
+  updateUsername = async (token: string, username: string) => {
+    return await this.mock.updateUsername(token, username);
   }
 
   invite = async (token: string, key: string) => {

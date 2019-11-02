@@ -3,10 +3,14 @@ import { Redirect, RouteComponentProps } from "react-router";
 import AccountSettings from "../Components/Settings/AccountSettings";
 import { Backend } from "../Data/Backend";
 import Breadcrumb from "../Components/Breadcrumb";
+import { User } from "../Models/User";
 
 interface Props extends RouteComponentProps {
   backend: Backend;
+  displayError: (errorMessage: string) => void;
   token: string;
+  user: User;
+  updateLogin: (user: User, token: string) => void;
 }
 
 export default class Settings extends React.Component<Props> {
@@ -15,7 +19,14 @@ export default class Settings extends React.Component<Props> {
     let details;
     switch (params.get("page")) {
       case "account":
-        details = <AccountSettings backend={this.props.backend} token={this.props.token} />
+        details =
+          <AccountSettings
+            backend={this.props.backend}
+            displayError={this.props.displayError}
+            token={this.props.token}
+            user={this.props.user}
+            updateLogin={this.props.updateLogin}
+          />
         break;
       default:
         return <Redirect to="/settings?page=account" />

@@ -1,7 +1,8 @@
 import { delay } from 'q';
+import { readTokenPayload } from '../Helpers';
 import { Article } from '../Models/Article';
-import { Backend } from './Backend';
 import { File } from '../Models/File';
+import { Backend } from './Backend';
 
 export class MockBackend implements Backend {
   sleepDuration: number;
@@ -38,6 +39,11 @@ export class MockBackend implements Backend {
 
   updatePassword = async (token: string, oldPassword: string, newPassword: string) => {
     await delay(this.sleepDuration);
+  }
+
+  updateUsername = async (token: string, username: string) => {
+    await delay(this.sleepDuration);
+    return { user: { ...readTokenPayload(token), username: username }, token: token }
   }
 
   invite = async (token: string, key: string) => {
