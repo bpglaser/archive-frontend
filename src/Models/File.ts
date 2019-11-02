@@ -6,4 +6,5 @@ export interface File {
   projID?: number;
   uploader?: User;
   tags?: string[];
+  originalName?: string;
 }

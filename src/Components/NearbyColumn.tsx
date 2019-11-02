@@ -13,7 +13,7 @@ interface Props {
 
 interface State {
   errorMessage: string | null;
-  files: File[];
+  nearby: { distance: number, file: File }[];
   loading: boolean;
 }
 
@@ -22,7 +22,7 @@ export default class NearbyColumn extends React.Component<Props, State> {
     super(props);
     this.state = {
       errorMessage: null,
-      files: [],
+      nearby: [],
       loading: true,
     };
   }
@@ -67,8 +67,9 @@ export default class NearbyColumn extends React.Component<Props, State> {
     return (<div className="column is-narrow">
       <h1 className="title">What's Nearby</h1>
       {
-        this.state.files.map((file, i) =>
+        this.state.nearby.map(({ distance, file }, i) =>
           <NearbyBox
+            distance={distance}
             file={file}
             key={i}
           />
@@ -83,9 +84,9 @@ export default class NearbyColumn extends React.Component<Props, State> {
     }
 
     try {
-      const files = await this.props.backend.getNearbyFiles(this.props.token, this.props.file.fileID);
+      const nearby = await this.props.backend.getNearbyFiles(this.props.token, this.props.file.fileID);
       this.setState({
-        files: files,
+        nearby: nearby,
       });
     } catch (err) {
       console.log(err);

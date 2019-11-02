@@ -273,7 +273,10 @@ export class URLBackend implements Backend {
   }
 
   getNearbyFiles = async (token: string, fileID: number) => {
-    return await this.mock.getNearbyFiles(token, fileID);
+    const url = new URL('/api/files/list/nearby/' + fileID, this.base);
+    const config = createAuthorizationConfig(token);
+    const result = await this.instance.get(url.toString(), config);
+    return result.data.map(parseNearby);
   }
 
   uploadFile = async (token: string, projectID: number, formData: FormData) => {
@@ -420,7 +423,18 @@ function parseFileEntry(entry: any): File {
     };
   }
 
+  if (entry.OriginalName) {
+    result.originalName = entry.OriginalName;
+  }
+
   return result;
+}
+
+function parseNearby(entry: any): { distance: number, file: File } {
+  return {
+    distance: Number(entry.distance),
+    file: parseFileEntry(entry.file)
+  };
 }
 
 function createAuthorizationConfig(token: string): AxiosRequestConfig {

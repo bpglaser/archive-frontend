@@ -157,10 +157,10 @@ export class MockBackend implements Backend {
   getNearbyFiles = async (token: string, fileID: number) => {
     await delay(this.sleepDuration);
     return [
-      { fileID: 1, name: 'foo.jpg' },
-      { fileID: 2, name: 'bar.png' },
-      { fileID: 3, name: 'bin.fit' },
-      { fileID: 4, name: 'bazz.fits' },
+      { distance: 1, file: { fileID: 1, name: 'foo.jpg' } },
+      { distance: 1, file: { fileID: 2, name: 'bar.png' } },
+      { distance: 1, file: { fileID: 3, name: 'bin.fit' } },
+      { distance: 1, file: { fileID: 4, name: 'bazz.fits' } },
     ];
   }
 
