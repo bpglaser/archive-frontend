@@ -3,7 +3,7 @@ import * as React from 'react';
 interface Props {
   disabled: boolean;
   innerInputRef?: React.RefObject<HTMLInputElement>;
-  inputPlaceholder: string;
+  label: string;
   inputType: string;
   invalid: boolean;
   invalidMessage: string;
@@ -17,11 +17,13 @@ interface Props {
 export default class ValidationField extends React.Component<Props> {
   render() {
     return (<div className="field">
+      <label className="label">{this.props.label}</label>
+
       <p className={this.props.invalid ? "control has-icons-left has-icons-right" : "control has-icons-left"}>
         <input
           className={this.props.invalid ? "input is-danger" : "input"}
           type={this.props.inputType}
-          placeholder={this.props.inputPlaceholder}
+          placeholder={this.props.label}
           disabled={this.props.disabled}
           onChange={this.props.onChange}
           onKeyUp={this.inputOnKeyUp}

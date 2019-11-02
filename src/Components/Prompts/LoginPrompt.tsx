@@ -20,22 +20,25 @@ interface Props {
 
 interface State {
   email: string;
-  emailValid: boolean,
+  emailValid: boolean;
   errorMessage: string | null;
   loading: boolean;
   password: string;
   passwordConfirmation: string;
-  passwordValid: boolean,
-  passwordsMatch: boolean,
-  passwordStrength: zxcvbn.ZXCVBNResult | null,
+  passwordValid: boolean;
+  passwordsMatch: boolean;
+  passwordStrength: zxcvbn.ZXCVBNResult | null;
+  username: string;
+  usernameInvalidMessage: string;
+  usernameValid: boolean;
 }
 
 export class LoginPrompt extends React.Component<Props, State> {
-  emailRef: React.RefObject<HTMLInputElement>;
+  readonly emailRef: React.RefObject<HTMLInputElement>;
+  readonly usernameRef: React.RefObject<HTMLInputElement>;
 
   constructor(props: Props) {
     super(props);
-    this.emailRef = React.createRef();
     this.state = {
       email: '',
       emailValid: true,
@@ -46,14 +49,25 @@ export class LoginPrompt extends React.Component<Props, State> {
       passwordValid: true,
       passwordsMatch: true,
       passwordStrength: null,
+      username: '',
+      usernameInvalidMessage: '',
+      usernameValid: true,
     };
+    this.emailRef = React.createRef();
+    this.usernameRef = React.createRef();
   }
 
   componentDidMount() {
     registerEscHandler(this.props.close);
 
-    if (this.emailRef.current) {
-      this.emailRef.current.focus();
+    if (this.props.mode === LoginDisplayMode.Login) {
+      if (this.emailRef.current) {
+        this.emailRef.current.focus();
+      }
+    } else {
+      if (this.usernameRef.current) {
+        this.usernameRef.current.focus();
+      }
     }
   }
 
@@ -73,13 +87,29 @@ export class LoginPrompt extends React.Component<Props, State> {
         </header>
 
         <section className="modal-card-body">
+          {this.props.mode === LoginDisplayMode.Register &&
+            <ValidationField
+              disabled={this.state.loading}
+              innerInputRef={this.usernameRef}
+              label="Username"
+              inputType="text"
+              invalid={!this.state.usernameValid}
+              invalidMessage={this.state.usernameInvalidMessage}
+              leftIconName="fa-user"
+              submit={this.submit}
+              rightIconName="fa-exclamation-triangle"
+              onChange={this.usernameOnChange}
+              value={this.state.username}
+            />
+          }
+
           <ValidationField
             disabled={this.state.loading}
             innerInputRef={this.emailRef}
             invalid={!this.state.emailValid}
             invalidMessage="Invalid email address"
             leftIconName="fa-envelope"
-            inputPlaceholder="Email"
+            label="Email"
             rightIconName="fa-exclamation-triangle"
             submit={this.submit}
             inputType="email"
@@ -92,7 +122,7 @@ export class LoginPrompt extends React.Component<Props, State> {
             invalid={!this.state.passwordValid}
             invalidMessage="Invalid password"
             leftIconName="fa-lock"
-            inputPlaceholder="Password"
+            label="Password"
             rightIconName="fa-exclamation-triangle"
             submit={this.submit}
             inputType="password"
@@ -110,7 +140,7 @@ export class LoginPrompt extends React.Component<Props, State> {
               invalid={!this.state.passwordsMatch}
               invalidMessage="Passwords must match"
               leftIconName="fa-lock"
-              inputPlaceholder="Confirm password"
+              label="Confirm password"
               rightIconName="fa-exclamation-triangle"
               submit={this.submit}
               inputType="password"
@@ -258,5 +288,13 @@ export class LoginPrompt extends React.Component<Props, State> {
       passwordConfirmation: passwordConfirmation,
       passwordsMatch: oldState.password === passwordConfirmation,
     }));
+  }
+
+  usernameOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const username = event.target.value;
+    // TODO validate username
+    this.setState({
+      username: username,
+    });
   }
 }
