@@ -277,7 +277,7 @@ export class LoginPrompt extends React.Component<Props, State> {
     this.setState((oldState) => ({
       password: password,
       passwordValid: validPassword(password),
-      passwordsMatch: password === oldState.passwordConfirmation,
+      passwordsMatch: this.props.mode === LoginDisplayMode.Login || password === oldState.passwordConfirmation,
       passwordStrength: strength,
     }));
   }
