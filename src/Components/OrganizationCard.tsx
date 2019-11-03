@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Organization } from '../Models/Organization';
+import { Link } from 'react-router-dom';
 
 interface Props {
   organization: Organization;
@@ -7,7 +8,6 @@ interface Props {
 
 export default class OrganizationCard extends React.Component<Props> {
   render() {
-    /* eslint-disable jsx-a11y/anchor-is-valid */
     return (<div className="organization-card">
       <div className="card">
         <div className="card-content">
@@ -17,21 +17,25 @@ export default class OrganizationCard extends React.Component<Props> {
           <p className="subtitle">
             {this.props.organization.description}
           </p>
+          {this.props.organization.projectCount &&
+            <p>
+              Projects: {this.props.organization.projectCount}
+            </p>
+          }
+          {this.props.organization.fileCount &&
+            <p>
+              Files: {this.props.organization.fileCount}
+            </p>
+          }
         </div>
         <footer className="card-footer">
           <p className="card-footer-item">
             <span>
-              View on <a href="https://twitter.com/codinghorror/status/506010907021828096">Twitter</a>
-            </span>
-          </p>
-          <p className="card-footer-item">
-            <span>
-              Share on <a href="#">Facebook</a>
+              <Link to={"/organizations/" + this.props.organization.organizationID}>View</Link>
             </span>
           </p>
         </footer>
       </div>
     </div>);
-    /* eslint-enable jsx-a11y/anchor-is-valid */
   }
 }

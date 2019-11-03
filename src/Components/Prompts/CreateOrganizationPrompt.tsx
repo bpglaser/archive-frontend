@@ -31,6 +31,10 @@ export default class CreateOrganizationPrompt extends React.Component<Props, Sta
 
   componentDidMount() {
     registerEscHandler(this.props.close);
+
+    if (this.nameRef.current) {
+      this.nameRef.current.focus();
+    }
   }
 
   componentWillUnmount() {

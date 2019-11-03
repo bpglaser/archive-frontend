@@ -16,7 +16,7 @@
 
 .organization-card {
     margin: 1em;
-    width: 300px;
+    max-width: 300px;
 }
 
 .organization-cards {

@@ -5,6 +5,7 @@ import CreateOrganizationPrompt from '../Components/Prompts/CreateOrganizationPr
 import { Backend } from '../Data/Backend';
 import { Organization } from '../Models/Organization';
 import Breadcrumb from '../Components/Breadcrumb';
+import { isAdmin } from '../Helpers';
 
 interface Props {
   backend: Backend;
@@ -63,24 +64,25 @@ export default class Organizations extends React.Component<Props, State> {
         </div>
       </div>
 
-      <div className="level">
-        <div className="level-left">
-          <div className="level-item">
-            <button className="button" onClick={this.showCreateOrganizationPrompt}>
+      {isAdmin(this.props.token) &&
+        <div className="level">
+          <div className="level-left">
+            <div className="level-item">
+              <button className="button" onClick={this.showCreateOrganizationPrompt}>
 
-              <span className="icon">
-                <i className="fas fa-plus"></i>
+                <span className="icon">
+                  <i className="fas fa-plus"></i>
+                </span>
+
+                <span>
+                  Create New Organization
               </span>
 
-              <span>
-                Create New Organization
-              </span>
-
-            </button>
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-
+      }
 
       {this.state.loading &&
         <Loader />

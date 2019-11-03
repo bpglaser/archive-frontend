@@ -4,6 +4,7 @@ import { readTokenPayload } from '../Helpers';
 import { Article } from '../Models/Article';
 import { Comment } from '../Models/Comment';
 import { File } from '../Models/File';
+import { Organization } from '../Models/Organization';
 import { Backend } from './Backend';
 import { MockBackend } from "./MockBackend";
 
@@ -190,9 +191,7 @@ export class URLBackend implements Backend {
     const config = createAuthorizationConfig(token);
 
     const response = await this.instance.get(url.toString(), config);
-    return response.data.map((entry: any) => {
-      return { organizationID: entry.OrgID, name: entry.Name, description: entry.Description };
-    });
+    return response.data.map(parseOrganizationEntry);
   }
 
   getOrganizationDetails = async (token: string, organizationID: number) => {
@@ -200,12 +199,7 @@ export class URLBackend implements Backend {
     const config = createAuthorizationConfig(token);
 
     const response = await this.instance.get(url.toString(), config);
-    const entry = response.data;
-    return {
-      organizationID: entry.OrgID,
-      name: entry.Name,
-      description: entry.Description
-    };
+    return parseOrganizationEntry(response.data);
   }
 
   createProject = async (token: string, organizationID: number, name: string, description: string) => {
@@ -398,6 +392,24 @@ export class URLBackend implements Backend {
     const result = await this.instance.get(url.toString(), config);
     return result.data;
   }
+}
+
+function parseOrganizationEntry(entry: any): Organization {
+  const result: Organization = {
+    organizationID: Number(entry.OrgID),
+    name: entry.Name,
+    description: entry.Description,
+  };
+
+  if (entry.ProjectCount) {
+    result.projectCount = Number(entry.ProjectCount);
+  }
+
+  if (entry.FileCount) {
+    result.fileCount = Number(entry.FileCount);
+  }
+
+  return result;
 }
 
 function parseCommentEntry(entry: any): Comment {
