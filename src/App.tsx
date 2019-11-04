@@ -23,11 +23,13 @@ import Organizations from './Routes/Organizations';
 import Primary from './Routes/Primary';
 import ProjectDetails from './Routes/ProjectDetails';
 import Settings from './Routes/Settings';
+import EasterEgg from './EasterEgg';
 
 const history = createHashHistory();
 
 interface State {
   backend: Backend;
+  easterEgg?: NodeJS.Timeout;
   errorMessages: string[];
   loggedInAs: User | null;
   loginDisplayMode: LoginDisplayMode | null;
@@ -61,10 +63,12 @@ export default class App extends React.Component<any, State> {
 
   async componentDidMount() {
     await this.populateRecentOrganizations();
+    const easterEgg = new EasterEgg(this.doEasterEgg);
+    document.addEventListener('keyup', easterEgg.handleKeyEvent)
   }
 
   render() {
-    return (<div className="container">
+    return (<div className={this.state.easterEgg ? "container easter-egg" : "container"}>
       <BrowserRouter>
         <Navbar
           loggedInAs={this.state.loggedInAs}
@@ -309,5 +313,29 @@ export default class App extends React.Component<any, State> {
     } else {
       return <Redirect to="/" />;
     }
+  }
+
+  doEasterEgg = () => {
+    if (this.state.easterEgg) {
+      return;
+    }
+
+    const timeout = setInterval(
+      () => {
+        this.setState((oldState) => {
+          if (oldState.easterEgg) {
+            clearInterval(oldState.easterEgg);
+          }
+          return {
+            easterEgg: undefined,
+          };
+        });
+      },
+      1000
+    );
+
+    this.setState({
+      easterEgg: timeout,
+    });
   }
 }

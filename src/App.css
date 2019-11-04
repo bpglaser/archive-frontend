@@ -2,6 +2,16 @@
     max-width: 30em;
 }
 
+.easter-egg {
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 .error-display {
     position: absolute;
     top: 0;
