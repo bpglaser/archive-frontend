@@ -12,6 +12,7 @@ export interface Backend {
   logout: (token: string) => Promise<void>;
   updatePassword: (token: string, oldPassword: string, newPassword: string) => Promise<void>;
   updateUsername: (token: string, username: string) => Promise<{ user: User, token: string }>;
+  getUserSuggestions: (token: string, search: string) => Promise<User[]>;
 
   invite: (token: string, key: string) => Promise<InviteDetails>;
   acceptInvite: (token: string, key: string) => Promise<void>;
@@ -23,7 +24,7 @@ export interface Backend {
   updateArticle: (token: string, article: Article, title: string, content: string) => Promise<Article>;
   deleteArticle: (token: string, articleID: number) => Promise<void>;
 
-  createOrganization: (token: string, name: string, description: string) => Promise<Organization>;
+  createOrganization: (token: string, name: string, description: string, admins: number[]) => Promise<Organization>;
   editOrganization: (token: string, organizationID: number, name: string, description: string) => Promise<Organization>;
   deleteOrganization: (token: string, organizationID: number) => Promise<void>;
   listOrganizations: (token: string) => Promise<Organization[]>;

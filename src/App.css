@@ -53,3 +53,27 @@
     overflow: hidden;
     outline: none;
 }
+
+
+/* https://github.com/jgthms/bulma/issues/936 */
+
+.modal.has-overflow {
+    position: fixed !important;
+    overflow: auto !important;
+}
+
+.modal.has-overflow .modal-background {
+    position: fixed !important;
+}
+
+.modal.has-overflow .modal-content {
+    overflow: visible !important;
+}
+
+.modal.has-overflow .modal-card {
+    overflow: visible !important;
+}
+
+.modal.has-overflow .modal-card-body {
+    overflow: visible !important;
+}

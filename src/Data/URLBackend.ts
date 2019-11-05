@@ -73,6 +73,10 @@ export class URLBackend implements Backend {
     return await this.mock.updateUsername(token, username);
   }
 
+  getUserSuggestions = async (token: string, search: string) => {
+    return await this.mock.getUserSuggestions(token, search);
+  }
+
   invite = async (token: string, key: string) => {
     return await this.mock.invite(token, key);
   }
@@ -156,9 +160,9 @@ export class URLBackend implements Backend {
     await this.instance.delete(url.toString(), config);
   }
 
-  createOrganization = async (token: string, name: string, description: string) => {
+  createOrganization = async (token: string, name: string, description: string, admins: number[]) => {
     const url = new URL('/api/organizations/create', this.base);
-    const data = { name: name, desc: description };
+    const data = { name: name, desc: description, adminsIDs: admins };
     const config = createAuthorizationConfig(token);
 
     const response = await this.instance.post(url.toString(), data, config);

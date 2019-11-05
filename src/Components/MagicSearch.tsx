@@ -4,6 +4,8 @@ import React from 'react';
 type Suggestions = { suggestion: string, select: () => void }[];
 
 interface Props {
+  errorMessage?: string;
+  inputPlaceholder?: string;
   suggestionProvider: (source: CancelTokenSource, search: string) => Suggestions | Promise<Suggestions>;
 }
 
@@ -34,7 +36,7 @@ export default class MagicSearch extends React.Component<Props, State> {
             <input
               className="input"
               onChange={this.searchInputOnChange}
-              placeholder="Search"
+              placeholder={this.props.inputPlaceholder ? this.props.inputPlaceholder : "Search"}
               value={this.state.search}
             />
 
@@ -47,11 +49,11 @@ export default class MagicSearch extends React.Component<Props, State> {
         </div>
       </div>
 
-      <div className="dropdown-menu" style={{ zIndex: 100 }}>
+      <div className="dropdown-menu" style={{ background: 'hsl(0, 0%, 96%)' }}>
         {
           this.state.suggestions.map(({ suggestion, select }, i) =>
             <div className="dropdown-content" key={i}>
-              <a className="dropdown-item" onClick={select}>{suggestion}</a>
+              <a className="dropdown-item" onClick={() => this.doSelection(select)}>{suggestion}</a>
             </div>
           )
         }
@@ -88,5 +90,13 @@ export default class MagicSearch extends React.Component<Props, State> {
         throw err;
       }
     }
+  }
+
+  doSelection = (select: () => void) => {
+    this.setState({
+      search: '',
+      suggestions: [],
+    });
+    select();
   }
 }

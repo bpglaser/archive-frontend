@@ -46,6 +46,11 @@ export class MockBackend implements Backend {
     return { user: { ...readTokenPayload(token), username: username }, token: token }
   }
 
+  getUserSuggestions = async (token: string, search: string) => {
+    await delay(this.sleepDuration);
+    return Array.from({ length: 5 }).map((_, i) => ({ email: search + ' ' + i, userID: 1 }));
+  }
+
   invite = async (token: string, key: string) => {
     await delay(this.sleepDuration);
     return {
@@ -92,7 +97,7 @@ export class MockBackend implements Backend {
     await delay(this.sleepDuration);
   }
 
-  createOrganization = async (token: string, name: string, description: string) => {
+  createOrganization = async (token: string, name: string, description: string, admins: number[]) => {
     await delay(this.sleepDuration);
     return { organizationID: 1, name: 'foobar', description: 'hello world' };
   }
