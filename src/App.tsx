@@ -9,6 +9,7 @@ import Navbar from './Components/Navbar';
 import { LoginDisplayMode, LoginPrompt } from './Components/Prompts/LoginPrompt';
 import { Backend } from './Data/Backend';
 import { URLBackend } from "./Data/URLBackend";
+import EasterEgg from './EasterEgg';
 import { readTokenPayload } from './Helpers';
 import { Organization } from './Models/Organization';
 import { User } from './Models/User';
@@ -23,7 +24,6 @@ import Organizations from './Routes/Organizations';
 import Primary from './Routes/Primary';
 import ProjectDetails from './Routes/ProjectDetails';
 import Settings from './Routes/Settings';
-import EasterEgg from './EasterEgg';
 
 const history = createHashHistory();
 
