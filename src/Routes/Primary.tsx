@@ -6,9 +6,11 @@ import RecentProjects from '../Components/RecentProjects';
 import { Backend } from '../Data/Backend';
 import { isAdmin } from '../Helpers';
 import Breadcrumb from '../Components/Breadcrumb';
+import PublicProjects from '../Components/PublicProjects';
 
 interface Props {
   backend: Backend;
+  displayError: (errorMessage: string) => void;
   token: string | null;
 }
 
@@ -32,11 +34,22 @@ export default class Primary extends React.Component<Props, State> {
           links={[]}
         />
 
-        <h1 className="title">Recent News</h1>
-        <RecentNews
-          backend={this.props.backend}
-          token={this.props.token}
-        />
+        <div className="columns">
+          <div className="column is-three-quarters">
+            <h1 className="title">Recent News</h1>
+            <RecentNews
+              backend={this.props.backend}
+              token={this.props.token}
+            />
+          </div>
+
+          <div className="column">
+            <h1 className="title">Public Projects</h1>
+            <PublicProjects
+              backend={this.props.backend}
+            />
+          </div>
+        </div>
       </div>);
     }
 

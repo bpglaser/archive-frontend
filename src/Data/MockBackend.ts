@@ -165,6 +165,16 @@ export class MockBackend implements Backend {
     ];
   }
 
+  getPublicProjects = async () => {
+    await delay(this.sleepDuration);
+    return [
+      { projectID: 1, organizationID: 11, name: 'MyProject1', description: 'Lorem ipsum description' },
+      { projectID: 2, organizationID: 12, name: 'MyProject2', description: 'Lorem ipsum description' },
+      { projectID: 3, organizationID: 13, name: 'MyProject3', description: 'Lorem ipsum description' },
+      { projectID: 4, organizationID: 14, name: 'MyProject4', description: 'Lorem ipsum description' },
+    ];
+  }
+
   getNearbyFiles = async (token: string, fileID: number) => {
     await delay(this.sleepDuration);
     return [

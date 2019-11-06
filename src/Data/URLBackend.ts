@@ -274,6 +274,10 @@ export class URLBackend implements Backend {
     });
   }
 
+  getPublicProjects = async () => {
+    return await this.mock.getPublicProjects();
+  }
+
   getNearbyFiles = async (token: string, fileID: number) => {
     const url = new URL('/api/files/list/nearby/' + fileID, this.base);
     const config = createAuthorizationConfig(token);

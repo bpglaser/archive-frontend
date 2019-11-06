@@ -82,6 +82,7 @@ export default class App extends React.Component<any, State> {
           <Route path="/" exact>
             <Primary
               backend={this.state.backend}
+              displayError={this.displayError}
               token={this.state.token}
             />
           </Route>
