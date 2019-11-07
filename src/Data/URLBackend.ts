@@ -162,7 +162,7 @@ export class URLBackend implements Backend {
 
   createOrganization = async (token: string, name: string, description: string, admins: number[]) => {
     const url = new URL('/api/organizations/create', this.base);
-    const data = { name: name, desc: description, adminsIDs: admins };
+    const data = { name: name, desc: description, adminIDs: admins };
     const config = createAuthorizationConfig(token);
 
     const response = await this.instance.post(url.toString(), data, config);
