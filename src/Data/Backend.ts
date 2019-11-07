@@ -34,14 +34,14 @@ export interface Backend {
   editProject: (token: string, projectID: number, organizationID: number, name: string, description: string) => Promise<Project>;
   deleteProject: (token: string, projectID: number) => Promise<void>;
   listProjects: (token: string, organizationID: number) => Promise<Project[]>;
-  getProjectDetails: (token: string, projectID: number) => Promise<Project>;
+  getProjectDetails: (token: string | null, projectID: number) => Promise<Project>;
   getRecentProjects: (token: string) => Promise<Project[]>;
   getPublicProjects: () => Promise<Project[]>;
 
   getNearbyFiles: (token: string, fileID: number) => Promise<{ distance: number, file: File }[]>;
   uploadFile: (token: string, projectID: number, formData: FormData) => Promise<File>;
   downloadFile: (token: string, fileID: number, extension?: string) => Promise<Blob>;
-  listFiles: (token: string, projID: number) => Promise<File[]>;
+  listFiles: (token: string | null, projID: number) => Promise<File[]>;
   getFileDetails: (token: string, fileID: number) => Promise<File>;
   updateFile: (token: string, file: File, name: string) => Promise<File>;
   deleteFile: (token: string, fileID: number) => Promise<void>;
@@ -51,7 +51,7 @@ export interface Backend {
   editComment: (token: string, commentID: number, content: string) => Promise<Comment>;
   deleteComment: (token: string, commentID: number) => Promise<void>;
 
-  getTags: (token: string, fileID: number) => Promise<string[]>;
+  getTags: (token: string | null, fileID: number) => Promise<string[]>;
   addTag: (token: string, fileID: number, tag: string) => Promise<void>;
   deleteTag: (token: string, fileID: number, tag: string) => Promise<void>;
 

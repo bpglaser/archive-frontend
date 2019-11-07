@@ -24,7 +24,7 @@ export default class ProjectPreviewCard extends React.Component<{ project: Proje
         <footer className="card-footer">
           <Link to={"/projects/" + projectID} className="card-footer-item">
             View
-      </Link>
+          </Link>
         </footer>
 
       </div>

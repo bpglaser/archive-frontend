@@ -89,13 +89,11 @@ export default class App extends React.Component<any, State> {
 
           <Route path="/projects/:id"
             render={(props) =>
-              this.requireAuthentication(
-                <ProjectDetails
-                  {...props}
-                  backend={this.state.backend}
-                  token={this.state.token!}
-                />
-              )
+              <ProjectDetails
+                {...props}
+                backend={this.state.backend}
+                token={this.state.token}
+              />
             }
           />
 

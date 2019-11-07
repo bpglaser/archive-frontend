@@ -245,9 +245,9 @@ export class URLBackend implements Backend {
     });
   }
 
-  getProjectDetails = async (token: string, projectID: number) => {
+  getProjectDetails = async (token: string | null, projectID: number) => {
     const url = new URL('/api/projects/details/' + projectID, this.base);
-    const config = createAuthorizationConfig(token);
+    const config = token ? createAuthorizationConfig(token) : {};
 
     const result = await this.instance.get(url.toString(), config);
     const entry = result.data;
@@ -307,9 +307,9 @@ export class URLBackend implements Backend {
     return new Blob([result.data]);
   }
 
-  listFiles = async (token: string, projectID: number) => {
+  listFiles = async (token: string | null, projectID: number) => {
     const url = new URL('/api/files/list/' + projectID, this.base);
-    const config = createAuthorizationConfig(token);
+    const config = token ? createAuthorizationConfig(token) : {};
 
     const result = await this.instance.get(url.toString(), config);
     return result.data.map(parseFileEntry);
@@ -373,9 +373,9 @@ export class URLBackend implements Backend {
     await this.instance.delete(url.toString(), config);
   }
 
-  getTags = async (token: string, fileID: number) => {
+  getTags = async (token: string | null, fileID: number) => {
     const url = new URL('/api/tags/' + fileID, this.base);
-    const config = createAuthorizationConfig(token);
+    const config = token ? createAuthorizationConfig(token) : {};
     const response = await this.instance.get(url.toString(), config);
     return response.data;
   }

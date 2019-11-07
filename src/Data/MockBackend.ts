@@ -150,7 +150,7 @@ export class MockBackend implements Backend {
     ];
   }
 
-  getProjectDetails = async (token: string, projectID: number) => {
+  getProjectDetails = async (token: string | null, projectID: number) => {
     await delay(this.sleepDuration);
     return { projectID: projectID, organizationID: 1, name: 'MyProject', description: 'Lorem ipsum description' };
   }
@@ -195,7 +195,7 @@ export class MockBackend implements Backend {
     return new Blob();
   }
 
-  listFiles = async (token: string, projID: number) => {
+  listFiles = async (token: string | null, projID: number) => {
     await delay(this.sleepDuration);
     return [
       { fileID: 1, name: 'foo.jpg' },
@@ -248,7 +248,7 @@ export class MockBackend implements Backend {
     await delay(this.sleepDuration);
   }
 
-  getTags = async (token: string, fileID: number) => {
+  getTags = async (token: string | null, fileID: number) => {
     await delay(this.sleepDuration);
     return ['foo', 'bar', 'bin', 'bazz'];
   }

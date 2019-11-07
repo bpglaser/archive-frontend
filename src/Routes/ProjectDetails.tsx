@@ -1,10 +1,11 @@
-import { NOT_FOUND } from 'http-status-codes';
+import { NOT_FOUND, UNAUTHORIZED } from 'http-status-codes';
 import React from 'react';
 import { Redirect, RouteComponentProps } from 'react-router';
 import { Link } from 'react-router-dom';
 import ReactTable, { Filter } from 'react-table';
 import 'react-table/react-table.css';
 import Breadcrumb from '../Components/Breadcrumb';
+import ErrorPage from '../Components/ErrorPage';
 import Loader from '../Components/Loader';
 import DeleteProjectPrompt from '../Components/Prompts/DeleteProjectPrompt';
 import ProjectSettingsPrompt from '../Components/Prompts/ProjectSettingsPrompt';
@@ -23,11 +24,12 @@ enum ProjectPrompt {
 
 interface Props extends RouteComponentProps<{ id: string }> {
   backend: Backend;
-  token: string;
+  token: string | null;
 }
 
 interface State {
-  files: File[],
+  errorMessage: string | null;
+  files: File[];
   loading: boolean;
   notFound: boolean;
   organization: Organization | null;
@@ -40,6 +42,7 @@ export default class ProjectDetails extends React.Component<Props, State> {
   constructor(props: any) {
     super(props)
     this.state = {
+      errorMessage: null,
       files: [],
       loading: true,
       notFound: false,
@@ -58,7 +61,7 @@ export default class ProjectDetails extends React.Component<Props, State> {
       });
 
       const project = await this.loadProject(this.props.token, projectID);
-      if (project) {
+      if (this.props.token && project) {
         await this.loadOrganization(this.props.token, project.organizationID);
       }
 
@@ -96,13 +99,26 @@ export default class ProjectDetails extends React.Component<Props, State> {
       return <NotFound />;
     }
 
+    if (this.state.errorMessage) {
+      return <ErrorPage errorMessage={this.state.errorMessage} />;
+    }
+
     return (<div>
-      <Breadcrumb
-        links={[
-          [this.state.organization!.name, "/organizations/" + this.state.organization!.organizationID],
-          [this.state.project!.name, "/projects/" + this.state.project!.projectID],
-        ]}
-      />
+      {
+        this.state.organization ?
+          <Breadcrumb
+            links={[
+              [this.state.organization!.name, "/organizations/" + this.state.organization!.organizationID],
+              [this.state.project!.name, "/projects/" + this.state.project!.projectID],
+            ]}
+          />
+          :
+          <Breadcrumb
+            links={[
+              [this.state.project!.name, "/projects/" + this.state.project!.projectID],
+            ]}
+          />
+      }
 
       <nav className="level">
         <div className="level-left">
@@ -111,25 +127,27 @@ export default class ProjectDetails extends React.Component<Props, State> {
           </h1>
         </div>
 
-        <div className="level-right">
-          <p className="level-item">
-            <button className="button" onClick={this.showUploadPrompt}>
-              <span className="icon">
-                <i className="fas fa-upload"></i>
+        {this.props.token &&
+          <div className="level-right">
+            <p className="level-item">
+              <button className="button" onClick={this.showUploadPrompt}>
+                <span className="icon">
+                  <i className="fas fa-upload"></i>
+                </span>
+                <span>
+                  Upload
               </span>
-              <span>
-                Upload
-              </span>
-            </button>
-          </p>
-          <p className="level-item">
-            <button className="button" onClick={this.showSettingsPrompt}>
-              <span className="icon">
-                <i className="fas fa-cog"></i>
-              </span>
-            </button>
-          </p>
-        </div>
+              </button>
+            </p>
+            <p className="level-item">
+              <button className="button" onClick={this.showSettingsPrompt}>
+                <span className="icon">
+                  <i className="fas fa-cog"></i>
+                </span>
+              </button>
+            </p>
+          </div>
+        }
       </nav>
 
       <p className="content">
@@ -151,7 +169,7 @@ export default class ProjectDetails extends React.Component<Props, State> {
         />
       </div>
 
-      {this.state.visiblePrompt === ProjectPrompt.Delete &&
+      {this.props.token && this.state.visiblePrompt === ProjectPrompt.Delete &&
         <DeleteProjectPrompt
           backend={this.props.backend}
           close={this.closePrompt}
@@ -162,7 +180,7 @@ export default class ProjectDetails extends React.Component<Props, State> {
         />
       }
 
-      {this.state.visiblePrompt === ProjectPrompt.Settings &&
+      {this.props.token && this.state.visiblePrompt === ProjectPrompt.Settings &&
         <ProjectSettingsPrompt
           backend={this.props.backend}
           close={this.closePrompt}
@@ -173,7 +191,7 @@ export default class ProjectDetails extends React.Component<Props, State> {
         />
       }
 
-      {this.state.visiblePrompt === ProjectPrompt.Upload &&
+      {this.props.token && this.state.visiblePrompt === ProjectPrompt.Upload &&
         <UploadFilePrompt
           backend={this.props.backend}
           close={this.closePrompt}
@@ -229,7 +247,7 @@ export default class ProjectDetails extends React.Component<Props, State> {
     });
   }
 
-  loadProject = async (token: string, projectID: number) => {
+  loadProject = async (token: string | null, projectID: number) => {
     try {
       const loadedProject = await this.props.backend.getProjectDetails(token, projectID);
       this.setState({
@@ -241,6 +259,10 @@ export default class ProjectDetails extends React.Component<Props, State> {
         if (err.response.status === NOT_FOUND) {
           this.setState({
             notFound: true,
+          });
+        } else if (err.response.status === UNAUTHORIZED) {
+          this.setState({
+            errorMessage: 'Unauthorized',
           });
         } else {
           // Unknown error code recieved
@@ -269,7 +291,7 @@ export default class ProjectDetails extends React.Component<Props, State> {
     }
   }
 
-  loadFiles = async (token: string, projectID: number) => {
+  loadFiles = async (token: string | null, projectID: number) => {
     try {
       const files = await this.props.backend.listFiles(token, projectID);
       this.setState({
@@ -283,7 +305,7 @@ export default class ProjectDetails extends React.Component<Props, State> {
     return null;
   }
 
-  loadTags = async (token: string, files: File[]) => {
+  loadTags = async (token: string | null, files: File[]) => {
     try {
       const fileTags = await Promise.all(
         files.map((file) => this.props.backend.getTags(token, file.fileID)));

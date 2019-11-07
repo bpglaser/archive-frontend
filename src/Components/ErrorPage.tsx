@@ -2,7 +2,7 @@ import React from 'react';
 
 interface Props {
   errorMessage: string;
-  retry: () => void;
+  retry?: () => void;
 }
 
 export default class ErrorPage extends React.Component<Props> {
@@ -12,14 +12,18 @@ export default class ErrorPage extends React.Component<Props> {
         <span className="icon is-large has-text-warning">
           <i className="fas fa-3x fa-exclamation-triangle"></i>
         </span>
+
         <h4 className="title is-4">
           {this.props.errorMessage}
         </h4>
-        <button className="button" onClick={this.props.retry}>
-          <span className="icon">
-            <i className="fas fa-redo"></i>
-          </span>
-        </button>
+
+        {this.props.retry &&
+          <button className="button" onClick={this.props.retry}>
+            <span className="icon">
+              <i className="fas fa-redo"></i>
+            </span>
+          </button>
+        }
       </div>
     </div>);
   }
