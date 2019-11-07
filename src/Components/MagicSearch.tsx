@@ -1,7 +1,7 @@
 import Axios, { CancelTokenSource } from 'axios';
 import React from 'react';
 
-type Suggestions = { suggestion: string, select: () => void }[];
+export type Suggestions = { suggestion: string, select: () => void }[];
 
 interface Props {
   errorMessage?: string;

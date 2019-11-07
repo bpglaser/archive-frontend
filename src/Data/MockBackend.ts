@@ -146,6 +146,10 @@ export class MockBackend implements Backend {
     await delay(this.sleepDuration);
   }
 
+  inviteUserToOrganization = async (token: string, organization: Organization, user: User) => {
+    await delay(this.sleepDuration);
+  }
+
   createProject = async (token: string, organizationID: number, name: string, description: string) => {
     await delay(this.sleepDuration);
     return { projectID: 123, organizationID: organizationID, name: name, description: description };

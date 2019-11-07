@@ -32,6 +32,7 @@ export interface Backend {
   getOrganizationUsers: (token: string, organization: Organization) => Promise<{ user: User, isAdmin: boolean }[]>;
   setOrganizationAdmin: (token: string, organization: Organization, user: User, isAdmin: boolean) => Promise<void>;
   kickUserFromOrganization: (token: string, organization: Organization, user: User) => Promise<void>;
+  inviteUserToOrganization: (token: string, organization: Organization, user: User) => Promise<void>;
 
   createProject: (token: string, organizationID: number, name: string, description: string) => Promise<Project>;
   editProject: (token: string, projectID: number, organizationID: number, name: string, description: string) => Promise<Project>;

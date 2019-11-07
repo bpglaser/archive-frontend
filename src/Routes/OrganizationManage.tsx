@@ -9,6 +9,8 @@ import ReactTable, { CellInfo } from 'react-table';
 import ToggleAdminButton from '../Components/ToggleAdminButton';
 import { User } from '../Models/User';
 import UserRemovePrompt from '../Components/Prompts/UserRemovePrompt';
+import MagicSearch, { Suggestions } from '../Components/MagicSearch';
+import { CancelTokenSource } from 'axios';
 
 interface Props extends RouteComponentProps<{ id: string }> {
   backend: Backend;
@@ -17,6 +19,8 @@ interface Props extends RouteComponentProps<{ id: string }> {
 }
 
 interface State {
+  addedMessageTimer: NodeJS.Timeout | null;
+  addedMessageVisible: boolean;
   errorMessage: string | null;
   loading: boolean;
   organization: Organization | null;
@@ -28,6 +32,8 @@ export default class OrganizationManage extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
+      addedMessageTimer: null,
+      addedMessageVisible: false,
       errorMessage: null,
       loading: true,
       organization: null,
@@ -76,6 +82,30 @@ export default class OrganizationManage extends React.Component<Props, State> {
           ["Manage", "/organizations/" + this.getID() + "/manage"]
         ]}
       />
+
+      <h3 className="title is-3">Manage {this.state.organization!.name}</h3>
+
+      <h4 className="title is-4">Add New User</h4>
+
+      <div className="columns is-vcentered">
+        <div className="column is-narrow">
+          <MagicSearch
+            suggestionProvider={this.userSuggestionProvider}
+          />
+        </div>
+
+        {this.state.addedMessageVisible &&
+          <div className="column">
+            <span className="help is-success">Invited!</span>
+          </div>
+        }
+      </div>
+
+
+      <br />
+      <br />
+
+      <h4 className="title is-4">Manage Existing Members</h4>
 
       <ReactTable
         columns={[
@@ -176,6 +206,50 @@ export default class OrganizationManage extends React.Component<Props, State> {
         users: newUsers,
       };
     });
+  }
+
+  userSuggestionProvider = async (source: CancelTokenSource, search: string): Promise<Suggestions> => {
+    try {
+      // TODO use cancel token
+      const suggestions = await this.props.backend.getUserSuggestions(this.props.token, search);
+      return suggestions.map((user) => ({
+        suggestion: user.email,
+        select: async () => await this.inviteUser(user),
+      }));
+    } catch (err) {
+      console.log(err);
+      this.props.displayError('Error encountered while looking up user suggestions.');
+      return [];
+    }
+  }
+
+  inviteUser = async (user: User) => {
+    try {
+      await this.props.backend.inviteUserToOrganization(this.props.token, this.state.organization!, user);
+
+      this.setState((oldState) => {
+        if (oldState.addedMessageTimer) {
+          clearTimeout(oldState.addedMessageTimer);
+        }
+
+        const addedMessageTimer = setTimeout(
+          () => {
+            this.setState({
+              addedMessageVisible: false,
+            });
+          },
+          2000
+        );
+
+        return {
+          addedMessageTimer: addedMessageTimer,
+          addedMessageVisible: true,
+        };
+      });
+    } catch (err) {
+      console.log(err);
+      this.props.displayError('Failed to invite user to organization.');
+    }
   }
 
   getID = () => {
