@@ -4,13 +4,12 @@ import Breadcrumb from '../Components/Breadcrumb';
 import ErrorPage from '../Components/ErrorPage';
 import Loader from '../Components/Loader';
 import ProjectPreviewCard from '../Components/ProjectPreviewCard';
+import CreateProjectPrompt from '../Components/Prompts/CreateProjectPrompt';
 import OrganizationDeletePrompt from '../Components/Prompts/OrganizationDeletePrompt';
 import OrganizationSettingsPrompt from '../Components/Prompts/OrganizationSettingsPrompt';
 import { Backend } from '../Data/Backend';
 import { Organization } from '../Models/Organization';
 import { Project } from '../Models/Project';
-import CreateProjectPrompt from '../Components/Prompts/CreateProjectPrompt';
-import { Link } from 'react-router-dom';
 
 enum VisiblePrompt {
   Create,
@@ -90,14 +89,13 @@ export default class OrganizationDetails extends React.Component<Props, State> {
       />
 
       <nav className="level">
-        <div className="level-left">
-        </div>
-
         <div className="level-item">
           <h1 className="title">{this.state.organization!.name}</h1>
         </div>
+      </nav>
 
-        <div className="level-right">
+      <nav className="level">
+        <div className="level-left">
           <p className="level-item">
             <button className="button" onClick={this.showCreatePrompt}>
               <span className="icon">
@@ -108,17 +106,15 @@ export default class OrganizationDetails extends React.Component<Props, State> {
               </span>
             </button>
           </p>
+        </div>
 
+        <div className="level-right">
           <p className="level-item">
             <button className="button" onClick={this.showSettingsPrompt}>
               <span className="icon">
                 <i className="fas fa-cog"></i>
               </span>
             </button>
-          </p>
-
-          <p className="level-item">
-            <Link to={"/organizations/" + this.props.match.params.id + "/manage"}>Manage</Link>
           </p>
         </div>
       </nav>

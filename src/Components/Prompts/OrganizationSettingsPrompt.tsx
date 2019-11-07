@@ -2,6 +2,7 @@ import React from 'react';
 import { Backend } from '../../Data/Backend';
 import { Organization } from '../../Models/Organization';
 import { registerEscHandler, unregisterEscHandler } from '../../Helpers';
+import { Redirect } from 'react-router';
 
 interface Props {
   backend: Backend;
@@ -15,6 +16,7 @@ interface Props {
 interface State {
   disabled: boolean;
   errorMessage: string | null;
+  redirect?: string;
 }
 
 export default class OrganizationSettingsPrompt extends React.Component<Props, State> {
@@ -40,6 +42,10 @@ export default class OrganizationSettingsPrompt extends React.Component<Props, S
   }
 
   render() {
+    if (this.state.redirect) {
+      return <Redirect to={this.state.redirect} />;
+    }
+
     return (<div className="modal is-active">
       <div className="modal-background" onClick={this.props.close}></div>
 
@@ -73,12 +79,21 @@ export default class OrganizationSettingsPrompt extends React.Component<Props, S
             </div>
           </div>
 
-          <button className="button is-danger" onClick={this.props.showDeletePrompt}>
-            <span className="icon">
-              <i className="fas fa-trash"></i>
-            </span>
-            <span>Delete Project</span>
-          </button>
+          <div className="buttons">
+            <button className="button" onClick={() => this.setState({ redirect: '/organizations/' + this.props.organization.organizationID + '/manage' })}>
+              <span className="icon">
+                <i className="fas fa-user"></i>
+              </span>
+              <span>Manage Users</span>
+            </button>
+
+            <button className="button is-danger" onClick={this.props.showDeletePrompt}>
+              <span className="icon">
+                <i className="fas fa-trash"></i>
+              </span>
+              <span>Delete Project</span>
+            </button>
+          </div>
         </section>
 
         <footer className="modal-card-foot">
