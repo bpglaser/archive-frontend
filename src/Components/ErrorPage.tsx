@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 interface Props {
   errorMessage: string;
@@ -24,6 +25,8 @@ export default class ErrorPage extends React.Component<Props> {
             </span>
           </button>
         }
+
+        <Link to="/">Go Home</Link>
       </div>
     </div>);
   }
