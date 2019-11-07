@@ -22,7 +22,7 @@ export class URLBackend implements Backend {
       this.instance.interceptors.response.use(
         (response) => response,
         (error) => {
-          if (error.response && error.response.status === UNAUTHORIZED) {
+          if (error.response && error.response.status === UNAUTHORIZED && error.response.data.message === 'token') {
             console.log('Caught UNAUTHORIZED return code. Logging out.')
             clientLogout();
           }
