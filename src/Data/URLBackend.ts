@@ -7,6 +7,7 @@ import { File } from '../Models/File';
 import { Organization } from '../Models/Organization';
 import { Backend } from './Backend';
 import { MockBackend } from "./MockBackend";
+import { User } from '../Models/User';
 
 export class URLBackend implements Backend {
   readonly base: string | undefined;
@@ -204,6 +205,18 @@ export class URLBackend implements Backend {
 
     const response = await this.instance.get(url.toString(), config);
     return parseOrganizationEntry(response.data);
+  }
+
+  getOrganizationUsers = async (token: string, organization: Organization) => {
+    return await this.mock.getOrganizationUsers(token, organization);
+  }
+
+  setOrganizationAdmin = async (token: string, organization: Organization, user: User, isAdmin: boolean) => {
+    await this.mock.setOrganizationAdmin(token, organization, user, isAdmin);
+  }
+
+  kickUserFromOrganization = async (token: string, organization: Organization, user: User) => {
+    await this.mock.kickUserFromOrganization(token, organization, user);
   }
 
   createProject = async (token: string, organizationID: number, name: string, description: string) => {

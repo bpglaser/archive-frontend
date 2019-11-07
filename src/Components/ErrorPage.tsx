@@ -19,14 +19,18 @@ export default class ErrorPage extends React.Component<Props> {
         </h4>
 
         {this.props.retry &&
-          <button className="button" onClick={this.props.retry}>
-            <span className="icon">
-              <i className="fas fa-redo"></i>
-            </span>
-          </button>
+          <p>
+            <button className="button" onClick={this.props.retry}>
+              <span className="icon">
+                <i className="fas fa-redo"></i>
+              </span>
+            </button>
+          </p>
         }
 
-        <Link to="/">Go Home</Link>
+        <p>
+          <Link to="/">Go Home</Link>
+        </p>
       </div>
     </div>);
   }

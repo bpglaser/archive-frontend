@@ -24,6 +24,7 @@ import Organizations from './Routes/Organizations';
 import Primary from './Routes/Primary';
 import ProjectDetails from './Routes/ProjectDetails';
 import Settings from './Routes/Settings';
+import OrganizationManage from './Routes/OrganizationManage';
 
 const history = createHashHistory();
 
@@ -107,6 +108,19 @@ export default class App extends React.Component<any, State> {
                   token={this.state.token!}
                   user={this.state.loggedInAs!}
                   updateLogin={this.loginCompleted}
+                />
+              )
+            }
+          />
+
+          <Route path="/organizations/:id/manage"
+            render={(props) =>
+              this.requireAuthentication(
+                <OrganizationManage
+                  {...props}
+                  backend={this.state.backend}
+                  displayError={this.displayError}
+                  token={this.state.token!}
                 />
               )
             }

@@ -3,6 +3,8 @@ import { readTokenPayload } from '../Helpers';
 import { Article } from '../Models/Article';
 import { File } from '../Models/File';
 import { Backend } from './Backend';
+import { Organization } from '../Models/Organization';
+import { User } from '../Models/User';
 
 export class MockBackend implements Backend {
   sleepDuration: number;
@@ -124,6 +126,24 @@ export class MockBackend implements Backend {
   getOrganizationDetails = async (token: string, organizationID: number) => {
     await delay(this.sleepDuration);
     return { organizationID: organizationID, name: 'foobar1', description: 'hello world' };
+  }
+
+  getOrganizationUsers = async (token: string, organization: Organization) => {
+    await delay(this.sleepDuration);
+    return [
+      { user: { userID: 1, email: 'foo0@gmail.com' }, isAdmin: true },
+      { user: { userID: 2, email: 'foo1@gmail.com' }, isAdmin: false },
+      { user: { userID: 3, email: 'foo2@gmail.com' }, isAdmin: false },
+      { user: { userID: 4, email: 'foo3@gmail.com' }, isAdmin: true },
+    ];
+  }
+
+  setOrganizationAdmin = async (token: string, organization: Organization, user: User, isAdmin: boolean) => {
+    await delay(this.sleepDuration);
+  }
+
+  kickUserFromOrganization = async (token: string, organization: Organization, user: User) => {
+    await delay(this.sleepDuration);
   }
 
   createProject = async (token: string, organizationID: number, name: string, description: string) => {

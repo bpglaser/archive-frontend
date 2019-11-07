@@ -10,6 +10,7 @@ import { Backend } from '../Data/Backend';
 import { Organization } from '../Models/Organization';
 import { Project } from '../Models/Project';
 import CreateProjectPrompt from '../Components/Prompts/CreateProjectPrompt';
+import { Link } from 'react-router-dom';
 
 enum VisiblePrompt {
   Create,
@@ -114,6 +115,10 @@ export default class OrganizationDetails extends React.Component<Props, State> {
                 <i className="fas fa-cog"></i>
               </span>
             </button>
+          </p>
+
+          <p className="level-item">
+            <Link to={"/organizations/" + this.props.match.params.id + "/manage"}>Manage</Link>
           </p>
         </div>
       </nav>
