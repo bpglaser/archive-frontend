@@ -72,11 +72,13 @@ export default class App extends React.Component<any, State> {
     return (<div className={this.state.easterEgg ? "container easter-egg" : "container"}>
       <BrowserRouter>
         <Navbar
+          backend={this.state.backend}
           loggedInAs={this.state.loggedInAs}
           registerClicked={this.registerClicked}
           logInClicked={this.showLoginPrompt}
           logOutClicked={this.logOutClicked}
           recentOrganizations={this.state.recentOrganizations}
+          token={this.state.token}
         />
 
         <Switch>

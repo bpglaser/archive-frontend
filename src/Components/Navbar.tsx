@@ -3,13 +3,17 @@ import { Link } from 'react-router-dom';
 import { Organization } from '../Models/Organization';
 import { User } from '../Models/User';
 import OrganizationNavbarItem from './OrganizationNavbarItem';
+import NotificationsBell from './NotificationsBell';
+import { Backend } from '../Data/Backend';
 
 interface Props {
+  backend: Backend;
   loggedInAs: User | null;
   registerClicked: () => void;
   logInClicked: () => void;
   logOutClicked: () => void;
   recentOrganizations: Organization[];
+  token: string | null;
 }
 
 interface State {
@@ -49,6 +53,15 @@ export default class Navbar extends React.Component<Props, State> {
         </div>
 
         <div className="navbar-end">
+          {this.props.token !== null &&
+            <div className="navbar-item">
+              <NotificationsBell
+                backend={this.props.backend}
+                token={this.props.token}
+              />
+            </div>
+          }
+
           {this.props.loggedInAs !== null &&
             <OrganizationNavbarItem
               recentOrganizations={this.props.recentOrganizations}

@@ -78,6 +78,10 @@ export class URLBackend implements Backend {
     return await this.mock.getUserSuggestions(token, search);
   }
 
+  getNotifications = async (token: string) => {
+    return await this.mock.getNotifications(token);
+  }
+
   invite = async (token: string, key: string) => {
     return await this.mock.invite(token, key);
   }

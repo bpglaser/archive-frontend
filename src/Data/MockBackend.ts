@@ -53,6 +53,16 @@ export class MockBackend implements Backend {
     return Array.from({ length: 5 }).map((_, i) => ({ email: search + ' ' + i, userID: 1 }));
   }
 
+  getNotifications = async (token: string) => {
+    await delay(this.sleepDuration);
+    return [
+      { content: { inviter: { userID: 1234, email: 'brad' }, organization: { organizationID: 1, name: 'New Org', description: '' } } },
+      { content: { inviter: { userID: 1234, email: 'brad' }, organization: { organizationID: 1, name: 'New Org', description: '' } } },
+      { content: { inviter: { userID: 1234, email: 'brad' }, organization: { organizationID: 1, name: 'New Org', description: '' } } },
+      { content: { inviter: { userID: 1234, email: 'brad' }, organization: { organizationID: 1, name: 'New Org', description: '' } } },
+    ];
+  }
+
   invite = async (token: string, key: string) => {
     await delay(this.sleepDuration);
     return {

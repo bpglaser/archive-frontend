@@ -5,6 +5,7 @@ import { Organization } from '../Models/Organization';
 import { Project } from '../Models/Project';
 import { User } from '../Models/User';
 import { Comment } from '../Models/Comment';
+import Notification from './Notification';
 
 export interface Backend {
   login: (email: string, password: string) => Promise<{ user: User, token: string }>;
@@ -13,6 +14,7 @@ export interface Backend {
   updatePassword: (token: string, oldPassword: string, newPassword: string) => Promise<void>;
   updateUsername: (token: string, username: string) => Promise<{ user: User, token: string }>;
   getUserSuggestions: (token: string, search: string) => Promise<User[]>;
+  getNotifications: (token: string) => Promise<Notification[]>;
 
   invite: (token: string, key: string) => Promise<InviteDetails>;
   acceptInvite: (token: string, key: string) => Promise<void>;
