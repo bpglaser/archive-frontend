@@ -5,9 +5,9 @@ import { Article } from '../Models/Article';
 import { Comment } from '../Models/Comment';
 import { File } from '../Models/File';
 import { Organization } from '../Models/Organization';
+import { User } from '../Models/User';
 import { Backend } from './Backend';
 import { MockBackend } from "./MockBackend";
-import { User } from '../Models/User';
 
 export class URLBackend implements Backend {
   readonly base: string | undefined;
@@ -78,8 +78,11 @@ export class URLBackend implements Backend {
     return await this.mock.getUserSuggestions(token, search);
   }
 
-  getNotifications = async (token: string) => {
-    return await this.mock.getNotifications(token);
+  getInvites = async (token: string) => {
+    const url = new URL('/api/invites', this.base);
+    const config = createAuthorizationConfig(token);
+    const result = await this.instance.get(url.toString(), config);
+    return result.data.invites;
   }
 
   invite = async (token: string, key: string) => {

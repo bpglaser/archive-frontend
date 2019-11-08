@@ -1,14 +1,14 @@
 import React from 'react';
-import Notification from '../Data/Notification';
+import { Invite } from '../Models/Invite';
 
 interface Props {
-  notification: Notification;
+  invite: Invite;
 }
 
 interface State {
 }
 
-export default class NotificationDisplay extends React.Component<Props, State> {
+export default class InviteDisplay extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -17,7 +17,7 @@ export default class NotificationDisplay extends React.Component<Props, State> {
 
   render() {
     /* eslint-disable jsx-a11y/anchor-is-valid */
-    const { inviter, organization } = this.props.notification.content;
+    const { inviter, organization } = this.props.invite;
 
     return (<div className="dropdown-item">
       <p>

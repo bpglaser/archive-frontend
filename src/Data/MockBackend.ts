@@ -53,13 +53,14 @@ export class MockBackend implements Backend {
     return Array.from({ length: 5 }).map((_, i) => ({ email: search + ' ' + i, userID: 1 }));
   }
 
-  getNotifications = async (token: string) => {
+  getInvites = async (token: string) => {
     await delay(this.sleepDuration);
     return [
-      { content: { inviter: { userID: 1234, email: 'brad' }, organization: { organizationID: 1, name: 'New Org', description: '' } } },
-      { content: { inviter: { userID: 1234, email: 'brad' }, organization: { organizationID: 1, name: 'New Org', description: '' } } },
-      { content: { inviter: { userID: 1234, email: 'brad' }, organization: { organizationID: 1, name: 'New Org', description: '' } } },
-      { content: { inviter: { userID: 1234, email: 'brad' }, organization: { organizationID: 1, name: 'New Org', description: '' } } },
+      { inviteID: 1, inviter: { userID: 123, email: 'foo@bar.com', username: 'foo' }, organization: { organizationID: 456, name: 'My org', description: 'hello world' } },
+      { inviteID: 1, inviter: { userID: 123, email: 'foo@bar.com', username: 'foo' }, organization: { organizationID: 456, name: 'My org', description: 'hello world' } },
+      { inviteID: 1, inviter: { userID: 123, email: 'foo@bar.com', username: 'foo' }, organization: { organizationID: 456, name: 'My org', description: 'hello world' } },
+      { inviteID: 1, inviter: { userID: 123, email: 'foo@bar.com', username: 'foo' }, organization: { organizationID: 456, name: 'My org', description: 'hello world' } },
+      { inviteID: 1, inviter: { userID: 123, email: 'foo@bar.com', username: 'foo' }, organization: { organizationID: 456, name: 'My org', description: 'hello world' } },
     ];
   }
 

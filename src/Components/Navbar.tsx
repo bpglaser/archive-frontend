@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Organization } from '../Models/Organization';
 import { User } from '../Models/User';
 import OrganizationNavbarItem from './OrganizationNavbarItem';
-import NotificationsBell from './NotificationsBell';
+import InviteBell from './InviteBell';
 import { Backend } from '../Data/Backend';
 
 interface Props {
@@ -55,7 +55,7 @@ export default class Navbar extends React.Component<Props, State> {
         <div className="navbar-end">
           {this.props.token !== null &&
             <div className="navbar-item">
-              <NotificationsBell
+              <InviteBell
                 backend={this.props.backend}
                 token={this.props.token}
               />

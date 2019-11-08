@@ -1,7 +1,7 @@
 import React from 'react';
 import { Backend } from '../Data/Backend';
-import Notification from '../Data/Notification';
-import NotificationDisplay from './NotificationDisplay';
+import InviteDisplay from './InviteDisplay';
+import { Invite } from '../Models/Invite';
 
 interface Props {
   backend: Backend;
@@ -9,22 +9,22 @@ interface Props {
 }
 
 interface State {
-  notifications: Notification[];
+  invites: Invite[];
   updateTimer?: NodeJS.Timeout;
 }
 
-export default class NotificationsBell extends React.Component<Props, State> {
+export default class InviteBell extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      notifications: [],
+      invites: [],
     };
   }
 
   componentDidMount = async () => {
-    await this.loadNotifications();
+    await this.loadInvites();
 
-    const timeout = setInterval(this.loadNotifications, 15 * 1000);
+    const timeout = setInterval(this.loadInvites, 15 * 1000);
     this.setState({
       updateTimer: timeout,
     });
@@ -37,7 +37,7 @@ export default class NotificationsBell extends React.Component<Props, State> {
   }
 
   render = () => {
-    if (this.state.notifications.length === 0) {
+    if (this.state.invites.length === 0) {
       return null;
     }
 
@@ -51,19 +51,19 @@ export default class NotificationsBell extends React.Component<Props, State> {
       <div className="dropdown-menu">
         <div className="dropdown-content">
           {
-            this.state.notifications.map((notification, i) =>
-              <NotificationDisplay notification={notification} key={i} />)
+            this.state.invites.map((invite, i) =>
+              <InviteDisplay invite={invite} key={i} />)
           }
         </div>
       </div>
     </div>);
   }
 
-  loadNotifications = async () => {
+  loadInvites = async () => {
     try {
-      const notifications = await this.props.backend.getNotifications(this.props.token);
+      const invites = await this.props.backend.getInvites(this.props.token);
       this.setState({
-        notifications: notifications,
+        invites: invites,
       });
     } catch (err) {
       console.log(err);
