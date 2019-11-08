@@ -5,6 +5,7 @@ import { File } from '../Models/File';
 import { Backend } from './Backend';
 import { Organization } from '../Models/Organization';
 import { User } from '../Models/User';
+import { Invite } from '../Models/Invite';
 
 export class MockBackend implements Backend {
   sleepDuration: number;
@@ -72,11 +73,11 @@ export class MockBackend implements Backend {
     };
   }
 
-  acceptInvite = async (token: string, key: string) => {
+  acceptInvite = async (token: string, invite: Invite) => {
     await delay(this.sleepDuration);
   }
 
-  declineInvite = async (token: string, key: string) => {
+  declineInvite = async (token: string, invite: Invite) => {
     await delay(this.sleepDuration);
   }
 

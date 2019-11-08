@@ -17,7 +17,6 @@ import ArticleDetails from './Routes/ArticleDetails';
 import CreateArticle from './Routes/CreateArticle';
 import EditArticle from './Routes/EditArticle';
 import FileDetails from './Routes/FileDetails';
-import Invite from './Routes/Invite';
 import NotFound from './Routes/NotFound';
 import OrganizationDetails from './Routes/OrganizationDetails';
 import Organizations from './Routes/Organizations';
@@ -73,6 +72,7 @@ export default class App extends React.Component<any, State> {
       <BrowserRouter>
         <Navbar
           backend={this.state.backend}
+          displayError={this.displayError}
           loggedInAs={this.state.loggedInAs}
           registerClicked={this.registerClicked}
           logInClicked={this.showLoginPrompt}
@@ -144,18 +144,6 @@ export default class App extends React.Component<any, State> {
             render={(props) =>
               this.requireAuthentication(
                 <Organizations
-                  backend={this.state.backend}
-                  token={this.state.token!}
-                />
-              )
-            }
-          />
-
-          <Route path="/invite" exact
-            render={(props) =>
-              this.requireAuthentication(
-                <Invite
-                  {...props}
                   backend={this.state.backend}
                   token={this.state.token!}
                 />

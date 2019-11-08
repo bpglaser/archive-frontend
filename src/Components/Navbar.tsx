@@ -8,6 +8,7 @@ import { Backend } from '../Data/Backend';
 
 interface Props {
   backend: Backend;
+  displayError: (errorMessage: string) => void;
   loggedInAs: User | null;
   registerClicked: () => void;
   logInClicked: () => void;
@@ -57,6 +58,7 @@ export default class Navbar extends React.Component<Props, State> {
             <div className="navbar-item">
               <InviteBell
                 backend={this.props.backend}
+                displayError={this.props.displayError}
                 token={this.props.token}
               />
             </div>

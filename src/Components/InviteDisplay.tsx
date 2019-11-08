@@ -1,8 +1,14 @@
 import React from 'react';
 import { Invite } from '../Models/Invite';
+import { Backend } from '../Data/Backend';
 
 interface Props {
+  backend: Backend;
+  clearInvite: (invite: Invite) => void;
+  displayError: (errorMessage: string) => void;
   invite: Invite;
+  reloadInvites: () => void;
+  token: string;
 }
 
 interface State {
@@ -31,11 +37,25 @@ export default class InviteDisplay extends React.Component<Props, State> {
   }
 
   accept = async () => {
-    // TODO impl
+    try {
+      await this.props.backend.acceptInvite(this.props.token, this.props.invite);
+      this.props.clearInvite(this.props.invite);
+    } catch (err) {
+      console.log(err);
+      this.props.displayError('Error encountered while accepting invite.');
+      this.props.reloadInvites();
+    }
   }
 
   decline = async () => {
-    // TODO impl
+    try {
+      await this.props.backend.declineInvite(this.props.token, this.props.invite);
+      this.props.clearInvite(this.props.invite);
+    } catch (err) {
+      console.log(err);
+      this.props.displayError('Error encountered while declining invite.');
+      this.props.reloadInvites();
+    }
   }
 }
 

@@ -8,6 +8,7 @@ import { Organization } from '../Models/Organization';
 import { User } from '../Models/User';
 import { Backend } from './Backend';
 import { MockBackend } from "./MockBackend";
+import { Invite } from '../Models/Invite';
 
 export class URLBackend implements Backend {
   readonly base: string | undefined;
@@ -85,16 +86,12 @@ export class URLBackend implements Backend {
     return result.data.invites;
   }
 
-  invite = async (token: string, key: string) => {
-    return await this.mock.invite(token, key);
+  acceptInvite = async (token: string, invite: Invite) => {
+    await this.mock.acceptInvite(token, invite);
   }
 
-  acceptInvite = async (token: string, key: string) => {
-    await this.mock.acceptInvite(token, key);
-  }
-
-  declineInvite = async (token: string, key: string) => {
-    await this.mock.declineInvite(token, key);
+  declineInvite = async (token: string, invite: Invite) => {
+    await this.mock.declineInvite(token, invite);
   }
 
   getArticles = async () => {

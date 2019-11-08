@@ -5,6 +5,7 @@ import { Invite } from '../Models/Invite';
 
 interface Props {
   backend: Backend;
+  displayError: (errorMessage: string) => void;
   token: string;
 }
 
@@ -52,7 +53,16 @@ export default class InviteBell extends React.Component<Props, State> {
         <div className="dropdown-content">
           {
             this.state.invites.map((invite, i) =>
-              <InviteDisplay invite={invite} key={i} />)
+              <InviteDisplay
+                backend={this.props.backend}
+                clearInvite={this.removeInvite}
+                displayError={this.props.displayError}
+                invite={invite}
+                key={i}
+                reloadInvites={this.loadInvites}
+                token={this.props.token}
+              />
+            )
           }
         </div>
       </div>
@@ -68,6 +78,12 @@ export default class InviteBell extends React.Component<Props, State> {
     } catch (err) {
       console.log(err);
     }
+  }
+
+  removeInvite = (inviteToRemove: Invite) => {
+    this.setState((oldState) => ({
+      invites: oldState.invites.filter((oldInvite) => oldInvite.inviteID !== inviteToRemove.inviteID),
+    }));
   }
 }
 
