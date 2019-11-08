@@ -76,7 +76,14 @@ export class URLBackend implements Backend {
   }
 
   getUserSuggestions = async (token: string, search: string) => {
-    return await this.mock.getUserSuggestions(token, search);
+    if (search.trim() === '') {
+      return [];
+    }
+
+    const url = new URL('/api/users/search?query=' + search, this.base);
+    const config = createAuthorizationConfig(token);
+    const result = await this.instance.get(url.toString(), config);
+    return result.data.map(parseUserEntry);
   }
 
   getInvites = async (token: string) => {
@@ -486,6 +493,15 @@ function parseNearby(entry: any): { distance: number, file: File } {
   return {
     distance: Number(entry.distance),
     file: parseFileEntry(entry.file)
+  };
+}
+
+function parseUserEntry(entry: any): User {
+  return {
+    userID: Number(entry.UserID),
+    email: entry.Email,
+    admin: entry.Admin,
+    username: entry.Username,
   };
 }
 
