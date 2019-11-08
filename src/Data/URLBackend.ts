@@ -87,11 +87,15 @@ export class URLBackend implements Backend {
   }
 
   acceptInvite = async (token: string, invite: Invite) => {
-    await this.mock.acceptInvite(token, invite);
+    const url = new URL('/api/invites/accept/' + invite.inviteID, this.base);
+    const config = createAuthorizationConfig(token);
+    await this.instance.post(url.toString(), {}, config);
   }
 
   declineInvite = async (token: string, invite: Invite) => {
-    await this.mock.declineInvite(token, invite);
+    const url = new URL('/api/invites/decline/' + invite.inviteID, this.base);
+    const config = createAuthorizationConfig(token);
+    await this.instance.delete(url.toString(), config);
   }
 
   getArticles = async () => {
@@ -224,7 +228,10 @@ export class URLBackend implements Backend {
   }
 
   inviteUserToOrganization = async (token: string, organization: Organization, user: User) => {
-    await this.mock.inviteUserToOrganization(token, organization, user);
+    const url = new URL('/api/invites/' + organization.organizationID, this.base);
+    const data = { invitee: user.userID };
+    const config = createAuthorizationConfig(token);
+    await this.instance.post(url.toString(), data, config);
   }
 
   createProject = async (token: string, organizationID: number, name: string, description: string) => {
