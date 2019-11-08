@@ -6,6 +6,7 @@ import { Backend } from './Backend';
 import { Organization } from '../Models/Organization';
 import { User } from '../Models/User';
 import { Invite } from '../Models/Invite';
+import { CancelTokenSource } from 'axios';
 
 export class MockBackend implements Backend {
   sleepDuration: number;
@@ -49,7 +50,7 @@ export class MockBackend implements Backend {
     return { user: { ...readTokenPayload(token), username: username }, token: token }
   }
 
-  getUserSuggestions = async (token: string, search: string) => {
+  getUserSuggestions = async (token: string, search: string, tokenSource: CancelTokenSource) => {
     await delay(this.sleepDuration);
     return Array.from({ length: 5 }).map((_, i) => ({ email: search + ' ' + i, userID: 1 }));
   }

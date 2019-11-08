@@ -5,6 +5,7 @@ import { Invite } from '../Models/Invite';
 import { Organization } from '../Models/Organization';
 import { Project } from '../Models/Project';
 import { User } from '../Models/User';
+import { CancelTokenSource } from 'axios';
 
 export interface Backend {
   login: (email: string, password: string) => Promise<{ user: User, token: string }>;
@@ -12,7 +13,7 @@ export interface Backend {
   logout: (token: string) => Promise<void>;
   updatePassword: (token: string, oldPassword: string, newPassword: string) => Promise<void>;
   updateUsername: (token: string, username: string) => Promise<{ user: User, token: string }>;
-  getUserSuggestions: (token: string, search: string) => Promise<User[]>;
+  getUserSuggestions: (token: string, search: string, tokenSource: CancelTokenSource) => Promise<User[]>;
 
   getInvites: (token: string) => Promise<Invite[]>;
   acceptInvite: (token: string, invite: Invite) => Promise<void>;

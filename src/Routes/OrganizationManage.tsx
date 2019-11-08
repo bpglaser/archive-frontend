@@ -10,7 +10,7 @@ import ToggleAdminButton from '../Components/ToggleAdminButton';
 import { User } from '../Models/User';
 import UserRemovePrompt from '../Components/Prompts/UserRemovePrompt';
 import MagicSearch, { Suggestions } from '../Components/MagicSearch';
-import { CancelTokenSource } from 'axios';
+import Axios, { CancelTokenSource } from 'axios';
 
 interface Props extends RouteComponentProps<{ id: string }> {
   backend: Backend;
@@ -210,15 +210,16 @@ export default class OrganizationManage extends React.Component<Props, State> {
 
   userSuggestionProvider = async (source: CancelTokenSource, search: string): Promise<Suggestions> => {
     try {
-      // TODO use cancel token
-      const suggestions = await this.props.backend.getUserSuggestions(this.props.token, search);
+      const suggestions = await this.props.backend.getUserSuggestions(this.props.token, search, source);
       return suggestions.map((user) => ({
         suggestion: user.email,
         select: async () => await this.inviteUser(user),
       }));
     } catch (err) {
-      console.log(err);
-      this.props.displayError('Error encountered while looking up user suggestions.');
+      if (!Axios.isCancel(err)) {
+        console.log(err);
+        this.props.displayError('Error encountered while looking up user suggestions.');
+      }
       return [];
     }
   }

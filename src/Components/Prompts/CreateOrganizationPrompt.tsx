@@ -1,4 +1,4 @@
-import { CancelTokenSource } from 'axios';
+import Axios, { CancelTokenSource } from 'axios';
 import React from 'react';
 import { Backend } from '../../Data/Backend';
 import { readTokenPayload, registerEscHandler, unregisterEscHandler } from '../../Helpers';
@@ -172,13 +172,15 @@ export default class CreateOrganizationPrompt extends React.Component<Props, Sta
     }
 
     try {
-      return (await this.props.backend.getUserSuggestions(this.props.token, search))
+      return (await this.props.backend.getUserSuggestions(this.props.token, search, source))
         .map((user) => ({ suggestion: user.email, select: () => this.addAdmin(user) }));
     } catch (err) {
-      console.log(err);
-      this.setState({
-        magicSearchErrorMessage: 'Error loading users from server.',
-      });
+      if (!Axios.isCancel(err)) {
+        console.log(err);
+        this.setState({
+          magicSearchErrorMessage: 'Error loading users from server.',
+        });
+      }
       return [];
     }
   }

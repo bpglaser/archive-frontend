@@ -1,4 +1,4 @@
-import Axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
+import Axios, { AxiosInstance, AxiosRequestConfig, CancelTokenSource } from 'axios';
 import { UNAUTHORIZED } from 'http-status-codes';
 import { readTokenPayload } from '../Helpers';
 import { Article } from '../Models/Article';
@@ -75,13 +75,14 @@ export class URLBackend implements Backend {
     return await this.mock.updateUsername(token, username);
   }
 
-  getUserSuggestions = async (token: string, search: string) => {
+  getUserSuggestions = async (token: string, search: string, tokenSource: CancelTokenSource) => {
     if (search.trim() === '') {
       return [];
     }
 
     const url = new URL('/api/users/search?query=' + search, this.base);
     const config = createAuthorizationConfig(token);
+    config.cancelToken = tokenSource.token;
     const result = await this.instance.get(url.toString(), config);
     return result.data.map(parseUserEntry);
   }
