@@ -1,11 +1,13 @@
 import * as React from 'react';
+import { Redirect } from 'react-router';
+import Breadcrumb from '../Components/Breadcrumb';
+import ErrorPage from '../Components/ErrorPage';
 import Loader from '../Components/Loader';
 import OrganizationCard from '../Components/OrganizationCard';
 import CreateOrganizationPrompt from '../Components/Prompts/CreateOrganizationPrompt';
 import { Backend } from '../Data/Backend';
-import { Organization } from '../Models/Organization';
-import Breadcrumb from '../Components/Breadcrumb';
 import { isAdmin } from '../Helpers';
+import { Organization } from '../Models/Organization';
 
 interface Props {
   backend: Backend;
@@ -17,6 +19,7 @@ interface State {
   errorMessage: string | null;
   loading: boolean;
   organizations: Organization[];
+  redirect: string | null;
 }
 
 export default class Organizations extends React.Component<Props, State> {
@@ -27,30 +30,37 @@ export default class Organizations extends React.Component<Props, State> {
       errorMessage: null,
       loading: false,
       organizations: [],
+      redirect: null,
     };
   }
 
-  async componentDidMount() {
-    try {
-      this.setState({
-        loading: true,
-      });
+  componentDidMount = async () => {
+    this.setState({
+      errorMessage: null,
+      loading: true,
+      organizations: [],
+    });
 
-      const organizations = await this.props.backend.listOrganizations(this.props.token);
+    await this.loadOrganizations();
 
-      this.setState({
-        organizations: organizations,
-        loading: false,
-      });
-    } catch (err) {
-      this.setState({
-        errorMessage: 'Error loading organizations',
-        loading: false,
-      });
-    }
+    this.setState({
+      loading: false,
+    });
   }
 
   render() {
+    if (this.state.redirect) {
+      return <Redirect to={this.state.redirect} />;
+    }
+
+    if (this.state.loading) {
+      return <Loader />;
+    }
+
+    if (this.state.errorMessage) {
+      return <ErrorPage errorMessage={this.state.errorMessage} retry={this.componentDidMount} />;
+    }
+
     return (<div>
       <Breadcrumb
         links={[
@@ -84,13 +94,7 @@ export default class Organizations extends React.Component<Props, State> {
         </div>
       }
 
-      {this.state.loading &&
-        <Loader />
-      }
-
-      {!this.state.loading &&
-        this.renderOrganizations()
-      }
+      {this.renderOrganizations()}
 
       {this.state.createOrganizationPromptVisible &&
         <CreateOrganizationPrompt
@@ -127,8 +131,23 @@ export default class Organizations extends React.Component<Props, State> {
     });
   }
 
-  newOrganizationCreated = () => {
-    // TODO handle reloading data or redirect
+  newOrganizationCreated = (organization: Organization) => {
     this.hideCreateOrganizationPrompt();
+    this.setState({
+      redirect: '/organizations/' + organization.organizationID,
+    });
+  }
+
+  loadOrganizations = async () => {
+    try {
+      const organizations = await this.props.backend.listOrganizations(this.props.token);
+      this.setState({
+        organizations: organizations,
+      });
+    } catch (err) {
+      this.setState({
+        errorMessage: 'Error encountered while loading organizations.',
+      });
+    }
   }
 }
