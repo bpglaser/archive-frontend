@@ -252,7 +252,10 @@ export class URLBackend implements Backend {
   }
 
   kickUserFromOrganization = async (token: string, organization: Organization, user: User) => {
-    await this.mock.kickUserFromOrganization(token, organization, user);
+    const url = new URL('/api/organizations/kick/' + organization.organizationID, this.base);
+    const data = { userID: user.userID };
+    const config = createAuthorizationConfig(token);
+    await this.instance.post(url.toString(), data, config);
   }
 
   inviteUserToOrganization = async (token: string, organization: Organization, user: User) => {
