@@ -245,7 +245,7 @@ export default class OrganizationManage extends React.Component<Props, State> {
 
   inviteUser = async (user: User) => {
     try {
-      await this.props.backend.inviteUserToOrganization(this.props.token, this.state.organization!, user);
+      const invite = await this.props.backend.inviteUserToOrganization(this.props.token, this.state.organization!, user);
 
       this.setState((oldState) => {
         if (oldState.addedMessageTimer) {
@@ -264,6 +264,7 @@ export default class OrganizationManage extends React.Component<Props, State> {
         return {
           addedMessageTimer: addedMessageTimer,
           addedMessageVisible: true,
+          pendingInvites: [...oldState.pendingInvites, invite],
         };
       });
     } catch (err) {

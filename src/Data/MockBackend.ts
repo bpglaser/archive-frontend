@@ -168,6 +168,7 @@ export class MockBackend implements Backend {
 
   inviteUserToOrganization = async (token: string, organization: Organization, user: User) => {
     await delay(this.sleepDuration);
+    return { inviteID: 1, inviter: readTokenPayload(token), invitee: { userID: 1, email: 'brad1@foo.com' }, organization: organization };
   }
 
   createProject = async (token: string, organizationID: number, name: string, description: string) => {
