@@ -245,7 +245,10 @@ export class URLBackend implements Backend {
   }
 
   setOrganizationAdmin = async (token: string, organization: Organization, user: User, isAdmin: boolean) => {
-    await this.mock.setOrganizationAdmin(token, organization, user, isAdmin);
+    const url = new URL('/api/organizations/admin/' + organization.organizationID, this.base);
+    const data = { userID: user.userID, isAdmin: isAdmin };
+    const config = createAuthorizationConfig(token);
+    await this.instance.post(url.toString(), data, config);
   }
 
   kickUserFromOrganization = async (token: string, organization: Organization, user: User) => {
