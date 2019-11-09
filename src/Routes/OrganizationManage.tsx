@@ -13,6 +13,7 @@ import MagicSearch, { Suggestions } from '../Components/MagicSearch';
 import Axios, { CancelTokenSource } from 'axios';
 import { Invite } from '../Models/Invite';
 import PendingInvitationsDisplay from '../Components/PendingInvitationsDisplay';
+import { readTokenPayload } from '../Helpers';
 
 interface Props extends RouteComponentProps<{ id: string }> {
   backend: Backend;
@@ -168,8 +169,9 @@ export default class OrganizationManage extends React.Component<Props, State> {
   loadUsers = async (organization: Organization) => {
     try {
       const users = await this.props.backend.getOrganizationUsers(this.props.token, organization);
+      const loggedInUser = readTokenPayload(this.props.token);
       this.setState({
-        users: users,
+        users: users.filter(({ user }) => user.userID !== loggedInUser.userID),
       });
     } catch (err) {
       console.log(err);
