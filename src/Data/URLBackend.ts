@@ -238,7 +238,10 @@ export class URLBackend implements Backend {
   }
 
   getOrganizationUsers = async (token: string, organization: Organization) => {
-    return await this.mock.getOrganizationUsers(token, organization);
+    const url = new URL('/api/organizations/users/' + organization.organizationID, this.base);
+    const config = createAuthorizationConfig(token);
+    const result = await this.instance.get(url.toString(), config);
+    return result.data;
   }
 
   setOrganizationAdmin = async (token: string, organization: Organization, user: User, isAdmin: boolean) => {
