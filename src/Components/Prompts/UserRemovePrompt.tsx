@@ -77,12 +77,9 @@ export default class UserRemovePrompt extends React.Component<Props, State> {
       this.props.success(this.props.user);
     } catch (err) {
       this.setState({
+        disabled: false,
         errorMessage: 'Failed to delete article.',
       });
     }
-
-    this.setState({
-      disabled: false,
-    });
   }
 }

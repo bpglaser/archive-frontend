@@ -9,7 +9,7 @@ import { CancelTokenSource } from 'axios';
 
 export interface Backend {
   login: (email: string, password: string) => Promise<{ user: User, token: string }>;
-  register: (email: string, password: string) => Promise<{ user: User, token: string }>;
+  register: (email: string, password: string, username: string) => Promise<{ user: User, token: string }>;
   logout: (token: string) => Promise<void>;
   updatePassword: (token: string, oldPassword: string, newPassword: string) => Promise<void>;
   updateUsername: (token: string, username: string) => Promise<{ user: User, token: string }>;

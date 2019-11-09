@@ -226,6 +226,7 @@ export class LoginPrompt extends React.Component<Props, State> {
   register = async () => {
     const email = this.state.email;
     const password = this.state.password;
+    const username = this.state.username;
 
     if (this.validateFields()) {
       this.setState({
@@ -233,7 +234,7 @@ export class LoginPrompt extends React.Component<Props, State> {
       });
 
       try {
-        const { user, token } = await this.props.backend.register(email, password);
+        const { user, token } = await this.props.backend.register(email, password, username);
 
         this.setState({
           loading: false,

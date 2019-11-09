@@ -26,12 +26,13 @@ export class MockBackend implements Backend {
     };
   }
 
-  register = async (email: string, password: string) => {
+  register = async (email: string, password: string, username: string) => {
     await delay(this.sleepDuration);
     return {
       user: {
         userID: 1234567890,
         email: email,
+        username: username,
       },
       token: "abc123",
     };

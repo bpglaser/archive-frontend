@@ -46,9 +46,9 @@ export class URLBackend implements Backend {
     return { user: user, token: token };
   }
 
-  register = async (email: string, password: string) => {
+  register = async (email: string, password: string, username: string) => {
     const url = new URL('/api/users/create', this.base);
-    const data = { email: email, password: password };
+    const data = { email: email, password: password, username: username };
     const response = await this.instance.post(url.toString(), data);
     if (response.data.token === undefined) {
       throw new Error('Server returned invalid payload.');
@@ -104,7 +104,7 @@ export class URLBackend implements Backend {
   acceptInvite = async (token: string, invite: Invite) => {
     const url = new URL('/api/invites/accept/' + invite.inviteID, this.base);
     const config = createAuthorizationConfig(token);
-    await this.instance.post(url.toString(), {}, config);
+    await this.instance.patch(url.toString(), {}, config);
   }
 
   cancelInvite = async (token: string, invite: Invite) => {
