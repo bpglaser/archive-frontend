@@ -16,7 +16,9 @@ export interface Backend {
   getUserSuggestions: (token: string, search: string, tokenSource: CancelTokenSource) => Promise<User[]>;
 
   getInvites: (token: string) => Promise<Invite[]>;
+  getPendingInvites: (token: string, organization: Organization) => Promise<Invite[]>;
   acceptInvite: (token: string, invite: Invite) => Promise<void>;
+  cancelInvite: (token: string, invite: Invite) => Promise<void>;
   declineInvite: (token: string, invite: Invite) => Promise<void>;
 
   getArticles: () => Promise<Article[]>;

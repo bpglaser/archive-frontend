@@ -11,6 +11,8 @@ import { User } from '../Models/User';
 import UserRemovePrompt from '../Components/Prompts/UserRemovePrompt';
 import MagicSearch, { Suggestions } from '../Components/MagicSearch';
 import Axios, { CancelTokenSource } from 'axios';
+import { Invite } from '../Models/Invite';
+import PendingInvitationsDisplay from '../Components/PendingInvitationsDisplay';
 
 interface Props extends RouteComponentProps<{ id: string }> {
   backend: Backend;
@@ -24,6 +26,7 @@ interface State {
   errorMessage: string | null;
   loading: boolean;
   organization: Organization | null;
+  pendingInvites: Invite[];
   users: { user: User, isAdmin: boolean }[];
   userToKick: User | null;
 }
@@ -37,6 +40,7 @@ export default class OrganizationManage extends React.Component<Props, State> {
       errorMessage: null,
       loading: true,
       organization: null,
+      pendingInvites: [],
       users: [],
       userToKick: null,
     };
@@ -50,6 +54,10 @@ export default class OrganizationManage extends React.Component<Props, State> {
     });
 
     const organization = await this.loadOrganization();
+
+    if (organization) {
+      await this.loadPendingInvites(organization);
+    }
 
     if (organization) {
       await this.loadUsers(organization);
@@ -101,9 +109,20 @@ export default class OrganizationManage extends React.Component<Props, State> {
         }
       </div>
 
+      <br />
 
-      <br />
-      <br />
+      {this.state.pendingInvites.length > 0 &&
+        <div>
+          <h4 className="title is-4">Pending Invitations</h4>
+
+          <PendingInvitationsDisplay
+            cancelInvite={this.cancelInvite}
+            invites={this.state.pendingInvites}
+          />
+
+          <br />
+        </div>
+      }
 
       <h4 className="title is-4">Manage Existing Members</h4>
 
@@ -250,6 +269,30 @@ export default class OrganizationManage extends React.Component<Props, State> {
     } catch (err) {
       console.log(err);
       this.props.displayError('Failed to invite user to organization.');
+    }
+  }
+
+  loadPendingInvites = async (organization: Organization) => {
+    try {
+      const pendingInvites = await this.props.backend.getPendingInvites(this.props.token, organization);
+      this.setState({
+        pendingInvites: pendingInvites,
+      });
+    } catch (err) {
+      console.log(err);
+      this.props.displayError('Error encountered while loading pending invites.');
+    }
+  }
+
+  cancelInvite = async (invite: Invite) => {
+    try {
+      await this.props.backend.cancelInvite(this.props.token, invite);
+      this.setState((oldState) => ({
+        pendingInvites: oldState.pendingInvites.filter((oldInvite) => oldInvite.inviteID !== invite.inviteID),
+      }));
+    } catch (err) {
+      console.log(err);
+      this.props.displayError('Error encountered while cancelling invite.');
     }
   }
 

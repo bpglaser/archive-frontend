@@ -94,10 +94,18 @@ export class URLBackend implements Backend {
     return result.data.invites;
   }
 
+  getPendingInvites = async (token: string, organization: Organization) => {
+    return await this.mock.getPendingInvites(token, organization);
+  }
+
   acceptInvite = async (token: string, invite: Invite) => {
     const url = new URL('/api/invites/accept/' + invite.inviteID, this.base);
     const config = createAuthorizationConfig(token);
     await this.instance.post(url.toString(), {}, config);
+  }
+
+  cancelInvite = async (token: string, invite: Invite) => {
+    await this.mock.cancelInvite(token, invite);
   }
 
   declineInvite = async (token: string, invite: Invite) => {

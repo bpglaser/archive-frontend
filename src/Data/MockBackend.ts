@@ -1,12 +1,12 @@
+import { CancelTokenSource } from 'axios';
 import { delay } from 'q';
 import { readTokenPayload } from '../Helpers';
 import { Article } from '../Models/Article';
 import { File } from '../Models/File';
-import { Backend } from './Backend';
+import { Invite } from '../Models/Invite';
 import { Organization } from '../Models/Organization';
 import { User } from '../Models/User';
-import { Invite } from '../Models/Invite';
-import { CancelTokenSource } from 'axios';
+import { Backend } from './Backend';
 
 export class MockBackend implements Backend {
   sleepDuration: number;
@@ -66,15 +66,22 @@ export class MockBackend implements Backend {
     ];
   }
 
-  invite = async (token: string, key: string) => {
+  getPendingInvites = async (token: string, organization: Organization) => {
     await delay(this.sleepDuration);
-    return {
-      inviter: { userID: 123, email: 'brad@foo.com' },
-      project: { projectID: 1234, organizationID: 1, name: 'Example Project', description: 'Everyone is having fun lol' },
-    };
+    return [
+      { inviteID: 1, inviter: readTokenPayload(token), invitee: { userID: 1, email: 'brad1@foo.com' }, organization: organization },
+      { inviteID: 2, inviter: readTokenPayload(token), invitee: { userID: 2, email: 'brad2@foo.com' }, organization: organization },
+      { inviteID: 3, inviter: readTokenPayload(token), invitee: { userID: 3, email: 'brad3@foo.com' }, organization: organization },
+      { inviteID: 4, inviter: readTokenPayload(token), invitee: { userID: 4, email: 'brad4@foo.com' }, organization: organization },
+      { inviteID: 5, inviter: readTokenPayload(token), invitee: { userID: 5, email: 'brad5@foo.com' }, organization: organization },
+    ];
   }
 
   acceptInvite = async (token: string, invite: Invite) => {
+    await delay(this.sleepDuration);
+  }
+
+  cancelInvite = async (token: string, invite: Invite) => {
     await delay(this.sleepDuration);
   }
 
