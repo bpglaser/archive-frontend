@@ -275,9 +275,9 @@ export class URLBackend implements Backend {
     return result.data;
   }
 
-  createProject = async (token: string, organizationID: number, name: string, description: string) => {
+  createProject = async (token: string, organizationID: number, name: string, description: string, isPublic: boolean) => {
     const url = new URL('/api/projects/create', this.base);
-    const data = { orgID: organizationID, name: name, desc: description };
+    const data = { orgID: organizationID, name: name, desc: description, isPublic: isPublic };
     const config = createAuthorizationConfig(token);
 
     const response = await this.instance.post(url.toString(), data, config);

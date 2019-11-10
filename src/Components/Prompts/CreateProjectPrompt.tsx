@@ -1,8 +1,9 @@
 import React from 'react';
 import { Backend } from '../../Data/Backend';
+import { registerEscHandler, unregisterEscHandler } from '../../Helpers';
 import { Organization } from '../../Models/Organization';
 import { Project } from '../../Models/Project';
-import { registerEscHandler, unregisterEscHandler } from '../../Helpers';
+import PublicToggleButton from '../PublicToggleButton';
 
 interface Props {
   backend: Backend;
@@ -13,24 +14,33 @@ interface Props {
 }
 
 interface State {
+  description: string;
   disabled: boolean;
+  errorMessage: string | null;
+  name: string;
+  isPublic: boolean;
 }
 
 export default class CreateProjectPrompt extends React.Component<Props, State> {
-  nameRef: React.RefObject<HTMLInputElement>;
-  descriptionRef: React.RefObject<HTMLTextAreaElement>;
+  readonly nameRef: React.RefObject<HTMLInputElement>;
 
   constructor(props: Props) {
     super(props);
     this.state = {
       disabled: false,
+      description: '',
+      errorMessage: null,
+      name: '',
+      isPublic: false,
     };
     this.nameRef = React.createRef();
-    this.descriptionRef = React.createRef();
   }
 
   componentDidMount() {
     registerEscHandler(this.props.close);
+    if (this.nameRef.current) {
+      this.nameRef.current.focus();
+    }
   }
 
   componentWillUnmount() {
@@ -56,7 +66,10 @@ export default class CreateProjectPrompt extends React.Component<Props, State> {
                 type="text"
                 placeholder="Project Name"
                 ref={this.nameRef}
-                disabled={this.state.disabled} />
+                disabled={this.state.disabled}
+                onChange={this.nameOnChange}
+                value={this.state.name}
+              />
             </div>
           </div>
 
@@ -66,9 +79,18 @@ export default class CreateProjectPrompt extends React.Component<Props, State> {
               <textarea
                 className="textarea"
                 placeholder="Description"
-                ref={this.descriptionRef}
-                disabled={this.state.disabled} />
+                disabled={this.state.disabled}
+                onChange={this.descriptionOnChange}
+                value={this.state.description}
+              />
             </div>
+          </div>
+
+          <div className="field">
+            <PublicToggleButton
+              isPublic={this.state.isPublic}
+              toggle={this.toggleIsPublic}
+            />
           </div>
         </section>
 
@@ -76,33 +98,65 @@ export default class CreateProjectPrompt extends React.Component<Props, State> {
           <button
             className={this.state.disabled ? "button is-success is-loading" : "button is-success"}
             disabled={this.state.disabled}
-            onClick={this.submitNewProject}>
+            onClick={this.submitNewProject}
+          >
             Create
-              </button>
+          </button>
+
           <button className="button" onClick={this.props.close}>Cancel</button>
+
+          {this.state.errorMessage &&
+            <span className="help is-danger">{this.state.errorMessage}</span>
+          }
         </footer>
       </div>
     </div>);
   }
 
   submitNewProject = async () => {
-    if (this.nameRef.current === null || this.descriptionRef.current === null) {
+    if (this.state.name.trim() === '') {
+      this.setState({
+        errorMessage: 'Project name must not be blank.',
+      });
       return;
-    }
+    };
 
     this.setState({
       disabled: true,
+      errorMessage: null,
     });
 
-    const { organizationID } = this.props.organization;
-    const name = this.nameRef.current.value;
-    const description = this.descriptionRef.current.value;
-    const project = await this.props.backend.createProject(this.props.token, organizationID, name, description);
+    try {
+      const { organizationID } = this.props.organization;
+      const project = await this.props.backend.createProject(this.props.token, organizationID, this.state.name, this.state.description, this.state.isPublic);
+      this.props.success(project);
+    } catch (err) {
+      console.log(err);
+      this.setState({
+        disabled: false,
+        errorMessage: 'An error was encountered while creating the project.',
+      });
+    }
+  }
 
+  nameOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
-      disabled: false,
+      errorMessage: null,
+      name: event.target.value,
     });
+  }
 
-    this.props.success(project);
+  descriptionOnChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    this.setState({
+      description: event.target.value,
+      errorMessage: null,
+    });
+  }
+
+  toggleIsPublic = () => {
+    this.setState((oldState) => ({
+      errorMessage: null,
+      isPublic: !oldState.isPublic,
+    }));
   }
 }
