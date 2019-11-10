@@ -46,7 +46,7 @@ export default class UserRemovePrompt extends React.Component<Props, State> {
         </header>
 
         <section className="modal-card-body">
-          Are you sure you want to remove <strong>{this.props.user.email}</strong> from <strong>{this.props.organization.name}</strong>?
+          Are you sure you want to remove <strong>{this.props.user.username}</strong> from <strong>{this.props.organization.name}</strong>?
         </section>
 
         <footer className="modal-card-foot">

@@ -158,7 +158,7 @@ export default class ProjectDetails extends React.Component<Props, State> {
         <ReactTable
           columns={[
             { Header: 'Name', accessor: 'name', Cell: props => <Link to={"/file/" + props.original.fileID}>{props.value}</Link> },
-            { Header: 'Uploader', accessor: f => f.uploader ? f.uploader.email : '', id: 'uploader' },
+            { Header: 'Uploader', accessor: f => f.uploader ? f.uploader.username : '', id: 'uploader' },
             { Header: 'Tags', accessor: 'tags', Cell: props => props.value ? props.value.join(', ') : '', filterMethod: tagFilterMethod },
           ]}
           data={this.state.files}

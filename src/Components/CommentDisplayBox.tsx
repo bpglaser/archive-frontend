@@ -37,7 +37,7 @@ export default class CommentDisplayBox extends React.Component<Props, State> {
 
       <div className="media-content">
         <div className="content">
-          <strong><i className="fas fa-user"></i> {this.props.comment.user.email}</strong>
+          <strong><i className="fas fa-user"></i> {this.props.comment.user.username}</strong>
           <br />
           <small><i className="fas fa-clock"></i> {localizedTimeString}</small>
           <br />

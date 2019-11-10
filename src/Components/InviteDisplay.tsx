@@ -27,7 +27,7 @@ export default class InviteDisplay extends React.Component<Props, State> {
 
     return (<div className="dropdown-item">
       <p>
-        <strong>{inviter.email}</strong> has invited you to join <strong>{organization.name}</strong>.
+        <strong>{inviter.username}</strong> has invited you to join <strong>{organization.name}</strong>.
       </p>
       <p>
         <a onClick={this.accept}>Accept</a> <a onClick={this.decline}>Decline</a>

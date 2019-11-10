@@ -21,7 +21,7 @@ export default class PendingInvitationsDisplay extends React.Component<Props, St
       {
         this.props.invites.map((invite, i) =>
           <div className="invite" key={i}>
-            {invite.invitee!.email} <button className="delete is-small" onClick={async () => await this.props.cancelInvite(invite)} />
+            {invite.invitee!.username} <button className="delete is-small" onClick={async () => await this.props.cancelInvite(invite)} />
           </div>
         )
       }

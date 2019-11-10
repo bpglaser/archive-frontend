@@ -9,6 +9,7 @@ import { User } from '../Models/User';
 import { Backend } from './Backend';
 import { MockBackend } from "./MockBackend";
 import { Invite } from '../Models/Invite';
+import { Project } from '../Models/Project';
 
 export class URLBackend implements Backend {
   readonly base: string | undefined;
@@ -72,7 +73,15 @@ export class URLBackend implements Backend {
   }
 
   updateUsername = async (token: string, username: string) => {
-    return await this.mock.updateUsername(token, username);
+    const url = new URL('/api/users/username', this.base);
+    const data = { username: username };
+    const config = createAuthorizationConfig(token);
+    const response = await this.instance.post(url.toString(), data, config);
+    const newToken = response.data.token;
+    return {
+      token: newToken,
+      user: readTokenPayload(newToken),
+    };
   }
 
   getUserSuggestions = async (token: string, search: string, tokenSource: CancelTokenSource) => {
@@ -129,7 +138,7 @@ export class URLBackend implements Backend {
       return {
         articleID: Number(entry.articleid),
         headline: entry.headline as string,
-        author: { userID: Number(entry.userid), email: entry.Email },
+        author: parseUserEntry(entry),
         published: new Date(entry.published),
         content: entry.content as string,
         snippet: entry.snippet as string,
@@ -145,7 +154,7 @@ export class URLBackend implements Backend {
     return {
       articleID: Number(entry.articleid),
       headline: entry.headline as string,
-      author: { userID: Number(entry.userid), email: entry.Email },
+      author: parseUserEntry(entry),
       published: new Date(entry.published),
       content: entry.content as string,
       snippet: entry.snippet as string,
@@ -272,10 +281,7 @@ export class URLBackend implements Backend {
     const config = createAuthorizationConfig(token);
 
     const response = await this.instance.post(url.toString(), data, config);
-    if (response.data.projID === undefined) {
-      throw new Error('Invalid field on project creation response');
-    }
-    return { projectID: response.data.projID, organizationID: organizationID, name: name, description: description };
+    return parseProjectEntry(response.data);
   }
 
   editProject = async (token: string, projectID: number, organizationID: number, name: string, description: string) => {
@@ -283,8 +289,8 @@ export class URLBackend implements Backend {
     const data = { projID: projectID, orgID: organizationID, name: name, desc: description };
     const config = createAuthorizationConfig(token);
 
-    await this.instance.post(url.toString(), data, config);
-    return { projectID: projectID, organizationID: organizationID, name: name, description: description };
+    const response = await this.instance.post(url.toString(), data, config);
+    return parseProjectEntry(response.data);
   }
 
   deleteProject = async (token: string, projectID: number) => {
@@ -300,9 +306,7 @@ export class URLBackend implements Backend {
     const config = createAuthorizationConfig(token);
 
     const result = await this.instance.get(url.toString(), config);
-    return result.data.map((entry: any) => {
-      return { projectID: entry.ProjID, organizationID: entry.OrgID, name: entry.Name, description: entry.Description };
-    });
+    return result.data.map(parseProjectEntry);
   }
 
   getProjectDetails = async (token: string | null, projectID: number) => {
@@ -310,28 +314,14 @@ export class URLBackend implements Backend {
     const config = token ? createAuthorizationConfig(token) : {};
 
     const result = await this.instance.get(url.toString(), config);
-    const entry = result.data;
-    return {
-      projectID: entry.ProjID,
-      organizationID: entry.OrgID,
-      name: entry.Name,
-      description: entry.Description
-    };
+    return parseProjectEntry(result.data);
   }
 
   getRecentProjects = async (token: string) => {
     const url = new URL('/api/projects/list/modified?count=5', this.base);
     const config = createAuthorizationConfig(token);
     const result = await this.instance.get(url.toString(), config);
-    return result.data.map((entry: any) => {
-      return {
-        projectID: Number(entry.ProjID),
-        organizationID: Number(entry.OrgID),
-        name: entry.Name,
-        description: entry.Description,
-        lastModified: new Date(entry.LastModified),
-      }
-    });
+    return result.data.map(parseProjectEntry);
   }
 
   getPublicProjects = async () => {
@@ -485,7 +475,7 @@ function parseCommentEntry(entry: any): Comment {
     commentID: Number(entry.CommentID),
     content: entry.Comment,
     published: new Date(entry.Published),
-    user: { userID: Number(entry.UserID), email: entry.Email },
+    user: parseUserEntry(entry),
     updated: entry.Updated ? new Date(entry.Updated) : null,
   }
 }
@@ -501,10 +491,7 @@ function parseFileEntry(entry: any): File {
   }
 
   if (entry.Uploader) {
-    result.uploader = {
-      userID: Number(entry.Uploader.UserID),
-      email: entry.Uploader.Email,
-    };
+    result.uploader = parseUserEntry(entry.Uploader);
   }
 
   if (entry.OriginalName) {
@@ -526,8 +513,12 @@ function parseUserEntry(entry: any): User {
     userID: Number(entry.UserID),
     email: entry.Email,
     admin: entry.Admin,
-    username: entry.Username,
+    username: entry.username,
   };
+}
+
+function parseProjectEntry(entry: any): Project {
+  return entry;
 }
 
 function createAuthorizationConfig(token: string): AxiosRequestConfig {

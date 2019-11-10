@@ -89,7 +89,7 @@ export default class AccountSettings extends React.Component<Props, State> {
       awaitingUsernameResponse: false,
       displayMessage: null,
       displayMessageClassNameSuffix: "",
-      username: this.props.user.email, // TODO change to username
+      username: this.props.user.username!,
       usernameButtonDisabled: true,
       validation: Validation.Undetermined,
     };

@@ -72,7 +72,7 @@ export default class Navbar extends React.Component<Props, State> {
 
           {this.props.loggedInAs !== null &&
             <Link to="/settings" className="navbar-item">
-              {this.props.loggedInAs.email}
+              {this.props.loggedInAs.username}
             </Link>
           }
 

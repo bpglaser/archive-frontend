@@ -83,7 +83,7 @@ export default class ArticleDetails extends React.Component<Props, State> {
       <div className="columns">
         <div className="column">
           <h1 className="title">{headline}</h1>
-          <i className="fas fa-user"></i> {author.email} <i className="fas fa-clock"></i> {localizedTimeString}
+          <i className="fas fa-user"></i> {author.username} <i className="fas fa-clock"></i> {localizedTimeString}
           <br />
           <br />
           <div className="content">

@@ -52,7 +52,7 @@ export default class ArticleBox extends React.Component<Props, State> {
           <article className="media">
             <div className="media-content">
               <div className="content">
-                <strong>{headline}</strong> <small><i className="fas fa-user"></i> {author.email}</small> <small><i className="fas fa-clock"></i> {localizedTimeString}</small>
+                <strong>{headline}</strong> <small><i className="fas fa-user"></i> {author.username}</small> <small><i className="fas fa-clock"></i> {localizedTimeString}</small>
                 <br />
                 {ReactHTMLParser(snippet!)}
                 <br />
