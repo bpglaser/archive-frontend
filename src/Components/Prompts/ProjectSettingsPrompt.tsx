@@ -2,6 +2,7 @@ import React from 'react';
 import { Backend } from '../../Data/Backend';
 import { Project } from '../../Models/Project';
 import { registerEscHandler, unregisterEscHandler } from '../../Helpers';
+import PublicToggleButton from '../PublicToggleButton';
 
 interface Props {
   backend: Backend;
@@ -16,22 +17,30 @@ interface State {
   description: string;
   disabled: boolean;
   errorMessage: string | null;
+  isPublic: boolean,
   name: string;
 }
 
 export default class ProjectSettingsPrompt extends React.Component<Props, State> {
+  readonly nameRef: React.RefObject<HTMLInputElement>;
+
   constructor(props: Props) {
     super(props);
     this.state = {
-      description: '',
+      description: props.project.description,
       disabled: false,
       errorMessage: null,
-      name: '',
+      isPublic: false, // TODO populate from props
+      name: props.project.name,
     };
+    this.nameRef = React.createRef();
   }
 
   componentDidMount() {
     registerEscHandler(this.props.close);
+    if (this.nameRef.current) {
+      this.nameRef.current.focus();
+    }
   }
 
   componentWillUnmount() {
@@ -58,6 +67,7 @@ export default class ProjectSettingsPrompt extends React.Component<Props, State>
                 placeholder="Project Name"
                 value={this.state.name}
                 onChange={this.nameUpdated}
+                ref={this.nameRef}
                 disabled={this.state.disabled} />
             </div>
           </div>
@@ -74,12 +84,22 @@ export default class ProjectSettingsPrompt extends React.Component<Props, State>
             </div>
           </div>
 
-          <button className="button is-danger" onClick={this.props.showDeletePrompt}>
-            <span className="icon">
-              <i className="fas fa-trash"></i>
-            </span>
-            <span>Delete Project</span>
-          </button>
+          <div className="field">
+            <PublicToggleButton
+              isPublic={this.state.isPublic}
+              toggle={this.toggleIsPublic}
+            />
+            
+          </div>
+
+          <div className="field">
+            <button className="button is-danger" onClick={this.props.showDeletePrompt}>
+              <span className="icon">
+                <i className="fas fa-trash"></i>
+              </span>
+              <span>Delete Project</span>
+            </button>
+          </div>
         </section>
 
         <footer className="modal-card-foot">
@@ -101,6 +121,13 @@ export default class ProjectSettingsPrompt extends React.Component<Props, State>
   }
 
   submitSettings = async () => {
+    if (this.state.name.trim() === '') {
+      this.setState({
+        errorMessage: 'Project name must not be empty.',
+      });
+      return;
+    }
+
     try {
       this.setState({
         disabled: true,
@@ -111,8 +138,9 @@ export default class ProjectSettingsPrompt extends React.Component<Props, State>
 
       const name = this.state.name;
       const description = this.state.description;
+      const isPublic = this.state.isPublic;
 
-      const newProject = await this.props.backend.editProject(this.props.token, projectID, organizationID, name, description);
+      const newProject = await this.props.backend.editProject(this.props.token, projectID, organizationID, name, description, isPublic);
       this.props.success(newProject);
     } catch (err) {
       this.setState({
@@ -132,5 +160,11 @@ export default class ProjectSettingsPrompt extends React.Component<Props, State>
     this.setState({
       description: event.target.value,
     });
+  }
+
+  toggleIsPublic = () => {
+    this.setState((oldState) => ({
+      isPublic: !oldState.isPublic,
+    }));
   }
 }

@@ -38,7 +38,7 @@ export interface Backend {
   inviteUserToOrganization: (token: string, organization: Organization, user: User) => Promise<Invite>;
 
   createProject: (token: string, organizationID: number, name: string, description: string, isPublic: boolean) => Promise<Project>;
-  editProject: (token: string, projectID: number, organizationID: number, name: string, description: string) => Promise<Project>;
+  editProject: (token: string, projectID: number, organizationID: number, name: string, description: string, isPublic: boolean) => Promise<Project>;
   deleteProject: (token: string, projectID: number) => Promise<void>;
   listProjects: (token: string, organizationID: number) => Promise<Project[]>;
   getProjectDetails: (token: string | null, projectID: number) => Promise<Project>;

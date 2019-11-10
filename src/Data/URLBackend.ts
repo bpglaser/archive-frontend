@@ -284,9 +284,9 @@ export class URLBackend implements Backend {
     return parseProjectEntry(response.data);
   }
 
-  editProject = async (token: string, projectID: number, organizationID: number, name: string, description: string) => {
+  editProject = async (token: string, projectID: number, organizationID: number, name: string, description: string, isPublic: boolean) => {
     const url = new URL('/api/projects/edit', this.base);
-    const data = { projID: projectID, orgID: organizationID, name: name, desc: description };
+    const data = { projID: projectID, orgID: organizationID, name: name, desc: description, isPublic: isPublic };
     const config = createAuthorizationConfig(token);
 
     const response = await this.instance.post(url.toString(), data, config);

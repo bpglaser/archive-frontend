@@ -178,7 +178,7 @@ export class MockBackend implements Backend {
     return { projectID: 123, organizationID: organizationID, name: name, description: description, owner: { userID: 123, email: 'foo@bar.com', username: 'foobar' } };
   }
 
-  editProject = async (token: string, projectID: number, organizationID: number, name: string, description: string) => {
+  editProject = async (token: string, projectID: number, organizationID: number, name: string, description: string, isPublic: boolean) => {
     await delay(this.sleepDuration);
     return { projectID: projectID, organizationID: organizationID, name: name, description: description, owner: { userID: 123, email: 'foo@bar.com', username: 'foobar' } };
   }
