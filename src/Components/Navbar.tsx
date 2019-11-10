@@ -34,6 +34,12 @@ export default class Navbar extends React.Component<Props, State> {
     return (<div className="navbar">
       <div className="navbar-brand">
         <div className="navbar-item">
+          <figure className="image">
+            <img src="/ucf_logo.png" alt="The UCF logo" />
+          </figure>
+        </div>
+
+        <div className="navbar-item">
           <strong>Robinson Observatory Archive</strong>
         </div>
 
