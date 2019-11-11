@@ -6,5 +6,6 @@ export interface Project {
   name: string;
   description: string;
   owner: User;
+  public: boolean;
   lastModified?: Date;
 }

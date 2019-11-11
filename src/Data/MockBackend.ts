@@ -175,12 +175,12 @@ export class MockBackend implements Backend {
 
   createProject = async (token: string, organizationID: number, name: string, description: string, isPublic: boolean) => {
     await delay(this.sleepDuration);
-    return { projectID: 123, organizationID: organizationID, name: name, description: description, owner: { userID: 123, email: 'foo@bar.com', username: 'foobar' } };
+    return { projectID: 123, organizationID: organizationID, name: name, description: description, public: isPublic, owner: { userID: 123, email: 'foo@bar.com', username: 'foobar' } };
   }
 
   editProject = async (token: string, projectID: number, organizationID: number, name: string, description: string, isPublic: boolean) => {
     await delay(this.sleepDuration);
-    return { projectID: projectID, organizationID: organizationID, name: name, description: description, owner: { userID: 123, email: 'foo@bar.com', username: 'foobar' } };
+    return { projectID: projectID, organizationID: organizationID, name: name, description: description, public: isPublic, owner: { userID: 123, email: 'foo@bar.com', username: 'foobar' } };
   }
 
   deleteProject = async (token: string, projectID: number) => {
@@ -190,35 +190,35 @@ export class MockBackend implements Backend {
   listProjects = async (token: string, organizationID: number) => {
     await delay(this.sleepDuration);
     return [
-      { projectID: 123, organizationID: organizationID, name: 'foo1', description: 'bar', owner: { userID: 123, email: 'foo@bar.com', username: 'foobar' } },
-      { projectID: 345, organizationID: organizationID, name: 'foo2', description: 'bar', owner: { userID: 123, email: 'foo@bar.com', username: 'foobar' } },
-      { projectID: 678, organizationID: organizationID, name: 'foo3', description: 'bar', owner: { userID: 123, email: 'foo@bar.com', username: 'foobar' } },
-      { projectID: 910, organizationID: organizationID, name: 'foo4', description: 'bar', owner: { userID: 123, email: 'foo@bar.com', username: 'foobar' } },
+      { projectID: 123, organizationID: organizationID, name: 'foo1', description: 'bar', public: false, owner: { userID: 123, email: 'foo@bar.com', username: 'foobar' } },
+      { projectID: 345, organizationID: organizationID, name: 'foo2', description: 'bar', public: false, owner: { userID: 123, email: 'foo@bar.com', username: 'foobar' } },
+      { projectID: 678, organizationID: organizationID, name: 'foo3', description: 'bar', public: false, owner: { userID: 123, email: 'foo@bar.com', username: 'foobar' } },
+      { projectID: 910, organizationID: organizationID, name: 'foo4', description: 'bar', public: false, owner: { userID: 123, email: 'foo@bar.com', username: 'foobar' } },
     ];
   }
 
   getProjectDetails = async (token: string | null, projectID: number) => {
     await delay(this.sleepDuration);
-    return { projectID: projectID, organizationID: 1, name: 'MyProject', description: 'Lorem ipsum description', owner: { userID: 123, email: 'foo@bar.com', username: 'foobar' } };
+    return { projectID: projectID, organizationID: 1, name: 'MyProject', description: 'Lorem ipsum description', public: false, owner: { userID: 123, email: 'foo@bar.com', username: 'foobar' } };
   }
 
   getRecentProjects = async (token: string) => {
     await delay(this.sleepDuration);
     return [
-      { projectID: 1, organizationID: 11, name: 'MyProject1', description: 'Lorem ipsum description', owner: { userID: 123, email: 'foo@bar.com', username: 'foobar' } },
-      { projectID: 2, organizationID: 12, name: 'MyProject2', description: 'Lorem ipsum description', owner: { userID: 123, email: 'foo@bar.com', username: 'foobar' } },
-      { projectID: 3, organizationID: 13, name: 'MyProject3', description: 'Lorem ipsum description', owner: { userID: 123, email: 'foo@bar.com', username: 'foobar' } },
-      { projectID: 4, organizationID: 14, name: 'MyProject4', description: 'Lorem ipsum description', owner: { userID: 123, email: 'foo@bar.com', username: 'foobar' } },
+      { projectID: 1, organizationID: 11, name: 'MyProject1', description: 'Lorem ipsum description', public: false, owner: { userID: 123, email: 'foo@bar.com', username: 'foobar' } },
+      { projectID: 2, organizationID: 12, name: 'MyProject2', description: 'Lorem ipsum description', public: false, owner: { userID: 123, email: 'foo@bar.com', username: 'foobar' } },
+      { projectID: 3, organizationID: 13, name: 'MyProject3', description: 'Lorem ipsum description', public: false, owner: { userID: 123, email: 'foo@bar.com', username: 'foobar' } },
+      { projectID: 4, organizationID: 14, name: 'MyProject4', description: 'Lorem ipsum description', public: false, owner: { userID: 123, email: 'foo@bar.com', username: 'foobar' } },
     ];
   }
 
   getPublicProjects = async () => {
     await delay(this.sleepDuration);
     return [
-      { projectID: 1, organizationID: 11, name: 'MyProject1', description: 'Lorem ipsum description', owner: { userID: 123, email: 'foo@bar.com', username: 'foobar' } },
-      { projectID: 2, organizationID: 12, name: 'MyProject2', description: 'Lorem ipsum description', owner: { userID: 123, email: 'foo@bar.com', username: 'foobar' } },
-      { projectID: 3, organizationID: 13, name: 'MyProject3', description: 'Lorem ipsum description', owner: { userID: 123, email: 'foo@bar.com', username: 'foobar' } },
-      { projectID: 4, organizationID: 14, name: 'MyProject4', description: 'Lorem ipsum description', owner: { userID: 123, email: 'foo@bar.com', username: 'foobar' } },
+      { projectID: 1, organizationID: 11, name: 'MyProject1', description: 'Lorem ipsum description', public: true, owner: { userID: 123, email: 'foo@bar.com', username: 'foobar' } },
+      { projectID: 2, organizationID: 12, name: 'MyProject2', description: 'Lorem ipsum description', public: true, owner: { userID: 123, email: 'foo@bar.com', username: 'foobar' } },
+      { projectID: 3, organizationID: 13, name: 'MyProject3', description: 'Lorem ipsum description', public: true, owner: { userID: 123, email: 'foo@bar.com', username: 'foobar' } },
+      { projectID: 4, organizationID: 14, name: 'MyProject4', description: 'Lorem ipsum description', public: true, owner: { userID: 123, email: 'foo@bar.com', username: 'foobar' } },
     ];
   }
 

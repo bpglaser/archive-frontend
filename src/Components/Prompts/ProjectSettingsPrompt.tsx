@@ -30,7 +30,7 @@ export default class ProjectSettingsPrompt extends React.Component<Props, State>
       description: props.project.description,
       disabled: false,
       errorMessage: null,
-      isPublic: false, // TODO populate from props
+      isPublic: props.project.public,
       name: props.project.name,
     };
     this.nameRef = React.createRef();
