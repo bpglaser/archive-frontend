@@ -325,7 +325,9 @@ export class URLBackend implements Backend {
   }
 
   getPublicProjects = async () => {
-    return await this.mock.getPublicProjects();
+    const url = new URL('/api/projects/public', this.base);
+    const result = await this.instance.get(url.toString());
+    return result.data;
   }
 
   getNearbyFiles = async (token: string, fileID: number) => {
@@ -345,7 +347,7 @@ export class URLBackend implements Backend {
     return file;
   }
 
-  downloadFile = async (token: string, fileID: number, extension?: string) => {
+  downloadFile = async (token: string | null, fileID: number, extension?: string) => {
     const url = new URL('/api/files/download/' + fileID, this.base);
     if (extension) {
       url.searchParams.set('extension', extension);
@@ -521,6 +523,10 @@ function parseProjectEntry(entry: any): Project {
   return entry;
 }
 
-function createAuthorizationConfig(token: string): AxiosRequestConfig {
-  return { headers: { Authorization: 'Bearer ' + token } };
+function createAuthorizationConfig(token: string | null): AxiosRequestConfig {
+  if (token) {
+    return { headers: { Authorization: 'Bearer ' + token } };
+  } else {
+    return {};
+  }
 }

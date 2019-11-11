@@ -237,7 +237,7 @@ export class MockBackend implements Backend {
     return { fileID: 123, name: 'foo.jpg' };
   }
 
-  downloadFile = async (token: string, fileID: number, extension?: string) => {
+  downloadFile = async (token: string | null, fileID: number, extension?: string) => {
     await delay(this.sleepDuration);
     return new Blob();
   }

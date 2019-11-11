@@ -8,7 +8,7 @@ interface Props {
   file: File;
   tagsUpdated: (tags: string[]) => void;
   tags: string[];
-  token: string;
+  token: string | null;
 }
 
 interface State {
@@ -62,7 +62,7 @@ export default class Tags extends React.Component<Props, State> {
           </span>
         }
 
-        {!this.state.editMode &&
+        {this.props.token && !this.state.editMode &&
           <span className="tag">
             <button className="transparent-button" onClick={this.showEditBox} title="Edit Tags">
               <span className="icon is-small">
@@ -112,7 +112,7 @@ export default class Tags extends React.Component<Props, State> {
 
     try {
       const tag = this.props.tags[tagIndex];
-      this.props.backend.deleteTag(this.props.token, this.props.file.fileID, tag);
+      this.props.backend.deleteTag(this.props.token!, this.props.file.fileID, tag);
 
       const newTags = [...this.props.tags];
       newTags.splice(tagIndex, 1);
@@ -138,7 +138,7 @@ export default class Tags extends React.Component<Props, State> {
 
     try {
       const tag = this.state.newTagValue;
-      this.props.backend.addTag(this.props.token, this.props.file.fileID, tag);
+      this.props.backend.addTag(this.props.token!, this.props.file.fileID, tag);
 
       this.setState({
         newTagValue: ''

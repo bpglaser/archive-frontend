@@ -23,7 +23,7 @@ enum FilePrompt {
 interface Props extends RouteComponentProps<{ id: string }> {
   backend: Backend;
   displayError: (s: string) => void;
-  token: string;
+  token: string | null;
 }
 
 interface State {
@@ -66,12 +66,15 @@ export default class FileDetails extends React.Component<Props, State> {
     });
 
     const file = await this.loadFileDetails();
-    if (file) {
-      await this.loadTags(file);
-      await this.loadMetadata(file);
+    if (this.props.token && file) {
+      await this.loadTags(this.props.token, file);
+      await this.loadMetadata(this.props.token, file);
     }
-    await this.loadProjectDetails();
-    await this.loadOrganizationDetails();
+
+    const project = await this.loadProjectDetails();
+    if (this.props.token && project) {
+      await this.loadOrganizationDetails(this.props.token, project);
+    }
     await this.downloadDisplayImage();
 
     this.setState({
@@ -104,13 +107,23 @@ export default class FileDetails extends React.Component<Props, State> {
     }
 
     return (<div>
-      <Breadcrumb
-        links={[
-          [this.state.organization!.name, '/organizations/' + this.state.organization!.organizationID],
-          [this.state.project!.name, '/projects/' + this.state.project!.projectID],
-          [this.state.file!.name, '/file/' + this.getID()],
-        ]}
-      />
+      {this.state.organization &&
+        <Breadcrumb
+          links={[
+            [this.state.organization!.name, '/organizations/' + this.state.organization!.organizationID],
+            [this.state.project!.name, '/projects/' + this.state.project!.projectID],
+            [this.state.file!.name, '/file/' + this.getID()],
+          ]}
+        />
+      }
+      {!this.state.organization &&
+        <Breadcrumb
+          links={[
+            [this.state.project!.name, '/projects/' + this.state.project!.projectID],
+            [this.state.file!.name, '/file/' + this.getID()],
+          ]}
+        />
+      }
 
       <div className="columns">
         <div className="column">
@@ -132,19 +145,23 @@ export default class FileDetails extends React.Component<Props, State> {
                     </span>
                 </button>
               </div>
+
               <div className="level-item">
                 <DownloadFileDropdown
                   downloadClicked={this.downloadClicked}
                   formatList={["png", "jpg"]}
                 />
               </div>
-              <div className="level-item">
-                <button className="button" onClick={this.showSettingsPrompt}>
-                  <span className="icon">
-                    <i className="fas fa-cog"></i>
-                  </span>
-                </button>
-              </div>
+
+              {this.props.token &&
+                <div className="level-item">
+                  <button className="button" onClick={this.showSettingsPrompt}>
+                    <span className="icon">
+                      <i className="fas fa-cog"></i>
+                    </span>
+                  </button>
+                </div>
+              }
             </div>
           </nav>
 
@@ -161,13 +178,13 @@ export default class FileDetails extends React.Component<Props, State> {
             <img src={this.state.imageDisplayUrl} alt="preview" />
           }
 
-          {this.state.metadata &&
+          {this.props.token && this.state.metadata &&
             <MetadataDisplay
               metadata={this.state.metadata}
             />
           }
 
-          {this.state.file &&
+          {this.props.token && this.state.file &&
             <Comments
               backend={this.props.backend}
               file={this.state.file}
@@ -176,14 +193,16 @@ export default class FileDetails extends React.Component<Props, State> {
           }
         </div>
 
-        <NearbyColumn
-          backend={this.props.backend}
-          file={this.state.file}
-          token={this.props.token!}
-        />
+        {this.props.token &&
+          <NearbyColumn
+            backend={this.props.backend}
+            file={this.state.file}
+            token={this.props.token!}
+          />
+        }
       </div>
 
-      {this.state.visiblePrompt === FilePrompt.Delete &&
+      {this.props.token && this.state.visiblePrompt === FilePrompt.Delete &&
         <FileDeletePrompt
           backend={this.props.backend}
           close={this.hidePrompt}
@@ -193,7 +212,7 @@ export default class FileDetails extends React.Component<Props, State> {
         />
       }
 
-      {this.state.visiblePrompt === FilePrompt.Settings &&
+      {this.props.token && this.state.visiblePrompt === FilePrompt.Settings &&
         <FileSettingsPrompt
           backend={this.props.backend}
           close={this.hidePrompt}
@@ -226,9 +245,9 @@ export default class FileDetails extends React.Component<Props, State> {
     return null;
   }
 
-  loadTags = async (file: File) => {
+  loadTags = async (token: string, file: File) => {
     try {
-      const tags = await this.props.backend.getTags(this.props.token, file.fileID);
+      const tags = await this.props.backend.getTags(token, file.fileID);
       this.setState({
         tags: tags,
       });
@@ -238,9 +257,9 @@ export default class FileDetails extends React.Component<Props, State> {
     }
   }
 
-  loadMetadata = async (file: File) => {
+  loadMetadata = async (token: string, file: File) => {
     try {
-      const metadata = await this.props.backend.getMetadata(this.props.token, file.fileID);
+      const metadata = await this.props.backend.getMetadata(token, file.fileID);
       this.setState({
         metadata: metadata,
       });
@@ -260,21 +279,23 @@ export default class FileDetails extends React.Component<Props, State> {
       this.setState({
         project: project,
       });
+      return project;
     } catch (err) {
       console.log(err);
       this.setState({
         errorMessage: 'Error loading file details.',
       });
+      return null;
     }
   }
 
-  loadOrganizationDetails = async () => {
+  loadOrganizationDetails = async (token: string, project: Project) => {
     if (!this.state.project) {
       return;
     }
 
     try {
-      const organization = await this.props.backend.getOrganizationDetails(this.props.token, this.state.project.organizationID);
+      const organization = await this.props.backend.getOrganizationDetails(token, project.organizationID);
       this.setState({
         organization: organization,
       });

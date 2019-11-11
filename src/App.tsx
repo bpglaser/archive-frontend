@@ -186,14 +186,12 @@ export default class App extends React.Component<any, State> {
 
           <Route path="/file/:id"
             render={(props) =>
-              this.requireAuthentication(
-                <FileDetails
-                  {...props}
-                  backend={this.state.backend}
-                  displayError={this.displayError}
-                  token={this.state.token!}
-                />
-              )
+              <FileDetails
+                {...props}
+                backend={this.state.backend}
+                displayError={this.displayError}
+                token={this.state.token}
+              />
             }
           />
 
