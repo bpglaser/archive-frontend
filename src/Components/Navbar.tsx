@@ -13,6 +13,7 @@ interface Props {
   registerClicked: () => void;
   logInClicked: () => void;
   logOutClicked: () => void;
+  showCreateOrganizationPrompt: () => void;
   recentOrganizations: Organization[];
   token: string | null;
 }
@@ -73,6 +74,8 @@ export default class Navbar extends React.Component<Props, State> {
           {this.props.loggedInAs !== null &&
             <OrganizationNavbarItem
               recentOrganizations={this.props.recentOrganizations}
+              showCreateOrganizationPrompt={this.props.showCreateOrganizationPrompt}
+              token={this.props.token}
             />
           }
 

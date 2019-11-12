@@ -19,6 +19,7 @@ enum VisiblePrompt {
 
 interface Props extends RouteComponentProps<{ id: string }> {
   backend: Backend;
+  organizationDeleted: (organization: Organization) => void;
   token: string;
 }
 
@@ -222,9 +223,10 @@ export default class OrganizationDetails extends React.Component<Props, State> {
   }
 
   organizationDeleted = async () => {
+    this.props.organizationDeleted(this.state.organization!);
     this.hidePrompt();
     this.setState({
-      redirect: '/organizations',
+      redirect: '/',
     });
   }
 

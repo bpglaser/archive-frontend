@@ -1,9 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Organization } from '../Models/Organization';
+import { isAdmin } from '../Helpers';
 
 interface Props {
   recentOrganizations: Organization[];
+  showCreateOrganizationPrompt: () => void;
+  token: string | null;
 }
 
 interface State {
@@ -17,7 +20,9 @@ export default class OrganizationNavbarItem extends React.Component<Props, State
     };
   }
   render() {
+    /* eslint-disable jsx-a11y/anchor-is-valid */
     if (this.props.recentOrganizations.length === 0) {
+      // TODO change to about prompt
       return (<Link to="/organizations" className="navbar-item">Join an Organization!</Link>);
     }
 
@@ -36,14 +41,22 @@ export default class OrganizationNavbarItem extends React.Component<Props, State
             )
         }
 
-        {this.props.recentOrganizations.length > 0 &&
+        {isAdmin(this.props.token) && this.props.recentOrganizations.length > 0 &&
           <hr className="navbar-divider" />
         }
 
-        <Link to="/organizations" className="navbar-item">
-          More Organizations
-        </Link>
+        {isAdmin(this.props.token) &&
+          <a className="navbar-item" onClick={this.props.showCreateOrganizationPrompt}>
+            <span className="icon">
+              <i className="fas fa-plus"></i>
+            </span>
+            <span>
+              Create new organization
+            </span>
+          </a>
+        }
       </div>
     </div>);
+    /* eslint-enable jsx-a11y/anchor-is-valid */
   }
 }

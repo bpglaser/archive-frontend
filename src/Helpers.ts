@@ -49,7 +49,7 @@ export function unregisterEscHandler() {
   document.onkeyup = null;
 }
 
-export function isAdmin(token?: string) {
+export function isAdmin(token: string | null | undefined) {
   if (!token) {
     return false;
   }

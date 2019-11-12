@@ -19,16 +19,17 @@ import EditArticle from './Routes/EditArticle';
 import FileDetails from './Routes/FileDetails';
 import NotFound from './Routes/NotFound';
 import OrganizationDetails from './Routes/OrganizationDetails';
-import Organizations from './Routes/Organizations';
 import Primary from './Routes/Primary';
 import ProjectDetails from './Routes/ProjectDetails';
 import Settings from './Routes/Settings';
 import OrganizationManage from './Routes/OrganizationManage';
+import CreateOrganizationPrompt from './Components/Prompts/CreateOrganizationPrompt';
 
 const history = createHashHistory();
 
 interface State {
   backend: Backend;
+  createOrganizationPromptVisible: boolean;
   easterEgg?: NodeJS.Timeout;
   errorMessages: string[];
   loggedInAs: User | null;
@@ -53,6 +54,7 @@ export default class App extends React.Component<any, State> {
     this.state = {
       // backend: new URLBackend('http://localhost:3001/', this.clientLogout),
       backend: new URLBackend('https://robinsonobservatory.org/', this.clientLogout),
+      createOrganizationPromptVisible: false,
       errorMessages: [],
       loggedInAs: user,
       loginDisplayMode: null,
@@ -77,6 +79,7 @@ export default class App extends React.Component<any, State> {
           registerClicked={this.registerClicked}
           logInClicked={this.showLoginPrompt}
           logOutClicked={this.logOutClicked}
+          showCreateOrganizationPrompt={this.showCreateOrganizationPrompt}
           recentOrganizations={this.state.recentOrganizations}
           token={this.state.token}
         />
@@ -134,17 +137,7 @@ export default class App extends React.Component<any, State> {
                 <OrganizationDetails
                   {...props}
                   backend={this.state.backend}
-                  token={this.state.token!}
-                />
-              )
-            }
-          />
-
-          <Route path="/organizations" exact
-            render={(props) =>
-              this.requireAuthentication(
-                <Organizations
-                  backend={this.state.backend}
+                  organizationDeleted={this.organizationDeleted}
                   token={this.state.token!}
                 />
               )
@@ -202,10 +195,19 @@ export default class App extends React.Component<any, State> {
 
         {this.state.loginDisplayMode !== null &&
           <LoginPrompt
-            close={this.closeLoginPrompt}
+            close={this.hidePrompt}
             backend={this.state.backend}
             loginSuccess={this.loginCompleted}
             mode={this.state.loginDisplayMode}
+          />
+        }
+
+        {this.state.token && this.state.createOrganizationPromptVisible &&
+          <CreateOrganizationPrompt
+            backend={this.state.backend}
+            close={this.hidePrompt}
+            success={this.organizationCreated}
+            token={this.state.token}
           />
         }
 
@@ -233,8 +235,9 @@ export default class App extends React.Component<any, State> {
     });
   }
 
-  closeLoginPrompt = () => {
+  hidePrompt = () => {
     this.setState({
+      createOrganizationPromptVisible: false,
       loginDisplayMode: null,
     });
   }
@@ -249,6 +252,27 @@ export default class App extends React.Component<any, State> {
     this.setState({
       loginDisplayMode: LoginDisplayMode.Login,
     });
+  }
+
+  showCreateOrganizationPrompt = () => {
+    this.setState({
+      loginDisplayMode: null,
+      createOrganizationPromptVisible: true,
+    });
+  }
+
+  organizationCreated = (organization: Organization) => {
+    this.setState((oldState) => ({
+      createOrganizationPromptVisible: false,
+      loginDisplayMode: null,
+      recentOrganizations: [...oldState.recentOrganizations, organization].sort((a, b) => a.name.localeCompare(b.name)),
+    }));
+  }
+
+  organizationDeleted = (organization: Organization) => {
+    this.setState((oldState) => ({
+      recentOrganizations: oldState.recentOrganizations.filter((oldOrganization) => oldOrganization.organizationID !== organization.organizationID),
+    }));
   }
 
   loginCompleted = async (user: User, token: string) => {
