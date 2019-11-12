@@ -1,11 +1,12 @@
 import 'bulma';
-import { createHashHistory } from 'history';
+import { createBrowserHistory } from 'history';
 import Cookies from 'js-cookie';
 import React from 'react';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import './App.css';
 import ErrorDropdownDisplay from './Components/ErrorDropdownDisplay';
 import Navbar from './Components/Navbar';
+import CreateOrganizationPrompt from './Components/Prompts/CreateOrganizationPrompt';
 import { LoginDisplayMode, LoginPrompt } from './Components/Prompts/LoginPrompt';
 import { Backend } from './Data/Backend';
 import { URLBackend } from "./Data/URLBackend";
@@ -19,13 +20,12 @@ import EditArticle from './Routes/EditArticle';
 import FileDetails from './Routes/FileDetails';
 import NotFound from './Routes/NotFound';
 import OrganizationDetails from './Routes/OrganizationDetails';
+import OrganizationManage from './Routes/OrganizationManage';
 import Primary from './Routes/Primary';
 import ProjectDetails from './Routes/ProjectDetails';
 import Settings from './Routes/Settings';
-import OrganizationManage from './Routes/OrganizationManage';
-import CreateOrganizationPrompt from './Components/Prompts/CreateOrganizationPrompt';
 
-const history = createHashHistory();
+const history = createBrowserHistory();
 
 interface State {
   backend: Backend;
@@ -250,14 +250,15 @@ export default class App extends React.Component<any, State> {
 
   showLoginPrompt = () => {
     this.setState({
+      createOrganizationPromptVisible: false,
       loginDisplayMode: LoginDisplayMode.Login,
     });
   }
 
   showCreateOrganizationPrompt = () => {
     this.setState({
-      loginDisplayMode: null,
       createOrganizationPromptVisible: true,
+      loginDisplayMode: null,
     });
   }
 
@@ -271,6 +272,8 @@ export default class App extends React.Component<any, State> {
 
   organizationDeleted = (organization: Organization) => {
     this.setState((oldState) => ({
+      createOrganizationPromptVisible: false,
+      loginDisplayMode: null,
       recentOrganizations: oldState.recentOrganizations.filter((oldOrganization) => oldOrganization.organizationID !== organization.organizationID),
     }));
   }
@@ -287,7 +290,6 @@ export default class App extends React.Component<any, State> {
   }
 
   clientLogout = () => {
-    console.log('Doing client logout');
     Cookies.remove('login-token');
 
     this.setState({
@@ -309,8 +311,7 @@ export default class App extends React.Component<any, State> {
     try {
       await this.state.backend.logout(this.state.token);
     } catch (err) {
-      console.log('Error while logging out. Just clearing the cookies.');
-      console.log(err);
+      console.log('Error while logging out. Just clearing the cookies.', err);
     }
 
     // Do the client logout even if there was an error
@@ -328,7 +329,8 @@ export default class App extends React.Component<any, State> {
         recentOrganizations: organizations,
       });
     } catch (err) {
-      // TODO handle
+      // TODO refine error message
+      this.displayError('Error encountered while loading organizations.');
     }
   }
 
