@@ -1,14 +1,18 @@
 import * as jwt from 'jsonwebtoken';
 import { User } from './Models/User';
+import * as emailValidator from 'email-validator';
 
-export function validUsername(s: string): boolean {
-  // TODO proper validation
-  return s.trim() !== '';
+export function validUsername(s: string) {
+  const trimmed = s.trim();
+  if (trimmed.length >= 4) {
+    return { valid: true };
+  } else {
+    return { valid: false, message: 'Username must be at least 4 characters.' };
+  }
 }
 
 export const vaildEmail = (s: string): boolean => {
-  // TODO proper validation
-  return s.trim() !== '';
+  return emailValidator.validate(s);
 }
 
 export const validPassword = (s: string): boolean => {
@@ -17,7 +21,6 @@ export const validPassword = (s: string): boolean => {
 }
 
 export const readTokenPayload = (token: string): User => {
-  // TODO validate token contents
   const result: any = jwt.decode(token);
   return { userID: result.userID, email: result.email, admin: result.admin, username: result.username };
 }

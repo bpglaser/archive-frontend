@@ -1,7 +1,7 @@
 import React from 'react';
 import zxcvbn from 'zxcvbn';
 import { Backend } from '../../Data/Backend';
-import { vaildEmail, validPassword, registerEscHandler, unregisterEscHandler } from '../../Helpers';
+import { vaildEmail, validPassword, registerEscHandler, unregisterEscHandler, validUsername } from '../../Helpers';
 import { User } from '../../Models/User';
 import StrengthIndicator from '../StrengthIndicator';
 import ValidationField from '../ValidationField';
@@ -293,9 +293,11 @@ export class LoginPrompt extends React.Component<Props, State> {
 
   usernameOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const username = event.target.value;
-    // TODO validate username
+    const { valid, message } = validUsername(username);
     this.setState({
       username: username,
+      usernameInvalidMessage: message ? message : '',
+      usernameValid: valid,
     });
   }
 }
