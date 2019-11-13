@@ -98,6 +98,7 @@ export default class App extends React.Component<any, State> {
               <ProjectDetails
                 {...props}
                 backend={this.state.backend}
+                displayError={this.displayError}
                 token={this.state.token}
               />
             }

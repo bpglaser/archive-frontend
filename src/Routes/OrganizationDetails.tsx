@@ -52,8 +52,10 @@ export default class OrganizationDetails extends React.Component<Props, State> {
   async componentDidMount() {
     this.setState(initialState());
 
-    await this.loadOrganization();
-    await this.loadProjects();
+    const organization = await this.loadOrganization();
+    if (organization) {
+      await this.loadProjects(organization);
+    }
 
     this.setState({
       loading: false,
@@ -164,17 +166,19 @@ export default class OrganizationDetails extends React.Component<Props, State> {
       this.setState({
         organization: organization,
       });
+      return organization;
     } catch (err) {
       console.log(err);
       this.setState({
         errorMessage: 'Failed to load organization',
       });
+      return null;
     }
   }
 
-  loadProjects = async () => {
+  loadProjects = async (organization: Organization) => {
     try {
-      const projects = await this.props.backend.listProjects(this.props.token!, this.state.organization!.organizationID);
+      const projects = await this.props.backend.listProjects(this.props.token!, organization.organizationID);
       this.setState({
         projects: projects,
       });
@@ -187,8 +191,10 @@ export default class OrganizationDetails extends React.Component<Props, State> {
   }
 
   retryLoad = async () => {
-    await this.loadOrganization();
-    await this.loadProjects();
+    const organization = await this.loadOrganization();
+    if (organization) {
+      await this.loadProjects(organization);
+    }
   }
 
   hidePrompt = () => {
@@ -215,11 +221,11 @@ export default class OrganizationDetails extends React.Component<Props, State> {
     });
   }
 
-  organizationUpdated = (organization: Organization) => {
-    // TODO should we reload the projects?
+  organizationUpdated = async (organization: Organization) => {
     this.setState({
       organization: organization,
     });
+    await this.loadProjects(organization);
   }
 
   organizationDeleted = async () => {

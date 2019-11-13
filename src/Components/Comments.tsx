@@ -119,8 +119,8 @@ export default class Comments extends React.Component<Props, State> {
     });
 
     try {
-      const comments = await this.props.backend.getComments(this.props.token, file.fileID);
-      // TODO sort comments
+      let comments = await this.props.backend.getComments(this.props.token, file.fileID);
+      comments = comments.sort((a, b) => Number(a) - Number(b));
       this.setState({
         comments: comments,
       });
@@ -137,8 +137,8 @@ export default class Comments extends React.Component<Props, State> {
   }
 
   pushComment = (comment: Comment) => {
-    const newComments = [comment, ...this.state.comments];
-    // TODO sort comments
+    let newComments = [comment, ...this.state.comments];
+    newComments = newComments.sort((a, b) => Number(a) - Number(b));
     this.setState({
       comments: newComments,
     });
@@ -153,7 +153,6 @@ export default class Comments extends React.Component<Props, State> {
     const newComments = [...this.state.comments];
     const i = newComments.findIndex((c) => c.commentID === comment.commentID);
     newComments[i] = comment;
-    // TODO maybe sort?
     this.setState({
       comments: newComments,
     });

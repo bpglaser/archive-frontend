@@ -70,7 +70,6 @@ export default class ArticleDetails extends React.Component<Props, State> {
       return <Redirect to='/' />;
     }
 
-    // TODO handle updated
     const { headline, author, content, published } = this.state.article!;
     const localizedTimeString = moment(published).fromNow();
     return (<div>

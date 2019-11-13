@@ -42,7 +42,7 @@ export default class ArticleBox extends React.Component<Props, State> {
     if (this.state.redirectToEdit) {
       return <Redirect to={'/article/edit/' + this.props.article.articleID} />
     }
-    // TODO handle updated date
+
     const { articleID, headline, author, snippet, published } = this.props.article;
     const localizedTimeString = moment(published).fromNow();
 

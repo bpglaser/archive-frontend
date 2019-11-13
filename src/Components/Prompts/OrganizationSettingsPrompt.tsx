@@ -133,11 +133,8 @@ export default class OrganizationSettingsPrompt extends React.Component<Props, S
     } catch (err) {
       // TODO properly display message
       this.setState({
-        errorMessage: 'Failed to update settings',
-      });
-    } finally {
-      this.setState({
         disabled: false,
+        errorMessage: 'Failed to update settings.',
       });
     }
   }

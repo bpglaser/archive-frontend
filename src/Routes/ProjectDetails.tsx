@@ -24,6 +24,7 @@ enum ProjectPrompt {
 
 interface Props extends RouteComponentProps<{ id: string }> {
   backend: Backend;
+  displayError: (errorMessage: string) => void;
   token: string | null;
 }
 
@@ -287,7 +288,9 @@ export default class ProjectDetails extends React.Component<Props, State> {
       });
     } catch (err) {
       console.log(err);
-      // TODO handle error
+      this.setState({
+        errorMessage: 'Failed to load organization details.',
+      })
     }
   }
 
@@ -299,8 +302,10 @@ export default class ProjectDetails extends React.Component<Props, State> {
       });
       return files;
     } catch (err) {
-      // TODO
       console.log(err);
+      this.setState({
+        errorMessage: 'Failed to load files.',
+      });
     }
     return null;
   }
@@ -319,7 +324,7 @@ export default class ProjectDetails extends React.Component<Props, State> {
       });
     } catch (err) {
       console.log(err);
-      // TODO
+      this.props.displayError('Failed to load tags from server.');
     }
   }
 

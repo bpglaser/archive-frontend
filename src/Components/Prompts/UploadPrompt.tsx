@@ -161,7 +161,9 @@ export default class UploadFilePrompt extends React.Component<Props, State> {
 
   startUpload = async () => {
     if (this.fileInputRef.current!.files === null || this.fileInputRef.current!.files.length === 0) {
-      // TODO
+      this.setState({
+        errorMessage: 'No file selected.',
+      });
       return;
     }
 
