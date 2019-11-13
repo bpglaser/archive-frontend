@@ -268,7 +268,7 @@ export class LoginPrompt extends React.Component<Props, State> {
     const email = event.target.value;
     this.setState({
       email: email,
-      emailValid: vaildEmail(email),
+      emailValid: vaildEmail(email) || this.props.mode === LoginDisplayMode.Login,
     });
   }
 
