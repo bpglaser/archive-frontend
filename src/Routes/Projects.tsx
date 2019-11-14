@@ -1,69 +1,50 @@
 import * as React from 'react';
 import { Redirect } from 'react-router';
+import Breadcrumb from '../Components/Breadcrumb';
+import Loader from '../Components/Loader';
 import ProjectPreviewCard from '../Components/ProjectPreviewCard';
-import CreateProjectPrompt from '../Components/Prompts/CreateProjectPrompt';
 import { Backend } from '../Data/Backend';
 import { Organization } from '../Models/Organization';
 import { Project } from '../Models/Project';
 
 interface Props {
   backend: Backend;
-  organization: Organization | null;
   token: string | null;
 }
 
 interface State {
-  createNewProjectPromptVisible: boolean;
+  errorMessage: string | null;
   loading: boolean;
-  projects: Project[];
+  myProjects: [Organization, Project[]][];
+  publicProjects: Project[];
   redirect: string | null;
+}
+
+function initialState(): State {
+  return {
+    errorMessage: null,
+    loading: true,
+    myProjects: [],
+    publicProjects: [],
+    redirect: null,
+  };
 }
 
 export default class Projects extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = {
-      createNewProjectPromptVisible: false,
-      loading: false,
-      projects: [],
-      redirect: this.props.organization && this.props.token ? null : '/',
-    };
+    this.state = initialState();
   }
 
   async componentDidMount() {
-    if (this.props.organization && this.props.token) {
-      this.setState({
-        loading: true,
-      });
+    this.setState(initialState());
 
-      const projects = await this.props.backend.listProjects(this.props.token, this.props.organization.organizationID);
+    await this.loadMyProjects();
+    await this.loadPublicProjects();
 
-      this.setState({
-        loading: true,
-        projects: projects,
-      });
-    }
-  }
-
-  async componentDidUpdate(oldProps: Props) {
-    if (this.props.organization !== oldProps.organization || this.props.token !== oldProps.token) {
-      if (this.props.organization && this.props.token) {
-        this.setState({
-          loading: true,
-        });
-
-        const projects = await this.props.backend.listProjects(this.props.token, this.props.organization.organizationID);
-
-        this.setState({
-          loading: true,
-          projects: projects,
-        });
-      } else {
-        this.setState({
-          redirect: '/',
-        });
-      }
-    }
+    this.setState({
+      loading: false,
+    });
   }
 
   render() {
@@ -71,57 +52,76 @@ export default class Projects extends React.Component<Props, State> {
       return <Redirect to={this.state.redirect} />;
     }
 
+    if (this.state.loading) {
+      return <Loader />;
+    }
+
     return (<div>
-      <nav className="level">
-        <div className="level-left">
-          <div className="level-item">
-            <button className="button" onClick={this.displayNewProjectDialog}>
-              <span className="icon">
-                <i className="fas fa-plus"></i>
-              </span>
-              <span>
-                Create New Project
-              </span>
-            </button>
-          </div>
-        </div>
-      </nav>
+      <Breadcrumb
+        links={[
+          ["All Projects", "/projects"],
+        ]}
+      />
 
-      <div className="projects">
-        {
-          this.state.projects.map((project, i) =>
-            <ProjectPreviewCard project={project} key={i} />)
-        }
-      </div>
+      <h3 className="title is-3">Public Projects</h3>
 
-      {this.state.createNewProjectPromptVisible &&
-        <CreateProjectPrompt
-          backend={this.props.backend}
-          close={this.closeProjectPrompt}
-          organization={this.props.organization!}
-          success={this.newProjectCreated}
-          token={this.props.token!}
-        />
+      {
+        this.state.publicProjects.map((project, i) =>
+          <ProjectPreviewCard project={project} key={i} />)
       }
-    </div>)
+
+      {this.state.myProjects.length > 0 &&
+        <h3 className="title is-3">My Projects</h3>
+      }
+      {this.state.myProjects.length > 0 &&
+        this.state.myProjects.map(([organization, projects], i) =>
+          <div key={i}>
+            <h4 className="title is-4">{organization.name}</h4>
+            {
+              projects.map((project, j) =>
+                <ProjectPreviewCard project={project} key={j} />)
+            }
+          </div>
+        )
+      }
+    </div>);
   }
 
-  displayNewProjectDialog = () => {
-    this.setState({
-      createNewProjectPromptVisible: true,
-    });
+  loadMyProjects = async () => {
+    if (this.props.token === null) {
+      return;
+    }
+
+    try {
+      const organizations = await this.props.backend.listOrganizations(this.props.token);
+
+      const myProjects: [Organization, Project[]][] = [];
+      for (const organization of organizations) {
+        const projects = await this.props.backend.listProjects(this.props.token, organization.organizationID);
+        const pair: [Organization, Project[]] = [organization, projects];
+        myProjects.push(pair);
+      }
+
+      this.setState({
+        myProjects: myProjects,
+      });
+    } catch (err) {
+      this.setState({
+        errorMessage: 'Failed to load my projects.',
+      });
+    }
   }
 
-  closeProjectPrompt = () => {
-    this.setState({
-      createNewProjectPromptVisible: false,
-    });
-  }
-
-  newProjectCreated = (project: Project) => {
-    this.setState({
-      createNewProjectPromptVisible: false,
-      projects: [...this.state.projects, project],
-    });
+  loadPublicProjects = async () => {
+    try {
+      const publicProjects = await this.props.backend.getPublicProjects();
+      this.setState({
+        publicProjects: publicProjects,
+      });
+    } catch (err) {
+      this.setState({
+        errorMessage: 'Failed to load public projects.',
+      });
+    }
   }
 }

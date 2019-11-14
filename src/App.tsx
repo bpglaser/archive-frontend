@@ -24,6 +24,7 @@ import OrganizationManage from './Routes/OrganizationManage';
 import Primary from './Routes/Primary';
 import ProjectDetails from './Routes/ProjectDetails';
 import Settings from './Routes/Settings';
+import Projects from './Routes/Projects';
 
 const history = createBrowserHistory();
 
@@ -89,6 +90,13 @@ export default class App extends React.Component<any, State> {
             <Primary
               backend={this.state.backend}
               displayError={this.displayError}
+              token={this.state.token}
+            />
+          </Route>
+
+          <Route path="/projects" exact>
+            <Projects
+              backend={this.state.backend}
               token={this.state.token}
             />
           </Route>
