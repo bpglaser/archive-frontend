@@ -287,10 +287,15 @@ export default class ProjectDetails extends React.Component<Props, State> {
         organization: organization,
       });
     } catch (err) {
-      console.log(err);
-      this.setState({
-        errorMessage: 'Failed to load organization details.',
-      })
+      if (err.response && err.response.status === UNAUTHORIZED && err.response.data.message === 'role') {
+        // public projects can't access organizations so we just pass
+        return;
+      } else {
+        console.log(err);
+        this.setState({
+          errorMessage: 'Failed to load organization details.',
+        })
+      }
     }
   }
 
