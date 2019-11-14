@@ -4,6 +4,7 @@ import { Organization } from '../Models/Organization';
 import { isAdmin } from '../Helpers';
 
 interface Props {
+  showJoinOrganizationPrompt: () => void;
   recentOrganizations: Organization[];
   showCreateOrganizationPrompt: () => void;
   token: string | null;
@@ -22,8 +23,7 @@ export default class OrganizationNavbarItem extends React.Component<Props, State
   render() {
     /* eslint-disable jsx-a11y/anchor-is-valid */
     if (this.props.recentOrganizations.length === 0) {
-      // TODO change to about prompt
-      return (<Link to="/organizations" className="navbar-item">Join an Organization!</Link>);
+      return (<a className="navbar-item" onClick={this.props.showJoinOrganizationPrompt}>Join an Organization!</a>);
     }
 
     return (<div className="navbar-item has-dropdown is-hoverable">

@@ -25,6 +25,7 @@ import Primary from './Routes/Primary';
 import ProjectDetails from './Routes/ProjectDetails';
 import Settings from './Routes/Settings';
 import Projects from './Routes/Projects';
+import JoinOrganizationInfoPrompt from './Components/Prompts/JoinOrganizationInfoPrompt';
 
 const history = createBrowserHistory();
 
@@ -33,6 +34,7 @@ interface State {
   createOrganizationPromptVisible: boolean;
   easterEgg?: NodeJS.Timeout;
   errorMessages: string[];
+  joinOrganizationInfoPromptVisible: boolean;
   loggedInAs: User | null;
   loginDisplayMode: LoginDisplayMode | null;
   recentOrganizations: Organization[];
@@ -57,6 +59,7 @@ export default class App extends React.Component<any, State> {
       backend: new URLBackend('https://robinsonobservatory.org/', this.clientLogout),
       createOrganizationPromptVisible: false,
       errorMessages: [],
+      joinOrganizationInfoPromptVisible: false,
       loggedInAs: user,
       loginDisplayMode: null,
       recentOrganizations: [],
@@ -81,6 +84,7 @@ export default class App extends React.Component<any, State> {
           logInClicked={this.showLoginPrompt}
           logOutClicked={this.logOutClicked}
           showCreateOrganizationPrompt={this.showCreateOrganizationPrompt}
+          showJoinOrganizationPrompt={this.showJoinOrganizationPrompt}
           recentOrganizations={this.state.recentOrganizations}
           token={this.state.token}
         />
@@ -220,6 +224,12 @@ export default class App extends React.Component<any, State> {
           />
         }
 
+        {this.state.joinOrganizationInfoPromptVisible &&
+          <JoinOrganizationInfoPrompt
+            close={this.hidePrompt}
+          />
+        }
+
         {this.state.errorMessages.length > 0 &&
           <ErrorDropdownDisplay
             close={this.advanceError}
@@ -247,12 +257,15 @@ export default class App extends React.Component<any, State> {
   hidePrompt = () => {
     this.setState({
       createOrganizationPromptVisible: false,
+      joinOrganizationInfoPromptVisible: false,
       loginDisplayMode: null,
     });
   }
 
   registerClicked = () => {
     this.setState({
+      createOrganizationPromptVisible: false,
+      joinOrganizationInfoPromptVisible: false,
       loginDisplayMode: LoginDisplayMode.Register,
     });
   }
@@ -260,6 +273,7 @@ export default class App extends React.Component<any, State> {
   showLoginPrompt = () => {
     this.setState({
       createOrganizationPromptVisible: false,
+      joinOrganizationInfoPromptVisible: false,
       loginDisplayMode: LoginDisplayMode.Login,
     });
   }
@@ -267,6 +281,15 @@ export default class App extends React.Component<any, State> {
   showCreateOrganizationPrompt = () => {
     this.setState({
       createOrganizationPromptVisible: true,
+      joinOrganizationInfoPromptVisible: false,
+      loginDisplayMode: null,
+    });
+  }
+  
+  showJoinOrganizationPrompt = () => {
+    this.setState({
+      createOrganizationPromptVisible: false,
+      joinOrganizationInfoPromptVisible: true,
       loginDisplayMode: null,
     });
   }
