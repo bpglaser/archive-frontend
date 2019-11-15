@@ -16,6 +16,7 @@ interface Props {
   showCreateOrganizationPrompt: () => void;
   showJoinOrganizationPrompt: () => void;
   recentOrganizations: Organization[];
+  reloadOrganizations: () => void;
   token: string | null;
 }
 
@@ -67,6 +68,7 @@ export default class Navbar extends React.Component<Props, State> {
               <InviteBell
                 backend={this.props.backend}
                 displayError={this.props.displayError}
+                reloadOrganizations={this.props.reloadOrganizations}
                 token={this.props.token}
               />
             </div>

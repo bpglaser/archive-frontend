@@ -86,6 +86,7 @@ export default class App extends React.Component<any, State> {
           showCreateOrganizationPrompt={this.showCreateOrganizationPrompt}
           showJoinOrganizationPrompt={this.showJoinOrganizationPrompt}
           recentOrganizations={this.state.recentOrganizations}
+          reloadOrganizations={this.populateRecentOrganizations}
           token={this.state.token}
         />
 

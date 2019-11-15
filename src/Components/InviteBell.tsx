@@ -6,6 +6,7 @@ import { Invite } from '../Models/Invite';
 interface Props {
   backend: Backend;
   displayError: (errorMessage: string) => void;
+  reloadOrganizations: () => void;
   token: string;
 }
 
@@ -54,6 +55,7 @@ export default class InviteBell extends React.Component<Props, State> {
           {
             this.state.invites.map((invite, i) =>
               <InviteDisplay
+                accepted={this.inviteAccepted}
                 backend={this.props.backend}
                 clearInvite={this.removeInvite}
                 displayError={this.props.displayError}
@@ -78,6 +80,11 @@ export default class InviteBell extends React.Component<Props, State> {
     } catch (err) {
       console.log(err);
     }
+  }
+
+  inviteAccepted = (invite: Invite) => {
+    this.props.reloadOrganizations();
+    this.removeInvite(invite);
   }
 
   removeInvite = (inviteToRemove: Invite) => {

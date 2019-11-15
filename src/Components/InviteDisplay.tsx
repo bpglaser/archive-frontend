@@ -3,6 +3,7 @@ import { Invite } from '../Models/Invite';
 import { Backend } from '../Data/Backend';
 
 interface Props {
+  accepted: (invite: Invite) => void;
   backend: Backend;
   clearInvite: (invite: Invite) => void;
   displayError: (errorMessage: string) => void;
@@ -39,7 +40,7 @@ export default class InviteDisplay extends React.Component<Props, State> {
   accept = async () => {
     try {
       await this.props.backend.acceptInvite(this.props.token, this.props.invite);
-      this.props.clearInvite(this.props.invite);
+      this.props.accepted(this.props.invite);
     } catch (err) {
       console.log(err);
       this.props.displayError('Error encountered while accepting invite.');
