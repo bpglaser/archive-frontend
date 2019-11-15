@@ -15,6 +15,7 @@ import { File } from '../Models/File';
 import { Organization } from '../Models/Organization';
 import { Project } from '../Models/Project';
 import NotFound from './NotFound';
+import moment from 'moment';
 
 enum ProjectPrompt {
   Delete,
@@ -158,13 +159,14 @@ export default class ProjectDetails extends React.Component<Props, State> {
       <div className="content">
         <ReactTable
           columns={[
+            { Header: 'Uploaded', accessor: 'uploaded', filterable: false, Cell: props => <span>{moment(props.value).format('L LT')}</span> },
             { Header: 'Name', accessor: 'name', Cell: props => <Link to={"/file/" + props.original.fileID}>{props.value}</Link> },
             { Header: 'Uploader', accessor: f => f.uploader ? f.uploader.username : '', id: 'uploader' },
             { Header: 'Tags', accessor: 'tags', Cell: props => props.value ? props.value.join(', ') : '', filterMethod: tagFilterMethod },
           ]}
           data={this.state.files}
           defaultPageSize={10}
-          defaultSorted={[{ id: 'name', desc: false }]}
+          defaultSorted={[{ id: 'uploaded', desc: true }]}
           defaultFilterMethod={lowercaseFilterMethod}
           filterable
         />

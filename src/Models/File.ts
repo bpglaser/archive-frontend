@@ -7,4 +7,5 @@ export interface File {
   uploader?: User;
   tags?: string[];
   originalName?: string;
+  uploaded?: Date;
 }

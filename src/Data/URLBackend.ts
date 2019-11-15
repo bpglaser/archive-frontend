@@ -500,6 +500,10 @@ function parseFileEntry(entry: any): File {
     result.originalName = entry.OriginalName;
   }
 
+  if (entry.uploaded) {
+    result.uploaded = new Date(entry.uploaded);
+  }
+
   return result;
 }
 
