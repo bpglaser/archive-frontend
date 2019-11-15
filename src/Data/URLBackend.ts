@@ -331,7 +331,7 @@ export class URLBackend implements Backend {
   }
 
   getNearbyFiles = async (token: string, fileID: number) => {
-    const url = new URL('/api/files/list/nearby/' + fileID, this.base);
+    const url = new URL('/api/files/list/nearby/' + fileID + '?count=5', this.base);
     const config = createAuthorizationConfig(token);
     const result = await this.instance.get(url.toString(), config);
     return result.data.map(parseNearby);

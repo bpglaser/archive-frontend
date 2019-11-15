@@ -18,7 +18,10 @@ export default class NearbyBox extends React.Component<Props, State> {
   }
 
   render() {
-    const file = this.props.file;
+    const { distance, file } = this.props;
+    const degrees = Math.floor(distance);
+    const minutes = Math.floor((distance - degrees) * 60);
+    const seconds = Math.floor((distance - degrees - minutes / 60) * 3600);
 
     return (<div className="card">
       <header className="card-header">
@@ -30,7 +33,7 @@ export default class NearbyBox extends React.Component<Props, State> {
       <div className="card-content">
         <div className="content">
           <p className="has-text-centered">
-            Distance: {this.props.distance}&#176;
+            Distance: {degrees}&#176; {minutes}' {seconds}"
           </p>
           <p className="has-text-centered">
             <Link to={'/file/' + file.fileID}>
