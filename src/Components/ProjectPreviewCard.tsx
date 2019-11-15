@@ -4,7 +4,7 @@ import { Project } from '../Models/Project';
 
 export default class ProjectPreviewCard extends React.Component<{ project: Project }> {
   render() {
-    const { projectID, name, description } = this.props.project;
+    const { projectID, name, description, fileCount } = this.props.project;
 
     return (<div className="project-preview-card">
       <div className="card">
@@ -17,7 +17,7 @@ export default class ProjectPreviewCard extends React.Component<{ project: Proje
             {description}
             <br />
             <br />
-            Project size: ?
+            Entries: {fileCount}
           </div>
         </div>
 

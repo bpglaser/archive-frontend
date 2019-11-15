@@ -8,4 +8,5 @@ export interface Project {
   owner: User;
   public: boolean;
   lastModified?: Date;
+  fileCount?: number;
 }
