@@ -2,7 +2,7 @@ import React from 'react';
 import { Backend } from '../../Data/Backend';
 import { Project } from '../../Models/Project';
 import { Organization } from '../../Models/Organization';
-import { registerEscHandler, unregisterEscHandler } from '../../Helpers';
+import { registerEscHandler, unregisterEscHandler, createErrorMessage } from '../../Helpers';
 
 interface Props {
   backend: Backend;
@@ -93,11 +93,9 @@ export default class DeleteProjectPrompt extends React.Component<Props, State> {
       await this.props.backend.deleteProject(this.props.token, this.props.project.projectID);
       this.props.success();
     } catch (err) {
+      console.log(err);
       this.setState({
-        errorMessage: 'Project deletion failed.',
-      });
-    } finally {
-      this.setState({
+        errorMessage: createErrorMessage(err, 'Project deletion failed.'),
         loading: false,
       });
     }

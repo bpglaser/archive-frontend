@@ -1,7 +1,7 @@
 import React from 'react';
 import { Backend } from '../../Data/Backend';
 import { Organization } from '../../Models/Organization';
-import { registerEscHandler, unregisterEscHandler } from '../../Helpers';
+import { registerEscHandler, unregisterEscHandler, createErrorMessage } from '../../Helpers';
 import { Redirect } from 'react-router';
 
 interface Props {
@@ -119,11 +119,11 @@ export default class OrganizationSettingsPrompt extends React.Component<Props, S
       return;
     }
 
-    try {
-      this.setState({
-        disabled: true,
-      });
+    this.setState({
+      disabled: true,
+    });
 
+    try {
       const { organizationID } = this.props.organization;
       const name = this.nameRef.current.value;
       const description = this.descriptionRef.current.value;
@@ -131,10 +131,10 @@ export default class OrganizationSettingsPrompt extends React.Component<Props, S
       const organization = await this.props.backend.editOrganization(this.props.token, organizationID, name, description);
       this.props.success(organization);
     } catch (err) {
-      // TODO properly display message
+      console.log(err);
       this.setState({
         disabled: false,
-        errorMessage: 'Failed to update settings.',
+        errorMessage: createErrorMessage(err, 'Failed to update settings.'),
       });
     }
   }

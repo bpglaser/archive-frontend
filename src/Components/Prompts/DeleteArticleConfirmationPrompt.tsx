@@ -1,7 +1,7 @@
 import React from 'react';
 import { Backend } from '../../Data/Backend';
 import { Article } from '../../Models/Article';
-import { registerEscHandler, unregisterEscHandler } from '../../Helpers';
+import { registerEscHandler, unregisterEscHandler, createErrorMessage } from '../../Helpers';
 
 interface Props {
   article: Article;
@@ -72,8 +72,9 @@ export default class DeleteArticleConfirmationPrompt extends React.Component<Pro
       await this.props.backend.deleteArticle(this.props.token, this.props.article.articleID);
       this.props.success();
     } catch (err) {
+      console.log(err);
       this.setState({
-        errorMessage: 'Failed to delete article.',
+        errorMessage: createErrorMessage(err, 'Failed to delete article.'),
         disabled: false,
       });
     }

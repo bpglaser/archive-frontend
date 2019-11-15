@@ -1,8 +1,8 @@
 import React from 'react';
 import { EditorValue } from 'react-rte';
 import { Backend } from '../../Data/Backend';
+import { createErrorMessage, registerEscHandler, unregisterEscHandler } from '../../Helpers';
 import { Article } from '../../Models/Article';
-import { registerEscHandler, unregisterEscHandler } from '../../Helpers';
 
 interface Props {
   article: Article;
@@ -68,18 +68,19 @@ export default class EditArticleConfirmationPrompt extends React.Component<Props
   }
 
   updateArticle = async () => {
+    this.setState({
+      disabled: true,
+    });
+
     try {
-      this.setState({
-        disabled: true,
-      });
       const content = this.props.value.toString('html');
       const article = await this.props.backend.updateArticle(this.props.token, this.props.article, this.props.title, content);
       this.props.success(article);
     } catch (err) {
-      // TODO fine tune error handling
+      console.log(err);
       this.setState({
         disabled: false,
-        errorMessage: 'Failed to update article.',
+        errorMessage: createErrorMessage(err, 'Failed to update article.'),
       });
     }
   }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Backend } from '../../Data/Backend';
-import { registerEscHandler, unregisterEscHandler } from '../../Helpers';
+import { registerEscHandler, unregisterEscHandler, createErrorMessage } from '../../Helpers';
 import { File } from '../../Models/File';
 
 interface Props {
@@ -73,8 +73,9 @@ export default class FileDeletePrompt extends React.Component<Props, State> {
       await this.props.backend.deleteFile(this.props.token, this.props.file.fileID);
       this.props.success();
     } catch (err) {
+      console.log(err);
       this.setState({
-        errorMessage: 'Failed to delete file.',
+        errorMessage: createErrorMessage(err, 'Failed to delete file.'),
         disabled: false,
       });
     }

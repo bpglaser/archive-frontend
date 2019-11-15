@@ -1,6 +1,6 @@
 import React from 'react';
 import { Backend } from '../../Data/Backend';
-import { registerEscHandler, unregisterEscHandler } from '../../Helpers';
+import { registerEscHandler, unregisterEscHandler, createErrorMessage } from '../../Helpers';
 import { File } from '../../Models/File';
 
 interface Props {
@@ -98,9 +98,10 @@ export default class FileSettingsPrompt extends React.Component<Props, State> {
       const file = await this.props.backend.updateFile(this.props.token, this.props.file, this.state.name);
       this.props.success(file);
     } catch (err) {
+      console.log(err);
       this.setState({
         disabled: false,
-        errorMessage: 'Failed to update filename.',
+        errorMessage: createErrorMessage(err, 'Failed to update filename.'),
       });
     }
   }

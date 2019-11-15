@@ -1,6 +1,6 @@
 import React from 'react';
 import { Backend } from '../../Data/Backend';
-import { registerEscHandler, unregisterEscHandler } from '../../Helpers';
+import { registerEscHandler, unregisterEscHandler, createErrorMessage } from '../../Helpers';
 import { Organization } from '../../Models/Organization';
 import { Project } from '../../Models/Project';
 import PublicToggleButton from '../PublicToggleButton';
@@ -134,7 +134,7 @@ export default class CreateProjectPrompt extends React.Component<Props, State> {
       console.log(err);
       this.setState({
         disabled: false,
-        errorMessage: 'An error was encountered while creating the project.',
+        errorMessage: createErrorMessage(err, 'Failed to create project.'),
       });
     }
   }

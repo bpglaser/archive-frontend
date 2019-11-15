@@ -1,7 +1,7 @@
 import React from 'react';
 import { Backend } from '../../Data/Backend';
 import { Organization } from '../../Models/Organization';
-import { registerEscHandler, unregisterEscHandler } from '../../Helpers';
+import { registerEscHandler, unregisterEscHandler, createErrorMessage } from '../../Helpers';
 
 interface Props {
   backend: Backend;
@@ -91,8 +91,9 @@ export default class OrganizationDeletePrompt extends React.Component<Props, Sta
       await this.props.backend.deleteOrganization(this.props.token, this.props.organization.organizationID);
       this.props.success();
     } catch (err) {
+      console.log(err);
       this.setState({
-        errorMessage: 'Organization deletion failed.',
+        errorMessage: createErrorMessage(err, 'Organization deletion failed.'),
         loading: false,
       });
     }

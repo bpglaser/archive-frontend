@@ -1,7 +1,7 @@
 import React from 'react';
 import { Backend } from '../../Data/Backend';
 import { Project } from '../../Models/Project';
-import { registerEscHandler, unregisterEscHandler } from '../../Helpers';
+import { registerEscHandler, unregisterEscHandler, createErrorMessage } from '../../Helpers';
 import PublicToggleButton from '../PublicToggleButton';
 
 interface Props {
@@ -89,7 +89,7 @@ export default class ProjectSettingsPrompt extends React.Component<Props, State>
               isPublic={this.state.isPublic}
               toggle={this.toggleIsPublic}
             />
-            
+
           </div>
 
           <div className="field">
@@ -128,24 +128,21 @@ export default class ProjectSettingsPrompt extends React.Component<Props, State>
       return;
     }
 
+    this.setState({
+      disabled: true,
+      errorMessage: null,
+    });
+
     try {
-      this.setState({
-        disabled: true,
-        errorMessage: null,
-      });
-
       const { projectID, organizationID } = this.props.project;
-
-      const name = this.state.name;
-      const description = this.state.description;
-      const isPublic = this.state.isPublic;
-
+      const { name, description, isPublic } = this.state;
       const newProject = await this.props.backend.editProject(this.props.token, projectID, organizationID, name, description, isPublic);
       this.props.success(newProject);
     } catch (err) {
+      console.log(err);
       this.setState({
         disabled: false,
-        errorMessage: 'Failed to update settings.',
+        errorMessage: createErrorMessage(err, 'Failed to update settings.'),
       });
     }
   }

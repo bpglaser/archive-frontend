@@ -1,6 +1,6 @@
 import React from 'react';
 import { Backend } from '../../Data/Backend';
-import { registerEscHandler, unregisterEscHandler } from '../../Helpers';
+import { createErrorMessage, registerEscHandler, unregisterEscHandler } from '../../Helpers';
 import { Organization } from '../../Models/Organization';
 import { User } from '../../Models/User';
 
@@ -76,9 +76,10 @@ export default class UserRemovePrompt extends React.Component<Props, State> {
       await this.props.backend.kickUserFromOrganization(this.props.token, this.props.organization, this.props.user);
       this.props.success(this.props.user);
     } catch (err) {
+      console.log(err);
       this.setState({
         disabled: false,
-        errorMessage: 'Failed to delete article.',
+        errorMessage: createErrorMessage(err, 'Failed to delete article.'),
       });
     }
   }

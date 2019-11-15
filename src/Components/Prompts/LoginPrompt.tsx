@@ -1,7 +1,7 @@
 import React from 'react';
 import zxcvbn from 'zxcvbn';
 import { Backend } from '../../Data/Backend';
-import { vaildEmail, validPassword, registerEscHandler, unregisterEscHandler, validUsername } from '../../Helpers';
+import { vaildEmail, validPassword, registerEscHandler, unregisterEscHandler, validUsername, createErrorMessage } from '../../Helpers';
 import { User } from '../../Models/User';
 import StrengthIndicator from '../StrengthIndicator';
 import ValidationField from '../ValidationField';
@@ -195,61 +195,46 @@ export class LoginPrompt extends React.Component<Props, State> {
   }
 
   login = async () => {
-    const email = this.state.email;
-    const password = this.state.password;
+    if (!this.validateFields()) {
+      return;
+    }
 
-    if (this.validateFields()) {
+
+    this.setState({
+      loading: true,
+    });
+
+    try {
+      const { email, password } = this.state;
+      const { user, token } = await this.props.backend.login(email, password);
+      this.props.loginSuccess(user, token);
+    } catch (err) {
+      console.log(err);
       this.setState({
-        loading: true,
+        errorMessage: createErrorMessage(err, 'An error was encountered while logging in.'),
+        loading: false,
       });
-
-      try {
-        const { user, token } = await this.props.backend.login(email, password);
-
-        this.setState({
-          loading: false,
-        });
-
-        this.props.loginSuccess(user, token);
-      } catch (err) {
-        console.log('Error encountered while logging in!');
-        console.log(err);
-
-        this.setState({
-          errorMessage: String(err),
-          loading: false,
-        });
-      }
     }
   }
 
   register = async () => {
-    const email = this.state.email;
-    const password = this.state.password;
-    const username = this.state.username;
+    if (!this.validateFields()) {
+      return;
+    }
+    this.setState({
+      loading: true,
+    });
 
-    if (this.validateFields()) {
+    try {
+      const { email, password, username } = this.state;
+      const { user, token } = await this.props.backend.register(email, password, username);
+      this.props.loginSuccess(user, token);
+    } catch (err) {
+      console.log(err);
       this.setState({
-        loading: true,
+        errorMessage: createErrorMessage(err, 'Failed to register a new account.'),
+        loading: false,
       });
-
-      try {
-        const { user, token } = await this.props.backend.register(email, password, username);
-
-        this.setState({
-          loading: false,
-        });
-
-        this.props.loginSuccess(user, token);
-      } catch (err) {
-        console.log('Error encountered while registering!');
-        console.log(err);
-
-        this.setState({
-          errorMessage: String(err),
-          loading: false,
-        });
-      }
     }
   }
 

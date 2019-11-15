@@ -1,7 +1,7 @@
 import React from 'react';
 import { Backend } from '../../Data/Backend';
 import { Comment } from '../../Models/Comment';
-import { registerEscHandler, unregisterEscHandler } from '../../Helpers';
+import { registerEscHandler, unregisterEscHandler, createErrorMessage } from '../../Helpers';
 
 interface Props {
   backend: Backend;
@@ -73,8 +73,9 @@ export default class DeleteCommentConfirmationPrompt extends React.Component<Pro
       await this.props.backend.deleteComment(this.props.token, this.props.comment.commentID);
       this.props.success(this.props.comment);
     } catch (err) {
+      console.log(err);
       this.setState({
-        errorMessage: 'Failed to delete article.',
+        errorMessage: createErrorMessage(err, 'Failed to delete article.'),
         disabled: false,
       });
     }

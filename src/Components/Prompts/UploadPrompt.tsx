@@ -2,7 +2,7 @@ import * as React from "react";
 import { Backend } from "../../Data/Backend";
 import { Project } from "../../Models/Project";
 import { File } from '../../Models/File';
-import { registerEscHandler, unregisterEscHandler } from "../../Helpers";
+import { registerEscHandler, unregisterEscHandler, createErrorMessage } from "../../Helpers";
 
 interface Props {
   backend: Backend;
@@ -117,24 +117,6 @@ export default class UploadFilePrompt extends React.Component<Props, State> {
     </div>);
   }
 
-  disableInteractivity = () => {
-    this.setState({
-      disabled: true,
-    });
-  }
-
-  displayError = (error: any) => {
-    this.setState({
-      errorMessage: String(error),
-    });
-  }
-
-  enableInteractivity = () => {
-    this.setState({
-      disabled: false,
-    });
-  }
-
   fileUpdated = () => {
     if (this.fileInputRef.current !== null) {
       const files = this.fileInputRef.current.files;
@@ -167,9 +149,12 @@ export default class UploadFilePrompt extends React.Component<Props, State> {
       return;
     }
 
+    this.setState({
+      disabled: true,
+    });
+
     try {
       const { backend, project, token } = this.props;
-      this.disableInteractivity();
 
       const formData = new FormData();
       formData.append('name', this.nameInputRef.current!.value);
@@ -179,9 +164,12 @@ export default class UploadFilePrompt extends React.Component<Props, State> {
 
       const result = await backend.uploadFile(token, project.projectID, formData);
       this.props.closeWithSuccess(result);
-    } catch (error) {
-      this.displayError(error);
-      this.enableInteractivity();
+    } catch (err) {
+      console.log(err);
+      this.setState({
+        disabled: false,
+        errorMessage: createErrorMessage(err, 'Failed to upload file.'),
+      });
     }
   }
 }

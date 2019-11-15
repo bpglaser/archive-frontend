@@ -2,7 +2,7 @@ import React from 'react';
 import { EditorValue } from 'react-rte';
 import { Backend } from '../../Data/Backend';
 import { Article } from '../../Models/Article';
-import { registerEscHandler, unregisterEscHandler } from '../../Helpers';
+import { registerEscHandler, unregisterEscHandler, createErrorMessage } from '../../Helpers';
 
 interface Props {
   backend: Backend;
@@ -83,9 +83,10 @@ export default class CreateArticleConfrimationPrompt extends React.Component<Pro
       const article = await this.props.backend.createArticle(this.props.token, this.props.title, content);
       this.props.success(article);
     } catch (err) {
+      console.log(err);
       this.setState({
         disabled: false,
-        errorMessage: 'Failed to create article.',
+        errorMessage: createErrorMessage(err, 'Failed to create article.'),
       });
     }
   }

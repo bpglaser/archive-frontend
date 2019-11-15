@@ -29,6 +29,14 @@ import JoinOrganizationInfoPrompt from './Components/Prompts/JoinOrganizationInf
 
 const history = createBrowserHistory();
 
+let appDisplayError: ((s: string) => void) | undefined = undefined;
+export function displayError(message: string) {
+  console.log(message);
+  if (appDisplayError) {
+    appDisplayError(message);
+  }
+}
+
 interface State {
   backend: Backend;
   createOrganizationPromptVisible: boolean;
@@ -67,10 +75,15 @@ export default class App extends React.Component<any, State> {
     };
   }
 
-  async componentDidMount() {
+  componentDidMount = async () => {
     await this.populateRecentOrganizations();
+    appDisplayError = this.displayError;
     const easterEgg = new EasterEgg(this.doEasterEgg);
     document.addEventListener('keyup', easterEgg.handleKeyEvent)
+  }
+
+  componentWillUnmount = () => {
+    appDisplayError = undefined;
   }
 
   render() {
@@ -286,7 +299,7 @@ export default class App extends React.Component<any, State> {
       loginDisplayMode: null,
     });
   }
-  
+
   showJoinOrganizationPrompt = () => {
     this.setState({
       createOrganizationPromptVisible: false,

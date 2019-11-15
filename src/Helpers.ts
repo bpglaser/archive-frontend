@@ -65,3 +65,13 @@ export function isAdmin(token: string | null | undefined) {
     return user.admin;
   }
 }
+
+export function createErrorMessage(err: any, message: string) {
+  if (err.response) {
+    return message;
+  } else if (err.request) {
+    return 'Server uncreachable.';
+  } else {
+    return 'Unknown error occoured.';
+  }
+}

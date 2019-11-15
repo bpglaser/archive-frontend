@@ -1,7 +1,7 @@
 import Axios, { CancelTokenSource } from 'axios';
 import React from 'react';
 import { Backend } from '../../Data/Backend';
-import { readTokenPayload, registerEscHandler, unregisterEscHandler } from '../../Helpers';
+import { readTokenPayload, registerEscHandler, unregisterEscHandler, createErrorMessage } from '../../Helpers';
 import { Organization } from '../../Models/Organization';
 import { User } from '../../Models/User';
 import MagicSearch from '../MagicSearch';
@@ -155,8 +155,9 @@ export default class CreateOrganizationPrompt extends React.Component<Props, Sta
       const newOrganization = await this.props.backend.createOrganization(this.props.token, name, description, admins);
       this.props.success(newOrganization);
     } catch (err) {
+      console.log(err);
       this.setState({
-        errorMessage: 'Failed to create organization',
+        errorMessage: createErrorMessage(err, 'Failed to create organization.'),
         disabled: false,
       });
     }
