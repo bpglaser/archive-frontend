@@ -4,6 +4,7 @@ import { File } from '../Models/File';
 import ErrorPage from './ErrorPage';
 import Loader from './Loader';
 import NearbyBox from './NearbyBox';
+import { createErrorMessage } from '../Helpers';
 
 interface Props {
   backend: Backend;
@@ -91,7 +92,7 @@ export default class NearbyColumn extends React.Component<Props, State> {
     } catch (err) {
       console.log(err);
       this.setState({
-        errorMessage: 'Error loading nearby files.',
+        errorMessage: createErrorMessage(err, 'Error loading nearby files.'),
       });
     }
   }

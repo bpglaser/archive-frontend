@@ -16,6 +16,7 @@ import { Organization } from '../Models/Organization';
 import { Project } from '../Models/Project';
 import NotFound from './NotFound';
 import moment from 'moment';
+import { displayError } from '../App';
 
 enum ProjectPrompt {
   Delete,
@@ -25,7 +26,6 @@ enum ProjectPrompt {
 
 interface Props extends RouteComponentProps<{ id: string }> {
   backend: Backend;
-  displayError: (errorMessage: string) => void;
   token: string | null;
 }
 
@@ -331,7 +331,7 @@ export default class ProjectDetails extends React.Component<Props, State> {
       });
     } catch (err) {
       console.log(err);
-      this.props.displayError('Failed to load tags from server.');
+      displayError('Failed to load tags from server.');
     }
   }
 

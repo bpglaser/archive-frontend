@@ -14,10 +14,10 @@ import Axios, { CancelTokenSource } from 'axios';
 import { Invite } from '../Models/Invite';
 import PendingInvitationsDisplay from '../Components/PendingInvitationsDisplay';
 import { readTokenPayload } from '../Helpers';
+import { displayError } from '../App';
 
 interface Props extends RouteComponentProps<{ id: string }> {
   backend: Backend;
-  displayError: (errorMessage: string) => void;
   token: string;
 }
 
@@ -239,7 +239,7 @@ export default class OrganizationManage extends React.Component<Props, State> {
     } catch (err) {
       if (!Axios.isCancel(err)) {
         console.log(err);
-        this.props.displayError('Error encountered while looking up user suggestions.');
+        displayError('Error encountered while looking up user suggestions.');
       }
       return [];
     }
@@ -271,7 +271,7 @@ export default class OrganizationManage extends React.Component<Props, State> {
       });
     } catch (err) {
       console.log(err);
-      this.props.displayError('Failed to invite user to organization.');
+      displayError('Failed to invite user to organization.');
     }
   }
 
@@ -283,7 +283,7 @@ export default class OrganizationManage extends React.Component<Props, State> {
       });
     } catch (err) {
       console.log(err);
-      this.props.displayError('Error encountered while loading pending invites.');
+      displayError('Error encountered while loading pending invites.');
     }
   }
 
@@ -295,7 +295,7 @@ export default class OrganizationManage extends React.Component<Props, State> {
       }));
     } catch (err) {
       console.log(err);
-      this.props.displayError('Error encountered while cancelling invite.');
+      displayError('Error encountered while cancelling invite.');
     }
   }
 

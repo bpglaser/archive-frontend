@@ -7,7 +7,7 @@ import ErrorPage from '../Components/ErrorPage';
 import Loader from '../Components/Loader';
 import DeleteArticleConfirmationPrompt from '../Components/Prompts/DeleteArticleConfirmationPrompt';
 import { Backend } from '../Data/Backend';
-import { checkIsAdmin } from '../Helpers';
+import { checkIsAdmin, createErrorMessage } from '../Helpers';
 import { Article } from '../Models/Article';
 import Breadcrumb from '../Components/Breadcrumb';
 
@@ -151,9 +151,9 @@ export default class ArticleDetails extends React.Component<Props, State> {
         article: article,
       });
     } catch (err) {
-      // TODO fine tune error handling
+      console.log(err);
       this.setState({
-        errorMessage: 'An error occoured while loading the article contents.',
+        errorMessage: createErrorMessage(err, 'An error occoured while loading the article contents.'),
       });
     }
   }

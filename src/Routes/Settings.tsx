@@ -7,7 +7,6 @@ import { User } from "../Models/User";
 
 interface Props extends RouteComponentProps {
   backend: Backend;
-  displayError: (errorMessage: string) => void;
   token: string;
   user: User;
   updateLogin: (user: User, token: string) => void;
@@ -22,7 +21,6 @@ export default class Settings extends React.Component<Props> {
         details =
           <AccountSettings
             backend={this.props.backend}
-            displayError={this.props.displayError}
             token={this.props.token}
             user={this.props.user}
             updateLogin={this.props.updateLogin}

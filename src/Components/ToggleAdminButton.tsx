@@ -2,10 +2,11 @@ import React from 'react';
 import { User } from '../Models/User';
 import { Backend } from '../Data/Backend';
 import { Organization } from '../Models/Organization';
+import { displayError } from '../App';
+import { createErrorMessage } from '../Helpers';
 
 interface Props {
   backend: Backend;
-  displayError: (errorMessage: string) => void;
   isAdmin: boolean;
   organization: Organization;
   token: string;
@@ -55,7 +56,7 @@ export default class ToggleAdminButton extends React.Component<Props, State> {
       this.props.updated(this.props.user, !this.props.isAdmin);
     } catch (err) {
       console.log(err);
-      this.props.displayError('Failed to set user as admin.');
+      displayError(createErrorMessage(err, 'Failed to set user as admin.'));
     }
 
     this.setState({

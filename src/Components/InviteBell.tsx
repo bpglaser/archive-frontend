@@ -2,10 +2,11 @@ import React from 'react';
 import { Backend } from '../Data/Backend';
 import InviteDisplay from './InviteDisplay';
 import { Invite } from '../Models/Invite';
+import { displayError } from '../App';
+import { createErrorMessage } from '../Helpers';
 
 interface Props {
   backend: Backend;
-  displayError: (errorMessage: string) => void;
   reloadOrganizations: () => void;
   token: string;
 }
@@ -58,7 +59,6 @@ export default class InviteBell extends React.Component<Props, State> {
                 accepted={this.inviteAccepted}
                 backend={this.props.backend}
                 clearInvite={this.removeInvite}
-                displayError={this.props.displayError}
                 invite={invite}
                 key={i}
                 reloadInvites={this.loadInvites}
@@ -79,6 +79,7 @@ export default class InviteBell extends React.Component<Props, State> {
       });
     } catch (err) {
       console.log(err);
+      displayError(createErrorMessage(err, 'Error encountered while loading invites.'));
     }
   }
 

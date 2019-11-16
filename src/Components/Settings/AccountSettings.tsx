@@ -1,8 +1,9 @@
-import { BAD_REQUEST, INTERNAL_SERVER_ERROR, UNAUTHORIZED } from "http-status-codes";
+import { UNAUTHORIZED } from "http-status-codes";
 import React from "react";
+import { displayError } from "../../App";
 import { Backend } from "../../Data/Backend";
+import { createErrorMessage, validUsername } from "../../Helpers";
 import { User } from "../../Models/User";
-import { validUsername } from "../../Helpers";
 
 enum Validation {
   Undetermined,
@@ -56,7 +57,6 @@ const PasswordField: React.FC<PasswordFieldProps> =
 
 interface Props {
   backend: Backend;
-  displayError: (errorMessage: string) => void;
   token: string;
   user: User;
   updateLogin: (user: User, token: string) => void;
@@ -206,42 +206,25 @@ export default class AccountSettings extends React.Component<Props, State> {
 
     try {
       await this.props.backend.updatePassword(this.props.token, oldPassword, newPassword);
-
       this.clearPasswordFields();
-
       this.setState({
+        awaitingUpdateResponse: false,
         displayMessage: "Password updated successfully!",
         displayMessageClassNameSuffix: " is-success",
       });
     } catch (err) {
-      if (err.response) {
-        switch (err.response.status) {
-          case BAD_REQUEST:
-            // The token is invalid
-            // TODO redirect to home and logout
-            break;
-          case INTERNAL_SERVER_ERROR:
-            // TODO
-            break;
-          case UNAUTHORIZED:
-            // Wrong old password
-            this.setState({
-              displayMessage: 'Old password incorrect.',
-              displayMessageClassNameSuffix: ' is-danger',
-            });
-            this.clearPasswordFields();
-            return;
-        }
+      console.log(err);
+
+      let message = createErrorMessage(err, 'An error occoured while updating the password.');
+      if (err.response && err.response.status === UNAUTHORIZED) {
+        message = 'Old password is incorrect.';
+        this.clearPasswordFields();
       }
 
-      console.log('Error encountered while updating password: ' + err);
-      this.setState({
-        displayMessage: 'An error was encountered.',
-        displayMessageClassNameSuffix: ' is-danger',
-      });
-    } finally {
       this.setState({
         awaitingUpdateResponse: false,
+        displayMessage: message,
+        displayMessageClassNameSuffix: ' is-danger',
       });
     }
   }
@@ -269,7 +252,7 @@ export default class AccountSettings extends React.Component<Props, State> {
       this.props.updateLogin(user, token);
     } catch (err) {
       console.log(err);
-      this.props.displayError('Error encountered while updating username.');
+      displayError('Error encountered while updating username.');
     }
 
     this.setState({

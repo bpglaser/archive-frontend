@@ -2,6 +2,7 @@ import React, { ChangeEvent } from 'react';
 import { Backend } from '../Data/Backend';
 import { Comment } from '../Models/Comment';
 import { File } from '../Models/File';
+import { createErrorMessage } from '../Helpers';
 
 export enum CreateCommentMode {
   Create,
@@ -123,7 +124,7 @@ export default class CreateCommentBox extends React.Component<Props, State> {
     } catch (err) {
       console.log(err);
       this.setState({
-        errorMessage: 'Failed to create comment.',
+        errorMessage: createErrorMessage(err, 'Failed to create comment.'),
       });
     }
 

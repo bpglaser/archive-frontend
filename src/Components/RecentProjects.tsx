@@ -4,6 +4,8 @@ import { Project } from '../Models/Project';
 import Loader from './Loader';
 import ProjectPreviewCard from './ProjectPreviewCard';
 import MoreProjectsCard from './MoreProjectsCard';
+import ErrorPage from './ErrorPage';
+import { createErrorMessage } from '../Helpers';
 
 interface Props {
   backend: Backend;
@@ -11,7 +13,7 @@ interface Props {
 }
 
 interface State {
-  error: boolean;
+  error: string | null;
   loading: boolean;
   projects: Project[];
 }
@@ -20,7 +22,7 @@ export default class RecentProjects extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      error: false,
+      error: null,
       loading: true,
       projects: [],
     };
@@ -36,6 +38,10 @@ export default class RecentProjects extends React.Component<Props, State> {
   render() {
     if (this.state.loading) {
       return <Loader />;
+    }
+
+    if (this.state.error) {
+      return <ErrorPage errorMessage={this.state.error} />;
     }
 
     return (<div style={{ display: "flex", flexFlow: "row wrap" }}>
@@ -55,7 +61,7 @@ export default class RecentProjects extends React.Component<Props, State> {
       });
     } catch (err) {
       this.setState({
-        error: true,
+        error: createErrorMessage(err, 'Error encountered while loading recent projects.'),
       });
     }
   }

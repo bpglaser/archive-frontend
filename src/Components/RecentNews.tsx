@@ -3,6 +3,7 @@ import { Backend } from '../Data/Backend';
 import { Article } from '../Models/Article';
 import ArticleBox from './ArticleBox';
 import Loader from './Loader';
+import { createErrorMessage } from '../Helpers';
 
 interface Props {
   backend: Backend;
@@ -75,7 +76,7 @@ export default class RecentNews extends React.Component<Props, State> {
       });
     } catch (err) {
       this.setState({
-        errorMessage: 'Failed to load news!',
+        errorMessage: createErrorMessage(err, 'Failed to load news!'),
       });
     }
   }

@@ -91,7 +91,6 @@ export default class App extends React.Component<any, State> {
       <BrowserRouter>
         <Navbar
           backend={this.state.backend}
-          displayError={this.displayError}
           loggedInAs={this.state.loggedInAs}
           registerClicked={this.registerClicked}
           logInClicked={this.showLoginPrompt}
@@ -107,7 +106,6 @@ export default class App extends React.Component<any, State> {
           <Route path="/" exact>
             <Primary
               backend={this.state.backend}
-              displayError={this.displayError}
               token={this.state.token}
             />
           </Route>
@@ -124,7 +122,6 @@ export default class App extends React.Component<any, State> {
               <ProjectDetails
                 {...props}
                 backend={this.state.backend}
-                displayError={this.displayError}
                 token={this.state.token}
               />
             }
@@ -136,7 +133,6 @@ export default class App extends React.Component<any, State> {
                 <Settings
                   {...props}
                   backend={this.state.backend}
-                  displayError={this.displayError}
                   token={this.state.token!}
                   user={this.state.loggedInAs!}
                   updateLogin={this.loginCompleted}
@@ -151,7 +147,6 @@ export default class App extends React.Component<any, State> {
                 <OrganizationManage
                   {...props}
                   backend={this.state.backend}
-                  displayError={this.displayError}
                   token={this.state.token!}
                 />
               )
@@ -209,7 +204,6 @@ export default class App extends React.Component<any, State> {
               <FileDetails
                 {...props}
                 backend={this.state.backend}
-                displayError={this.displayError}
                 token={this.state.token}
               />
             }
@@ -375,7 +369,6 @@ export default class App extends React.Component<any, State> {
         recentOrganizations: organizations,
       });
     } catch (err) {
-      // TODO refine error message
       this.displayError('Error encountered while loading organizations.');
     }
   }

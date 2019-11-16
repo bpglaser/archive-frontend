@@ -6,6 +6,7 @@ import ProjectPreviewCard from '../Components/ProjectPreviewCard';
 import { Backend } from '../Data/Backend';
 import { Organization } from '../Models/Organization';
 import { Project } from '../Models/Project';
+import { createErrorMessage } from '../Helpers';
 
 interface Props {
   backend: Backend;
@@ -106,8 +107,9 @@ export default class Projects extends React.Component<Props, State> {
         myProjects: myProjects,
       });
     } catch (err) {
+      console.log(err);
       this.setState({
-        errorMessage: 'Failed to load my projects.',
+        errorMessage: createErrorMessage(err, 'Failed to load my projects.'),
       });
     }
   }
@@ -119,8 +121,9 @@ export default class Projects extends React.Component<Props, State> {
         publicProjects: publicProjects,
       });
     } catch (err) {
+      console.log(err);
       this.setState({
-        errorMessage: 'Failed to load public projects.',
+        errorMessage: createErrorMessage(err, 'Failed to load public projects.'),
       });
     }
   }

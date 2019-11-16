@@ -5,6 +5,7 @@ import ErrorPage from './ErrorPage';
 import Loader from './Loader';
 import ProjectPreviewCard from './ProjectPreviewCard';
 import MoreProjectsCard from './MoreProjectsCard';
+import { createErrorMessage } from '../Helpers';
 
 interface Props {
   backend: Backend;
@@ -66,7 +67,7 @@ export default class PublicProjects extends React.Component<Props, State> {
     } catch (err) {
       console.log(err);
       this.setState({
-        errorMessage: 'Failed to load public projects.',
+        errorMessage: createErrorMessage(err, 'Failed to load public projects.'),
       });
     }
   }

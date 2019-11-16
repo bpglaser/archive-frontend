@@ -14,6 +14,8 @@ import { Project } from '../Models/Project';
 import FileSettingsPrompt from '../Components/Prompts/FileSettingsPrompt';
 import FileDeletePrompt from '../Components/Prompts/FileDeletePrompt';
 import MetadataDisplay from '../Components/MetadataDisplay';
+import { displayError } from '../App';
+import { createErrorMessage } from '../Helpers';
 
 enum FilePrompt {
   Delete,
@@ -22,7 +24,6 @@ enum FilePrompt {
 
 interface Props extends RouteComponentProps<{ id: string }> {
   backend: Backend;
-  displayError: (s: string) => void;
   token: string | null;
 }
 
@@ -167,7 +168,6 @@ export default class FileDetails extends React.Component<Props, State> {
 
           <Tags
             backend={this.props.backend}
-            displayError={this.props.displayError}
             file={this.state.file!}
             tagsUpdated={this.updateTags}
             tags={this.state.tags}
@@ -239,7 +239,7 @@ export default class FileDetails extends React.Component<Props, State> {
     } catch (err) {
       console.log(err);
       this.setState({
-        errorMessage: 'Error loading file details.',
+        errorMessage: createErrorMessage(err, 'Error loading file details.'),
       });
     }
     return null;
@@ -253,7 +253,7 @@ export default class FileDetails extends React.Component<Props, State> {
       });
     } catch (err) {
       console.log(err);
-      this.props.displayError('Error loading tags.');
+      displayError('Error loading tags.');
     }
   }
 
@@ -265,7 +265,7 @@ export default class FileDetails extends React.Component<Props, State> {
       });
     } catch (err) {
       console.log(err);
-      this.props.displayError('Error loading metadata.');
+      displayError('Error loading metadata.');
     }
   }
 
@@ -283,7 +283,7 @@ export default class FileDetails extends React.Component<Props, State> {
     } catch (err) {
       console.log(err);
       this.setState({
-        errorMessage: 'Error loading file details.',
+        errorMessage: createErrorMessage(err, 'Error loading file details.'),
       });
       return null;
     }
@@ -302,7 +302,7 @@ export default class FileDetails extends React.Component<Props, State> {
     } catch (err) {
       console.log(err);
       this.setState({
-        errorMessage: 'Error loading file details.',
+        errorMessage: createErrorMessage(err, 'Error loading file details.'),
       });
     }
   }
@@ -317,7 +317,7 @@ export default class FileDetails extends React.Component<Props, State> {
       window.URL.revokeObjectURL(url);
     } catch (err) {
       console.log(err);
-      this.props.displayError('Error encountered while downloading file.');
+      displayError('Error encountered while downloading file.');
     }
   }
 
@@ -330,7 +330,7 @@ export default class FileDetails extends React.Component<Props, State> {
       });
     } catch (err) {
       console.log(err);
-      this.props.displayError('Error encountered while loading display image.');
+      displayError('Error encountered while loading display image.');
     }
   }
 

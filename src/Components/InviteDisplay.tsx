@@ -1,12 +1,13 @@
 import React from 'react';
 import { Invite } from '../Models/Invite';
 import { Backend } from '../Data/Backend';
+import { displayError } from '../App';
+import { createErrorMessage } from '../Helpers';
 
 interface Props {
   accepted: (invite: Invite) => void;
   backend: Backend;
   clearInvite: (invite: Invite) => void;
-  displayError: (errorMessage: string) => void;
   invite: Invite;
   reloadInvites: () => void;
   token: string;
@@ -43,7 +44,7 @@ export default class InviteDisplay extends React.Component<Props, State> {
       this.props.accepted(this.props.invite);
     } catch (err) {
       console.log(err);
-      this.props.displayError('Error encountered while accepting invite.');
+      displayError(createErrorMessage(err, 'Error encountered while accepting invite.'));
       this.props.reloadInvites();
     }
   }
@@ -54,7 +55,7 @@ export default class InviteDisplay extends React.Component<Props, State> {
       this.props.clearInvite(this.props.invite);
     } catch (err) {
       console.log(err);
-      this.props.displayError('Error encountered while declining invite.');
+      displayError(createErrorMessage(err, 'Error encountered while declining invite.'));
       this.props.reloadInvites();
     }
   }

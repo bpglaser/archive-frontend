@@ -1,10 +1,11 @@
 import React from 'react';
 import { Backend } from '../Data/Backend';
 import { File } from '../Models/File';
+import { displayError } from '../App';
+import { createErrorMessage } from '../Helpers';
 
 interface Props {
   backend: Backend;
-  displayError: (s: string) => void;
   file: File;
   tagsUpdated: (tags: string[]) => void;
   tags: string[];
@@ -119,7 +120,7 @@ export default class Tags extends React.Component<Props, State> {
       this.props.tagsUpdated(newTags);
     } catch (err) {
       console.log(err);
-      this.props.displayError('Failed to delete tag.');
+      displayError(createErrorMessage(err, 'Failed to delete tag.'));
     }
 
     this.setState({
@@ -148,7 +149,7 @@ export default class Tags extends React.Component<Props, State> {
       this.props.tagsUpdated(newTags);
     } catch (err) {
       console.log(err);
-      this.props.displayError('Failed to add new tag.');
+      displayError(createErrorMessage(err, 'Failed to add new tag.'));
     }
 
     this.setState({

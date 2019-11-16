@@ -7,6 +7,7 @@ import EditArticleConfirmationPrompt from '../Components/Prompts/EditArticleConf
 import { Backend } from '../Data/Backend';
 import { Article } from '../Models/Article';
 import Breadcrumb from '../Components/Breadcrumb';
+import { createErrorMessage } from '../Helpers';
 
 interface Props extends RouteComponentProps<{ id: string }> {
   backend: Backend;
@@ -143,9 +144,9 @@ export default class EditArticle extends React.Component<Props, State> {
         value: EditorValue.createFromString(article.content, 'html'),
       });
     } catch (err) {
-      // TODO fine tune error handling
+      console.log(err);
       this.setState({
-        errorMessage: 'An error occoured while loading the article contents.',
+        errorMessage: createErrorMessage(err, 'An error occoured while loading the article contents.'),
       });
     }
   }

@@ -6,7 +6,7 @@ import CommentDisplayBox from './CommentDisplayBox';
 import CreateCommentBox, { CreateCommentMode } from './CreateCommentBox';
 import ErrorPage from './ErrorPage';
 import Loader from './Loader';
-import { readTokenPayload } from '../Helpers';
+import { readTokenPayload, createErrorMessage } from '../Helpers';
 import DeleteCommentConfirmationPrompt from './Prompts/DeleteCommentConfirmationPrompt';
 
 interface Props {
@@ -127,7 +127,7 @@ export default class Comments extends React.Component<Props, State> {
     } catch (err) {
       console.log(err);
       this.setState({
-        errorMessage: 'Failed to load comments.',
+        errorMessage: createErrorMessage(err, 'Failed to load comments.'),
       });
     }
 

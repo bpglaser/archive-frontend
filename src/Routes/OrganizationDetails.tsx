@@ -10,6 +10,7 @@ import OrganizationSettingsPrompt from '../Components/Prompts/OrganizationSettin
 import { Backend } from '../Data/Backend';
 import { Organization } from '../Models/Organization';
 import { Project } from '../Models/Project';
+import { createErrorMessage } from '../Helpers';
 
 enum VisiblePrompt {
   Create,
@@ -170,7 +171,7 @@ export default class OrganizationDetails extends React.Component<Props, State> {
     } catch (err) {
       console.log(err);
       this.setState({
-        errorMessage: 'Failed to load organization',
+        errorMessage: createErrorMessage(err, 'Failed to load organization'),
       });
       return null;
     }
@@ -185,7 +186,7 @@ export default class OrganizationDetails extends React.Component<Props, State> {
     } catch (err) {
       console.log(err);
       this.setState({
-        errorMessage: 'Failed to load projects',
+        errorMessage: createErrorMessage(err, 'Failed to load projects'),
       });
     }
   }

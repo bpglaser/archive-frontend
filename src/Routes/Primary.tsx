@@ -10,7 +10,6 @@ import PublicProjects from '../Components/PublicProjects';
 
 interface Props {
   backend: Backend;
-  displayError: (errorMessage: string) => void;
   token: string | null;
 }
 
