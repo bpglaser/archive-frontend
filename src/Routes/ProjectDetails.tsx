@@ -17,6 +17,7 @@ import { Project } from '../Models/Project';
 import NotFound from './NotFound';
 import moment from 'moment';
 import { displayError } from '../App';
+import { readTokenPayload } from '../Helpers';
 
 enum ProjectPrompt {
   Delete,
@@ -141,13 +142,16 @@ export default class ProjectDetails extends React.Component<Props, State> {
               </span>
               </button>
             </p>
-            <p className="level-item">
-              <button className="button" onClick={this.showSettingsPrompt}>
-                <span className="icon">
-                  <i className="fas fa-cog"></i>
-                </span>
-              </button>
-            </p>
+
+            {this.isProjectOwned() &&
+              < p className="level-item">
+                <button className="button" onClick={this.showSettingsPrompt}>
+                  <span className="icon">
+                    <i className="fas fa-cog"></i>
+                  </span>
+                </button>
+              </p>
+            }
           </div>
         }
       </nav>
@@ -172,7 +176,8 @@ export default class ProjectDetails extends React.Component<Props, State> {
         />
       </div>
 
-      {this.props.token && this.state.visiblePrompt === ProjectPrompt.Delete &&
+      {
+        this.props.token && this.state.visiblePrompt === ProjectPrompt.Delete &&
         <DeleteProjectPrompt
           backend={this.props.backend}
           close={this.closePrompt}
@@ -183,7 +188,8 @@ export default class ProjectDetails extends React.Component<Props, State> {
         />
       }
 
-      {this.props.token && this.state.visiblePrompt === ProjectPrompt.Settings &&
+      {
+        this.props.token && this.state.visiblePrompt === ProjectPrompt.Settings &&
         <ProjectSettingsPrompt
           backend={this.props.backend}
           close={this.closePrompt}
@@ -194,7 +200,8 @@ export default class ProjectDetails extends React.Component<Props, State> {
         />
       }
 
-      {this.props.token && this.state.visiblePrompt === ProjectPrompt.Upload &&
+      {
+        this.props.token && this.state.visiblePrompt === ProjectPrompt.Upload &&
         <UploadFilePrompt
           backend={this.props.backend}
           close={this.closePrompt}
@@ -203,7 +210,7 @@ export default class ProjectDetails extends React.Component<Props, State> {
           token={this.props.token}
         />
       }
-    </div>);
+    </div >);
   }
 
   closePrompt = () => {
@@ -337,6 +344,14 @@ export default class ProjectDetails extends React.Component<Props, State> {
 
   getProjectID = () => {
     return Number(this.props.match.params.id);
+  }
+
+  isProjectOwned = () => {
+    if (this.props.token && this.state.project) {
+      const user = readTokenPayload(this.props.token);
+      return this.state.project.owner.userID === user.userID;
+    }
+    return false;
   }
 }
 
