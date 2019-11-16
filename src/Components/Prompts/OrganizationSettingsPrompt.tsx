@@ -14,23 +14,22 @@ interface Props {
 }
 
 interface State {
+  description: string;
   disabled: boolean;
   errorMessage: string | null;
+  name: string;
   redirect?: string;
 }
 
 export default class OrganizationSettingsPrompt extends React.Component<Props, State> {
-  readonly nameRef: React.RefObject<HTMLInputElement>;
-  readonly descriptionRef: React.RefObject<HTMLTextAreaElement>;
-
   constructor(props: Props) {
     super(props);
     this.state = {
+      description: props.organization.description,
       disabled: false,
       errorMessage: null,
+      name: props.organization.name,
     };
-    this.nameRef = React.createRef();
-    this.descriptionRef = React.createRef();
   }
 
   componentDidMount() {
@@ -63,7 +62,8 @@ export default class OrganizationSettingsPrompt extends React.Component<Props, S
                 className="input"
                 type="text"
                 placeholder="Project Name"
-                ref={this.nameRef}
+                value={this.state.name}
+                onChange={this.nameOnChange}
                 disabled={this.state.disabled} />
             </div>
           </div>
@@ -74,7 +74,8 @@ export default class OrganizationSettingsPrompt extends React.Component<Props, S
               <textarea
                 className="textarea"
                 placeholder="Description"
-                ref={this.descriptionRef}
+                value={this.state.description}
+                onChange={this.descriptionOnChange}
                 disabled={this.state.disabled} />
             </div>
           </div>
@@ -115,7 +116,8 @@ export default class OrganizationSettingsPrompt extends React.Component<Props, S
   }
 
   submitSettings = async () => {
-    if (this.nameRef.current === null || this.descriptionRef.current === null) {
+    const { name, description } = this.state;
+    if (name.trim() === '') {
       return;
     }
 
@@ -125,9 +127,6 @@ export default class OrganizationSettingsPrompt extends React.Component<Props, S
 
     try {
       const { organizationID } = this.props.organization;
-      const name = this.nameRef.current.value;
-      const description = this.descriptionRef.current.value;
-
       const organization = await this.props.backend.editOrganization(this.props.token, organizationID, name, description);
       this.props.success(organization);
     } catch (err) {
@@ -137,5 +136,17 @@ export default class OrganizationSettingsPrompt extends React.Component<Props, S
         errorMessage: createErrorMessage(err, 'Failed to update settings.'),
       });
     }
+  }
+
+  nameOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({
+      name: event.target.value,
+    });
+  }
+
+  descriptionOnChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    this.setState({
+      description: event.target.value,
+    });
   }
 }
