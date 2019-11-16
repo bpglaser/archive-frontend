@@ -206,11 +206,7 @@ export class URLBackend implements Backend {
     const config = createAuthorizationConfig(token);
 
     const response = await this.instance.post(url.toString(), data, config);
-    const organizationID = response.data.orgID;
-    if (organizationID === undefined) {
-      throw new Error('Invalid fields on response.');
-    }
-    return { organizationID: organizationID, name: name, description: description };
+    return parseOrganizationEntry(response.data);
   }
 
   editOrganization = async (token: string, organizationID: number, name: string, description: string) => {
@@ -218,8 +214,8 @@ export class URLBackend implements Backend {
     const data = { orgID: organizationID, name: name, desc: description };
     const config = createAuthorizationConfig(token);
 
-    await this.instance.post(url.toString(), data, config);
-    return { organizationID: organizationID, name: name, description: description };
+    const response = await this.instance.post(url.toString(), data, config);
+    return parseOrganizationEntry(response.data);
   }
 
   deleteOrganization = async (token: string, organizationID: number) => {
@@ -455,21 +451,17 @@ export class URLBackend implements Backend {
 }
 
 function parseOrganizationEntry(entry: any): Organization {
-  const result: Organization = {
-    organizationID: Number(entry.OrgID),
-    name: entry.Name,
-    description: entry.Description,
-  };
-
-  if (entry.ProjectCount) {
-    result.projectCount = Number(entry.ProjectCount);
+  if (
+    typeof entry.organizationID === 'number' &&
+    typeof entry.name === 'string' &&
+    typeof entry.description === 'string' &&
+    typeof entry.isAdmin === 'boolean' &&
+    typeof entry.projectCount === 'number' &&
+    typeof entry.fileCount === 'number'
+  ) {
+    return entry;
   }
-
-  if (entry.FileCount) {
-    result.fileCount = Number(entry.FileCount);
-  }
-
-  return result;
+  throw new Error('Malformed organization entry: ' + JSON.stringify(entry));
 }
 
 function parseCommentEntry(entry: any): Comment {

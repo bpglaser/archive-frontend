@@ -369,6 +369,7 @@ export default class App extends React.Component<any, State> {
         recentOrganizations: organizations,
       });
     } catch (err) {
+      console.log(err);
       this.displayError('Error encountered while loading organizations.');
     }
   }

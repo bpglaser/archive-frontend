@@ -60,11 +60,11 @@ export class MockBackend implements Backend {
   getInvites = async (token: string) => {
     await delay(this.sleepDuration);
     return [
-      { inviteID: 1, inviter: { userID: 123, email: 'foo@bar.com', username: 'foo' }, organization: { organizationID: 456, name: 'My org', description: 'hello world' } },
-      { inviteID: 1, inviter: { userID: 123, email: 'foo@bar.com', username: 'foo' }, organization: { organizationID: 456, name: 'My org', description: 'hello world' } },
-      { inviteID: 1, inviter: { userID: 123, email: 'foo@bar.com', username: 'foo' }, organization: { organizationID: 456, name: 'My org', description: 'hello world' } },
-      { inviteID: 1, inviter: { userID: 123, email: 'foo@bar.com', username: 'foo' }, organization: { organizationID: 456, name: 'My org', description: 'hello world' } },
-      { inviteID: 1, inviter: { userID: 123, email: 'foo@bar.com', username: 'foo' }, organization: { organizationID: 456, name: 'My org', description: 'hello world' } },
+      { inviteID: 1, inviter: { userID: 123, email: 'foo@bar.com', username: 'foo' }, organization: { organizationID: 456, name: 'My org', description: 'hello world', isAdmin: false, projectCount: 10, fileCount: 5 } },
+      { inviteID: 1, inviter: { userID: 123, email: 'foo@bar.com', username: 'foo' }, organization: { organizationID: 456, name: 'My org', description: 'hello world', isAdmin: false, projectCount: 10, fileCount: 5 } },
+      { inviteID: 1, inviter: { userID: 123, email: 'foo@bar.com', username: 'foo' }, organization: { organizationID: 456, name: 'My org', description: 'hello world', isAdmin: false, projectCount: 10, fileCount: 5 } },
+      { inviteID: 1, inviter: { userID: 123, email: 'foo@bar.com', username: 'foo' }, organization: { organizationID: 456, name: 'My org', description: 'hello world', isAdmin: false, projectCount: 10, fileCount: 5 } },
+      { inviteID: 1, inviter: { userID: 123, email: 'foo@bar.com', username: 'foo' }, organization: { organizationID: 456, name: 'My org', description: 'hello world', isAdmin: false, projectCount: 10, fileCount: 5 } },
     ];
   }
 
@@ -123,12 +123,12 @@ export class MockBackend implements Backend {
 
   createOrganization = async (token: string, name: string, description: string, admins: number[]) => {
     await delay(this.sleepDuration);
-    return { organizationID: 1, name: 'foobar', description: 'hello world' };
+    return { organizationID: 1, name: 'foobar', description: 'hello world', isAdmin: false, projectCount: 0, fileCount: 0 };
   }
 
   editOrganization = async (token: string, organizationID: number, name: string, description: string) => {
     await delay(this.sleepDuration);
-    return { organizationID: 1, name: 'foobar', description: 'hello world' };
+    return { organizationID: 1, name: 'foobar', description: 'hello world', isAdmin: true, projectCount: 10, fileCount: 5 };
   }
 
   deleteOrganization = async (token: string, organizationID: number) => {
@@ -138,16 +138,16 @@ export class MockBackend implements Backend {
   listOrganizations = async (token: string) => {
     await delay(this.sleepDuration);
     return [
-      { organizationID: 1, name: 'foobar1', description: 'hello world' },
-      { organizationID: 2, name: 'foobar2', description: 'hello world' },
-      { organizationID: 3, name: 'foobar3', description: 'hello world' },
-      { organizationID: 4, name: 'foobar4', description: 'hello world' },
+      { organizationID: 1, name: 'foobar1', description: 'hello world', isAdmin: true, projectCount: 10, fileCount: 5 },
+      { organizationID: 2, name: 'foobar2', description: 'hello world', isAdmin: false, projectCount: 10, fileCount: 5 },
+      { organizationID: 3, name: 'foobar3', description: 'hello world', isAdmin: true, projectCount: 10, fileCount: 5 },
+      { organizationID: 4, name: 'foobar4', description: 'hello world', isAdmin: false, projectCount: 10, fileCount: 5 },
     ];
   }
 
   getOrganizationDetails = async (token: string, organizationID: number) => {
     await delay(this.sleepDuration);
-    return { organizationID: organizationID, name: 'foobar1', description: 'hello world' };
+    return { organizationID: organizationID, name: 'foobar1', description: 'hello world', isAdmin: false, projectCount: 5, fileCount: 100 };
   }
 
   getOrganizationUsers = async (token: string, organization: Organization) => {

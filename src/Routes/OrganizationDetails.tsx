@@ -113,13 +113,15 @@ export default class OrganizationDetails extends React.Component<Props, State> {
         </div>
 
         <div className="level-right">
-          <p className="level-item">
-            <button className="button" onClick={this.showSettingsPrompt}>
-              <span className="icon">
-                <i className="fas fa-cog"></i>
-              </span>
-            </button>
-          </p>
+          {this.state.organization && this.state.organization.isAdmin &&
+            <p className="level-item">
+              <button className="button" onClick={this.showSettingsPrompt}>
+                <span className="icon">
+                  <i className="fas fa-cog"></i>
+                </span>
+              </button>
+            </p>
+          }
         </div>
       </nav>
 
