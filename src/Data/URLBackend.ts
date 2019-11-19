@@ -496,6 +496,9 @@ function parseFileEntry(entry: any): File {
     result.uploaded = new Date(entry.uploaded);
   }
 
+  result.object = entry.object;
+  result.observer = entry.observer;
+
   return result;
 }
 

@@ -166,6 +166,8 @@ export default class ProjectDetails extends React.Component<Props, State> {
             { Header: 'Uploaded', accessor: 'uploaded', filterable: false, Cell: props => <span>{moment(props.value).format('L LT')}</span> },
             { Header: 'Name', accessor: 'name', Cell: props => <Link to={"/file/" + props.original.fileID}>{props.value}</Link> },
             { Header: 'Uploader', accessor: f => f.uploader ? f.uploader.username : '', id: 'uploader' },
+            { Header: 'Observer', accessor: 'observer' },
+            { Header: 'Object', accessor: 'object' },
             { Header: 'Tags', accessor: 'tags', Cell: props => props.value ? props.value.join(', ') : '', filterMethod: tagFilterMethod },
           ]}
           data={this.state.files}

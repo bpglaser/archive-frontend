@@ -8,4 +8,6 @@ export interface File {
   tags?: string[];
   originalName?: string;
   uploaded?: Date;
+  object?: string;
+  observer?: string;
 }
