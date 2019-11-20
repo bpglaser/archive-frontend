@@ -23,7 +23,18 @@ export default class OrganizationNavbarItem extends React.Component<Props, State
   render() {
     /* eslint-disable jsx-a11y/anchor-is-valid */
     if (this.props.recentOrganizations.length === 0) {
-      return (<a className="navbar-item" onClick={this.props.showJoinOrganizationPrompt}>Join an Organization!</a>);
+      if (isAdmin(this.props.token)) {
+        return (<a className="navbar-item" onClick={this.props.showCreateOrganizationPrompt}>
+          <span className="icon">
+            <i className="fas fa-plus"></i>
+          </span>
+          <span>
+            Create new organization
+          </span>
+        </a>);
+      } else {
+        return (<a className="navbar-item" onClick={this.props.showJoinOrganizationPrompt}>Join an Organization!</a>);
+      }
     }
 
     return (<div className="navbar-item has-dropdown is-hoverable">
