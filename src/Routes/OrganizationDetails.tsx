@@ -1,16 +1,17 @@
 import React from 'react';
 import { Redirect, RouteComponentProps } from 'react-router';
+import { Link } from 'react-router-dom';
+import ReactTable from 'react-table';
 import Breadcrumb from '../Components/Breadcrumb';
 import ErrorPage from '../Components/ErrorPage';
 import Loader from '../Components/Loader';
-import ProjectPreviewCard from '../Components/ProjectPreviewCard';
 import CreateProjectPrompt from '../Components/Prompts/CreateProjectPrompt';
 import OrganizationDeletePrompt from '../Components/Prompts/OrganizationDeletePrompt';
 import OrganizationSettingsPrompt from '../Components/Prompts/OrganizationSettingsPrompt';
 import { Backend } from '../Data/Backend';
+import { createErrorMessage } from '../Helpers';
 import { Organization } from '../Models/Organization';
 import { Project } from '../Models/Project';
-import { createErrorMessage } from '../Helpers';
 
 enum VisiblePrompt {
   Create,
@@ -125,10 +126,16 @@ export default class OrganizationDetails extends React.Component<Props, State> {
         </div>
       </nav>
 
-      {
-        this.state.projects.map((project, i) =>
-          <ProjectPreviewCard project={project} key={i} />)
-      }
+      <ReactTable
+        columns={[
+          { Header: "Name", accessor: "name", Cell: props => <Link to={"/projects/" + props.original.projectID}>{props.value}</Link> },
+          { Header: "Files", accessor: "fileCount", width: 75 },
+          { Header: "Visibility", accessor: (project) => project.public ? "Public" : "Private", id: "public", width: 75 },
+          { Header: "Owner", accessor: (project) => project.owner.username, id: "owner", width: 300 },
+        ]}
+        data={this.state.projects}
+        defaultPageSize={10}
+      />
 
       {this.state.visiblePrompt === VisiblePrompt.Create && this.state.organization &&
         <CreateProjectPrompt
