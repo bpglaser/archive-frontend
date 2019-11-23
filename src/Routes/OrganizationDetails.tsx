@@ -1,10 +1,9 @@
 import React from 'react';
 import { Redirect, RouteComponentProps } from 'react-router';
-import { Link } from 'react-router-dom';
-import ReactTable from 'react-table';
 import Breadcrumb from '../Components/Breadcrumb';
 import ErrorPage from '../Components/ErrorPage';
 import Loader from '../Components/Loader';
+import ProjectsTable from '../Components/ProjectsTable';
 import CreateProjectPrompt from '../Components/Prompts/CreateProjectPrompt';
 import OrganizationDeletePrompt from '../Components/Prompts/OrganizationDeletePrompt';
 import OrganizationSettingsPrompt from '../Components/Prompts/OrganizationSettingsPrompt';
@@ -126,15 +125,8 @@ export default class OrganizationDetails extends React.Component<Props, State> {
         </div>
       </nav>
 
-      <ReactTable
-        columns={[
-          { Header: "Name", accessor: "name", Cell: props => <Link to={"/projects/" + props.original.projectID}>{props.value}</Link> },
-          { Header: "Files", accessor: "fileCount", width: 75 },
-          { Header: "Visibility", accessor: (project) => project.public ? "Public" : "Private", id: "public", width: 75 },
-          { Header: "Owner", accessor: (project) => project.owner.username, id: "owner", width: 300 },
-        ]}
-        data={this.state.projects}
-        defaultPageSize={10}
+      <ProjectsTable
+        projects={this.state.projects}
       />
 
       {this.state.visiblePrompt === VisiblePrompt.Create && this.state.organization &&
