@@ -356,7 +356,7 @@ export class URLBackend implements Backend {
   }
 
   listFiles = async (token: string | null, projectID: number) => {
-    const url = new URL('/api/files/list/' + projectID, this.base);
+    const url = new URL('/api/files/list/' + projectID + '?tags=true', this.base);
     const config = token ? createAuthorizationConfig(token) : {};
 
     const result = await this.instance.get(url.toString(), config);
@@ -494,6 +494,10 @@ function parseFileEntry(entry: any): File {
 
   if (entry.uploaded) {
     result.uploaded = new Date(entry.uploaded);
+  }
+
+  if (entry.tags) {
+    result.tags = entry.tags;
   }
 
   result.object = entry.object;

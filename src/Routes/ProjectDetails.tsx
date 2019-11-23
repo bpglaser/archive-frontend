@@ -1,4 +1,5 @@
 import { NOT_FOUND, UNAUTHORIZED } from 'http-status-codes';
+import moment from 'moment';
 import React from 'react';
 import { Redirect, RouteComponentProps } from 'react-router';
 import { Link } from 'react-router-dom';
@@ -11,13 +12,11 @@ import DeleteProjectPrompt from '../Components/Prompts/DeleteProjectPrompt';
 import ProjectSettingsPrompt from '../Components/Prompts/ProjectSettingsPrompt';
 import UploadFilePrompt from '../Components/Prompts/UploadPrompt';
 import { Backend } from '../Data/Backend';
+import { readTokenPayload } from '../Helpers';
 import { File } from '../Models/File';
 import { Organization } from '../Models/Organization';
 import { Project } from '../Models/Project';
 import NotFound from './NotFound';
-import moment from 'moment';
-import { displayError } from '../App';
-import { readTokenPayload } from '../Helpers';
 
 enum ProjectPrompt {
   Delete,
@@ -68,10 +67,7 @@ export default class ProjectDetails extends React.Component<Props, State> {
         await this.loadOrganization(this.props.token, project.organizationID);
       }
 
-      const files = await this.loadFiles(this.props.token, projectID);
-      if (files) {
-        await this.loadTags(this.props.token, files);
-      }
+      await this.loadFiles(this.props.token, projectID);
 
       this.setState({
         loading: false,
@@ -324,24 +320,6 @@ export default class ProjectDetails extends React.Component<Props, State> {
       });
     }
     return null;
-  }
-
-  loadTags = async (token: string | null, files: File[]) => {
-    try {
-      const fileTags = await Promise.all(
-        files.map((file) => this.props.backend.getTags(token, file.fileID)));
-
-      const modifiedFiles: File[] = [];
-      fileTags.forEach((tags, i) => {
-        modifiedFiles.push({ ...files[i], tags: tags });
-      });
-      this.setState({
-        files: modifiedFiles,
-      });
-    } catch (err) {
-      console.log(err);
-      displayError('Failed to load tags from server.');
-    }
   }
 
   getProjectID = () => {
