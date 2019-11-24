@@ -56,7 +56,7 @@ export default class Projects extends React.Component<Props, State> {
     return (<div>
       <Breadcrumb
         links={[
-          ["All Projects", "/projects"],
+          ["Public Projects", "/projects"],
         ]}
       />
 

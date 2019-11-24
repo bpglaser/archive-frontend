@@ -129,7 +129,7 @@ export default class OrganizationManage extends React.Component<Props, State> {
 
       <ReactTable
         columns={[
-          { Header: 'Username', accessor: 'user.email' },
+          { Header: 'Username', accessor: 'user.username' },
           { Header: 'Email', accessor: 'user.email' },
           { Header: 'Admin', Cell: this.renderAdminCell },
         ]}
@@ -233,7 +233,7 @@ export default class OrganizationManage extends React.Component<Props, State> {
     try {
       const suggestions = await this.props.backend.getUserSuggestions(this.props.token, search, source);
       return suggestions.map((user) => ({
-        suggestion: user.email,
+        suggestion: user.username,
         select: async () => await this.inviteUser(user),
       }));
     } catch (err) {

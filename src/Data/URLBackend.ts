@@ -93,7 +93,7 @@ export class URLBackend implements Backend {
     const config = createAuthorizationConfig(token);
     config.cancelToken = tokenSource.token;
     const result = await this.instance.get(url.toString(), config);
-    return result.data.map(parseUserEntry);
+    return result.data;
   }
 
   getInvites = async (token: string) => {
