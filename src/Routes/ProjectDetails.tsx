@@ -63,11 +63,14 @@ export default class ProjectDetails extends React.Component<Props, State> {
       });
 
       const project = await this.loadProject(this.props.token, projectID);
+      const details = [];
       if (this.props.token && project) {
-        await this.loadOrganization(this.props.token, project.organizationID);
+        details.push(this.loadOrganization(this.props.token, project.organizationID));
       }
 
-      await this.loadFiles(this.props.token, projectID);
+      details.push(this.loadFiles(this.props.token, projectID));
+
+      await Promise.all(details);
 
       this.setState({
         loading: false,
@@ -312,14 +315,12 @@ export default class ProjectDetails extends React.Component<Props, State> {
       this.setState({
         files: files,
       });
-      return files;
     } catch (err) {
       console.log(err);
       this.setState({
         errorMessage: 'Failed to load files.',
       });
     }
-    return null;
   }
 
   getProjectID = () => {
