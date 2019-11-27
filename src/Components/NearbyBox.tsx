@@ -23,9 +23,9 @@ export default class NearbyBox extends React.Component<Props, State> {
     const minutes = Math.floor((distance - degrees) * 60);
     const seconds = Math.floor((distance - degrees - minutes / 60) * 3600);
 
-    return (<div className="card">
+    return (<div className="card" style={{ maxWidth: 300 }}>
       <header className="card-header">
-        <p className="card-header-title">
+        <p className="card-header-title" style={{ overflowWrap: "anywhere" }}>
           {file.name}
         </p>
       </header>

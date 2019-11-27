@@ -122,38 +122,40 @@ export default class ProjectDetails extends React.Component<Props, State> {
           />
       }
 
-      <nav className="level">
-        <div className="level-left">
+      <div className="columns">
+        <div className="column">
           <h1 className="title">
             {this.state.project!.name}
           </h1>
         </div>
 
         {this.props.token &&
-          <div className="level-right">
-            <p className="level-item">
-              <button className="button" onClick={this.showUploadPrompt}>
-                <span className="icon">
-                  <i className="fas fa-upload"></i>
-                </span>
-                <span>
-                  Upload
-              </span>
-              </button>
-            </p>
-
-            {this.isProjectOwned() &&
-              < p className="level-item">
-                <button className="button" onClick={this.showSettingsPrompt}>
+          <div className="column is-narrow">
+            <div className="field is-grouped">
+              <p className="control">
+                <button className="button" onClick={this.showUploadPrompt}>
                   <span className="icon">
-                    <i className="fas fa-cog"></i>
+                    <i className="fas fa-upload"></i>
                   </span>
+                  <span>
+                    Upload
+                </span>
                 </button>
               </p>
-            }
+
+              {this.isProjectOwned() &&
+                < p className="control">
+                  <button className="button" onClick={this.showSettingsPrompt}>
+                    <span className="icon">
+                      <i className="fas fa-cog"></i>
+                    </span>
+                  </button>
+                </p>
+              }
+            </div>
           </div>
         }
-      </nav>
+      </div>
 
       <p className="content">
         {this.state.project!.description}

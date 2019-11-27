@@ -134,44 +134,44 @@ export default class FileDetails extends React.Component<Props, State> {
 
       <div className="columns">
         <div className="column">
-          <nav className="level">
-            <div className="level-left">
-              <div className="level-item">
-                <h1 className="title">{this.state.file!.name}</h1>
-              </div>
-            </div>
+          <h1 className="title" style={{}}>{this.state.file!.name}</h1>
+        </div>
 
-            <div className="level-right">
-              <div className="level-item">
-                <button className="button is-primary" onClick={() => this.downloadClicked()}>
+        <div className="column is-narrow">
+          <div className="field is-grouped">
+            <p className="control">
+              <button className="button is-primary" onClick={() => this.downloadClicked()}>
+                <span className="icon">
+                  <i className="fas fa-download"></i>
+                </span>
+                <span>
+                  Download Original
+                </span>
+              </button>
+            </p>
+
+            <p className="control">
+              <DownloadFileDropdown
+                downloadClicked={this.downloadClicked}
+                formatList={["png", "jpg"]}
+              />
+            </p>
+
+            {this.props.token &&
+              <p className="control">
+                <button className="button" onClick={this.showSettingsPrompt}>
                   <span className="icon">
-                    <i className="fas fa-download"></i>
+                    <i className="fas fa-cog"></i>
                   </span>
-                  <span>
-                    Download Original
-                    </span>
                 </button>
-              </div>
+              </p>
+            }
+          </div>
+        </div>
+      </div>
 
-              <div className="level-item">
-                <DownloadFileDropdown
-                  downloadClicked={this.downloadClicked}
-                  formatList={["png", "jpg"]}
-                />
-              </div>
-
-              {this.props.token &&
-                <div className="level-item">
-                  <button className="button" onClick={this.showSettingsPrompt}>
-                    <span className="icon">
-                      <i className="fas fa-cog"></i>
-                    </span>
-                  </button>
-                </div>
-              }
-            </div>
-          </nav>
-
+      <div className="columns">
+        <div className="column">
           <Tags
             backend={this.props.backend}
             file={this.state.file!}
