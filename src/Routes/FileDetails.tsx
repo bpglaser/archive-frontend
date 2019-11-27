@@ -66,17 +66,20 @@ export default class FileDetails extends React.Component<Props, State> {
       loading: true,
     });
 
-    const file = await this.loadFileDetails();
-    if (this.props.token && file) {
-      await this.loadTags(this.props.token, file);
-      await this.loadMetadata(this.props.token, file);
+    const promises = [this.downloadDisplayImage()];
+
+    if (this.props.token) {
+      promises.push(this.loadTags(this.props.token));
+      promises.push(this.loadMetadata(this.props.token));
     }
 
+    await this.loadFileDetails();
     const project = await this.loadProjectDetails();
     if (this.props.token && project) {
-      await this.loadOrganizationDetails(this.props.token, project);
+      promises.push(this.loadOrganizationDetails(this.props.token, project));
     }
-    await this.downloadDisplayImage();
+
+    await Promise.all(promises);
 
     this.setState({
       loading: false,
@@ -235,19 +238,17 @@ export default class FileDetails extends React.Component<Props, State> {
       this.setState({
         file: file,
       });
-      return file;
     } catch (err) {
       console.log(err);
       this.setState({
         errorMessage: createErrorMessage(err, 'Error loading file details.'),
       });
     }
-    return null;
   }
 
-  loadTags = async (token: string, file: File) => {
+  loadTags = async (token: string) => {
     try {
-      const tags = await this.props.backend.getTags(token, file.fileID);
+      const tags = await this.props.backend.getTags(token, this.getID());
       this.setState({
         tags: tags,
       });
@@ -257,9 +258,9 @@ export default class FileDetails extends React.Component<Props, State> {
     }
   }
 
-  loadMetadata = async (token: string, file: File) => {
+  loadMetadata = async (token: string) => {
     try {
-      const metadata = await this.props.backend.getMetadata(token, file.fileID);
+      const metadata = await this.props.backend.getMetadata(token, this.getID());
       this.setState({
         metadata: metadata,
       });
@@ -275,7 +276,7 @@ export default class FileDetails extends React.Component<Props, State> {
     }
 
     try {
-      const project = await this.props.backend.getProjectDetails(this.props.token, this.state.file!.projID!);
+      const project = await this.props.backend.getProjectDetails(this.props.token, this.state.file.projID);
       this.setState({
         project: project,
       });
