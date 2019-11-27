@@ -1,21 +1,21 @@
 import React from 'react';
-import { RouteComponentProps, Redirect } from 'react-router';
+import { Redirect, RouteComponentProps } from 'react-router';
+import { displayError } from '../App';
 import Breadcrumb from '../Components/Breadcrumb';
 import Comments from '../Components/Comments';
 import DownloadFileDropdown from '../Components/DownloadFileDropdown';
 import ErrorPage from '../Components/ErrorPage';
 import Loader from '../Components/Loader';
+import MetadataDisplay from '../Components/MetadataDisplay';
 import NearbyColumn from '../Components/NearbyColumn';
+import FileDeletePrompt from '../Components/Prompts/FileDeletePrompt';
+import FileSettingsPrompt from '../Components/Prompts/FileSettingsPrompt';
 import Tags from '../Components/Tags';
 import { Backend } from '../Data/Backend';
+import { createErrorMessage } from '../Helpers';
 import { File } from '../Models/File';
 import { Organization } from '../Models/Organization';
 import { Project } from '../Models/Project';
-import FileSettingsPrompt from '../Components/Prompts/FileSettingsPrompt';
-import FileDeletePrompt from '../Components/Prompts/FileDeletePrompt';
-import MetadataDisplay from '../Components/MetadataDisplay';
-import { displayError } from '../App';
-import { createErrorMessage } from '../Helpers';
 
 enum FilePrompt {
   Delete,
@@ -33,6 +33,8 @@ interface State {
   imageDisplayUrl: string | null;
   loading: boolean;
   metadata: { [key: string]: string } | null;
+  nearby?: { distance: number, file: File }[];
+  nearbyError?: any;
   organization: Organization | null;
   project: Project | null;
   redirect: string | null;
@@ -71,6 +73,7 @@ export default class FileDetails extends React.Component<Props, State> {
     if (this.props.token) {
       promises.push(this.loadTags(this.props.token));
       promises.push(this.loadMetadata(this.props.token));
+      promises.push(this.loadNearby(this.props.token));
     }
 
     await this.loadFileDetails();
@@ -199,7 +202,9 @@ export default class FileDetails extends React.Component<Props, State> {
         {this.props.token &&
           <NearbyColumn
             backend={this.props.backend}
+            error={this.state.nearbyError}
             file={this.state.file}
+            nearby={this.state.nearby}
             token={this.props.token!}
           />
         }
@@ -332,6 +337,19 @@ export default class FileDetails extends React.Component<Props, State> {
     } catch (err) {
       console.log(err);
       displayError('Error encountered while loading display image.');
+    }
+  }
+
+  loadNearby = async (token: string) => {
+    try {
+      const nearby = await this.props.backend.getNearbyFiles(token, this.getID());
+      this.setState({
+        nearby: nearby,
+      });
+    } catch (err) {
+      this.setState({
+        nearbyError: err,
+      });
     }
   }
 
