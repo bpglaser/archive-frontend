@@ -1,5 +1,4 @@
 import 'bulma';
-import { createBrowserHistory } from 'history';
 import Cookies from 'js-cookie';
 import React from 'react';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
@@ -7,6 +6,7 @@ import './App.css';
 import ErrorDropdownDisplay from './Components/ErrorDropdownDisplay';
 import Navbar from './Components/Navbar';
 import CreateOrganizationPrompt from './Components/Prompts/CreateOrganizationPrompt';
+import JoinOrganizationInfoPrompt from './Components/Prompts/JoinOrganizationInfoPrompt';
 import { LoginDisplayMode, LoginPrompt } from './Components/Prompts/LoginPrompt';
 import { Backend } from './Data/Backend';
 import { URLBackend } from "./Data/URLBackend";
@@ -23,11 +23,8 @@ import OrganizationDetails from './Routes/OrganizationDetails';
 import OrganizationManage from './Routes/OrganizationManage';
 import Primary from './Routes/Primary';
 import ProjectDetails from './Routes/ProjectDetails';
-import Settings from './Routes/Settings';
 import Projects from './Routes/Projects';
-import JoinOrganizationInfoPrompt from './Components/Prompts/JoinOrganizationInfoPrompt';
-
-const history = createBrowserHistory();
+import Settings from './Routes/Settings';
 
 let appDisplayError: ((s: string) => void) | undefined = undefined;
 export function displayError(message: string) {
@@ -337,10 +334,7 @@ export default class App extends React.Component<any, State> {
       token: null,
     });
 
-    // Redirect to root.
-    if (history.location.pathname !== '/') {
-      history.push('/');
-    }
+    window.location.replace('/');
   }
 
   logOutClicked = async () => {

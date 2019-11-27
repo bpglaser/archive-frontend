@@ -29,7 +29,7 @@ export class URLBackend implements Backend {
             console.log('Caught UNAUTHORIZED return code. Logging out.')
             clientLogout();
           }
-          return Promise.reject(error);
+          return error;
         }
       );
     }
