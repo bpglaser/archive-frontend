@@ -69,6 +69,13 @@ export default class NearbyColumn extends React.Component<Props, State> {
       </div>);
     }
 
+    if (this.state.nearby.length === 0) {
+      return (<div className="column is-narrow">
+        <h1 className="title">What's Nearby</h1>
+        <div>No nearby files found.</div>
+      </div>);
+    }
+
     return (<div className="column is-narrow">
       <h1 className="title">What's Nearby</h1>
       {
