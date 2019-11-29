@@ -93,6 +93,9 @@ export class URLBackend implements Backend {
     const config = createAuthorizationConfig(token);
     config.cancelToken = tokenSource.token;
     const result = await this.instance.get(url.toString(), config);
+    if (Axios.isCancel(result)) {
+      throw result;
+    }
     return result.data;
   }
 
