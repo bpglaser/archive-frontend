@@ -1,6 +1,7 @@
 import * as jwt from 'jsonwebtoken';
 import { User } from './Models/User';
 import * as emailValidator from 'email-validator';
+import { Filter } from 'react-table';
 
 export function validUsername(s: string) {
   const trimmed = s.trim();
@@ -74,4 +75,8 @@ export function createErrorMessage(err: any, message: string) {
   } else {
     return 'Unknown error occoured.';
   }
+}
+
+export function lowercaseFilterMethod(filter: Filter, row: any, column: any) {
+  return row[filter.id].toString().toLowerCase().includes(filter.value.toString().toLowerCase());
 }

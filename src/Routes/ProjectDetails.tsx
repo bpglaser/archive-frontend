@@ -12,7 +12,7 @@ import DeleteProjectPrompt from '../Components/Prompts/DeleteProjectPrompt';
 import ProjectSettingsPrompt from '../Components/Prompts/ProjectSettingsPrompt';
 import UploadFilePrompt from '../Components/Prompts/UploadPrompt';
 import { Backend } from '../Data/Backend';
-import { readTokenPayload } from '../Helpers';
+import { readTokenPayload, lowercaseFilterMethod } from '../Helpers';
 import { File } from '../Models/File';
 import { Organization } from '../Models/Organization';
 import { Project } from '../Models/Project';
@@ -336,10 +336,6 @@ export default class ProjectDetails extends React.Component<Props, State> {
     }
     return false;
   }
-}
-
-function lowercaseFilterMethod(filter: Filter, row: any, column: any) {
-  return row[filter.id].toString().toLowerCase().includes(filter.value.toString().toLowerCase());
 }
 
 function tagFilterMethod(filter: Filter, row: any, column: any) {
