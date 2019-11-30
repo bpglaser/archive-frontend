@@ -92,38 +92,42 @@ export default class OrganizationDetails extends React.Component<Props, State> {
         ]}
       />
 
-      <nav className="level">
-        <div className="level-item">
-          <h1 className="title">{this.state.organization!.name}</h1>
-        </div>
-      </nav>
-
-      <nav className="level">
-        <div className="level-left">
-          <p className="level-item">
-            <button className="button" onClick={this.showCreatePrompt}>
-              <span className="icon">
-                <i className="fas fa-plus"></i>
-              </span>
-              <span>
-                Create New Project
-              </span>
-            </button>
-          </p>
+      <div className="columns">
+        <div className="column">
+          <h1 className="title">
+            {this.state.organization!.name}
+          </h1>
         </div>
 
-        <div className="level-right">
-          {this.state.organization && this.state.organization.isAdmin &&
-            <p className="level-item">
-              <button className="button" onClick={this.showSettingsPrompt}>
+        <div className="column is-narrow">
+          <div className="field is-grouped">
+            <p className="control">
+              <button className="button" onClick={this.showCreatePrompt}>
                 <span className="icon">
-                  <i className="fas fa-cog"></i>
+                  <i className="fas fa-plus"></i>
+                </span>
+                <span>
+                  Create New Project
                 </span>
               </button>
             </p>
-          }
+
+            {this.state.organization && this.state.organization.isAdmin &&
+              <p className="level-item">
+                <button className="button" onClick={this.showSettingsPrompt}>
+                  <span className="icon">
+                    <i className="fas fa-cog"></i>
+                  </span>
+                </button>
+              </p>
+            }
+          </div>
         </div>
-      </nav>
+      </div>
+
+      <p className="content">
+        {this.state.organization!.description}
+      </p>
 
       <ProjectsTable
         projects={this.state.projects}
@@ -226,6 +230,7 @@ export default class OrganizationDetails extends React.Component<Props, State> {
   organizationUpdated = async (organization: Organization) => {
     this.setState({
       organization: organization,
+      visiblePrompt: null,
     });
     await this.loadProjects(organization);
   }

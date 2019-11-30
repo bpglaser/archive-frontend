@@ -92,7 +92,7 @@ export default class OrganizationSettingsPrompt extends React.Component<Props, S
               <span className="icon">
                 <i className="fas fa-trash"></i>
               </span>
-              <span>Delete Project</span>
+              <span>Delete Organization</span>
             </button>
           </div>
         </section>

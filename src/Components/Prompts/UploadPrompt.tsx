@@ -21,13 +21,11 @@ interface State {
 export default class UploadFilePrompt extends React.Component<Props, State> {
   readonly fileInputRef: React.RefObject<HTMLInputElement>;
   readonly nameInputRef: React.RefObject<HTMLInputElement>;
-  readonly noteTextareaRef: React.RefObject<HTMLTextAreaElement>;
 
   constructor(props: Props) {
     super(props)
     this.fileInputRef = React.createRef();
     this.nameInputRef = React.createRef();
-    this.noteTextareaRef = React.createRef();
     this.state = {
       disabled: false,
       errorMessage: null,
@@ -84,13 +82,6 @@ export default class UploadFilePrompt extends React.Component<Props, State> {
             <label className="label">Name</label>
             <div className="control">
               <input className="input" type="text" placeholder="Name" disabled={this.state.disabled} ref={this.nameInputRef} />
-            </div>
-          </div>
-
-          <div className="field">
-            <label className="label">Note</label>
-            <div className="control">
-              <textarea className="textarea" placeholder="Note" disabled={this.state.disabled} ref={this.noteTextareaRef}></textarea>
             </div>
           </div>
         </section>
@@ -158,7 +149,7 @@ export default class UploadFilePrompt extends React.Component<Props, State> {
 
       const formData = new FormData();
       formData.append('name', this.nameInputRef.current!.value);
-      formData.append('note', this.noteTextareaRef.current!.value);
+      formData.append('note', "");
       const file = this.fileInputRef.current!.files[0];
       formData.append('image', file);
 
